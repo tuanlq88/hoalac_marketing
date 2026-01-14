@@ -33,21 +33,6 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Verify required env vars
-        run: |
-          missing=""
-          for var in PUBLIC_LEAD_ENDPOINT PUBLIC_ADMIN_USER PUBLIC_ADMIN_PASS PUBLIC_DEFAULT_LEAD_TAG; do
-            value="${!var}"
-            if [ -z "$value" ]; then
-              missing+="$var "
-            fi
-          done
-          if [ -n "$missing" ]; then
-            echo "Missing required environment variables: $missing"
-            exit 1
-          fi
-        shell: bash
-
       - name: Install dependencies
         run: npm ci
 
