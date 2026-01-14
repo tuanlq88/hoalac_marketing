@@ -8,20 +8,24 @@ interface Props {
 const { articles = [] } = Astro.props;
 
 const filterPublicTags = (tags: string[]) => tags.filter((tag) => !tag.startsWith('lead_'));
+const baseEnv = import.meta.env.BASE_URL ?? '/';
+const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
+const blogHref = `${basePath}/blog`;
 ---
 <section style="margin-top: 3rem;">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
     <h2 style="margin: 0;">Snapshot thị trường</h2>
-    <a class="button" href="/blog" style="background: rgba(27,27,27,0.1); color: var(--text);">Xem tất cả bài</a>
+    <a class="button" href={blogHref} style="background: rgba(27,27,27,0.1); color: var(--text);">Xem tất cả bài</a>
   </div>
   <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     {articles.map((article) => {
       const publicTags = filterPublicTags(article.data.tags);
+      const articleHref = `${basePath}/blog/${article.slug}`;
       return (
         <article style="background: #fff; padding: 1.5rem; border-radius: 1.25rem; box-shadow: 0 15px 45px rgba(0,0,0,0.05);">
           {publicTags.length > 0 && <p class="tag">{publicTags.join(' / ')}</p>}
           <h3 style="margin: 0.8rem 0 0.5rem;">
-            <a href={`/blog/${article.slug}`}>{article.data.title}</a>
+            <a href={articleHref}>{article.data.title}</a>
           </h3>
           <p style="margin: 0; color: var(--muted);">{article.data.excerpt}</p>
           <p style="margin-top: 1rem; font-weight: 600;">

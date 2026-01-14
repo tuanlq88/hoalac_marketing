@@ -10,6 +10,11 @@ const {
   title = "Insight Hòa Lạc",
   description = "Landing page phân tích thị trường địa ốc Hòa Lạc",
 } = Astro.props;
+
+const baseEnv = import.meta.env.BASE_URL ?? '/';
+const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
+const homeHref = basePath || '/';
+const blogHref = `${basePath}/blog`;
 ---
 <!DOCTYPE html>
 <html lang="vi">
@@ -31,12 +36,12 @@ const {
   <body>
     <header style="padding: 1.5rem 1.5rem 0;">
       <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-        <a href="/" style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;">
+        <a href={homeHref} style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;">
           Insight Hòa Lạc
         </a>
         <nav style="display: flex; gap: 1rem; font-weight: 500;">
           <a href="#lead-form">Form tư vấn</a>
-          <a href="/blog">Bài viết</a>
+          <a href={blogHref}>Bài viết</a>
         </nav>
       </div>
     </header>
