@@ -488,7 +488,7 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: new URLSearchParams(data)
       });
 
       if (!response.ok) {

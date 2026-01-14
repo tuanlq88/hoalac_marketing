@@ -4,7 +4,7 @@ const SHEET_ID = 'YOUR_SHEET_ID';
 
 function doPost(e) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
-  const payload = JSON.parse(e.postData.contents || '{}');
+  const payload = e.parameter;
 
   if (payload.action === 'seedTestData') {
     const seeded = seedTestData_(sheet);
@@ -64,9 +64,6 @@ function notifyTelegram(lead, tag) {
 function createCorsResponse_(body) {
   const output = ContentService.createTextOutput(JSON.stringify(body));
   output.setMimeType(ContentService.MimeType.JSON);
-  output.setHeader('Access-Control-Allow-Origin', '*');
-  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  output.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   return output;
 }
 
