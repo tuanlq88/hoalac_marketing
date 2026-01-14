@@ -1,0 +1,14 @@
+---
+import { LEAD_TAGS } from "@lib/lead-tag-config";
+---
+<section style="background: #fff; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 15px 45px rgba(0,0,0,0.06);">
+  <h2 style="margin-top: 0;">Bộ lọc lead real-time</h2>
+  <div style="display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+    {LEAD_TAGS.map((item) => (
+      <article style={`border-left: 4px solid ${item.color}; padding-left: 1rem;`}>
+        <p style="margin: 0; font-weight: 700;">{item.label}</p>
+        <p style="margin: 0.35rem 0 0; color: var(--muted);">{item.description}</p>
+      </article>
+    ))}
+  </div>
+</section>

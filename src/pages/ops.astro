@@ -1,0 +1,260 @@
+---
+import Layout from "@components/Layout.astro";
+import TagLegend from "@components/TagLegend.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection('articles');
+const adminUser = import.meta.env.PUBLIC_ADMIN_USER ?? 'insight';
+const adminPass = import.meta.env.PUBLIC_ADMIN_PASS ?? 'hoa-lac-2025';
+
+const mockStats = [
+  { label: 'Lead nóng (24h)', value: 12, delta: '+2 so với hôm qua' },
+  { label: 'Lead ấm đang dưỡng', value: 37, delta: '15 chờ gọi lại' },
+  { label: 'Lead lạnh mới', value: 48, delta: 'Auto drip email' }
+];
+---
+<Layout title="Bảng điều hành" description="Trang nội bộ quản lý funnel Hòa Lạc">
+  <section
+    class="ops-shell"
+    data-admin-shell
+    data-admin-user={adminUser}
+    data-admin-pass={adminPass}
+  >
+    <div class="ops-login" data-admin-login>
+      <h1>Đăng nhập quản trị</h1>
+      <p>Thông tin mặc định: <strong>{adminUser}</strong> / <strong>{adminPass}</strong></p>
+      <form class="login-form" data-login-form>
+        <label>
+          Tài khoản
+          <input type="text" name="username" required />
+        </label>
+        <label>
+          Mật khẩu
+          <input type="password" name="password" required />
+        </label>
+        <button class="button" type="submit">Truy cập dashboard</button>
+        <p class="status" data-login-status></p>
+      </form>
+    </div>
+
+    <div class="ops-panel" data-admin-panel hidden>
+      <header class="ops-panel__head">
+        <div>
+          <p class="tag">Nội bộ</p>
+          <h1>Funnel Hòa Lạc realtime</h1>
+          <p>Nhấn "Đăng xuất" để khóa lại trước khi rời trang.</p>
+        </div>
+        <button class="button" data-logout>Đăng xuất</button>
+      </header>
+
+      <div class="ops-stats">
+        {mockStats.map((item) => (
+          <article>
+            <p class="ops-stats__label">{item.label}</p>
+            <p class="ops-stats__value">{item.value}</p>
+            <p class="ops-stats__delta">{item.delta}</p>
+          </article>
+        ))}
+      </div>
+
+      <TagLegend />
+
+      <section class="ops-table">
+        <header>
+          <h2>Automation queues</h2>
+          <p>Mapping Google Sheet → Telegram/Zalo OA. Cập nhật script trong <code>apps-script/lead_webhook.gs</code>.</p>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th>Hành động</th>
+              <th>Trigger</th>
+              <th>Đích đến</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ping nhóm sales</td>
+              <td>Ghi lead_hot</td>
+              <td>Telegram BOT</td>
+            </tr>
+            <tr>
+              <td>Nuôi dưỡng email</td>
+              <td>lead_warm chưa giao dịch 7 ngày</td>
+              <td>Apps Script + Gmail API</td>
+            </tr>
+            <tr>
+              <td>Nhắc kiểm tra pháp lý</td>
+              <td>lead_cold có note "sổ chung"</td>
+              <td>Zalo OA</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="ops-content">
+        <h2>Nhật ký nội bộ</h2>
+        <ol>
+          <li>Gắn webhook Google Sheet vào biến <code>PUBLIC_LEAD_ENDPOINT</code>.</li>
+          <li>Điều chỉnh thông tin đăng nhập qua <code>PUBLIC_ADMIN_USER/PASS</code>.</li>
+          <li>Viết thêm automation mới bằng cách fork Apps Script mẫu.</li>
+        </ol>
+        <p>
+          Hiện có {articles.length} bài viết đã public. Cập nhật markdown tại <code>src/content/articles</code> để push thêm insight.
+        </p>
+      </section>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .ops-shell {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(2rem, 5vw, 4rem) 1.5rem 4rem;
+  }
+  .ops-login,
+  .ops-panel {
+    width: min(860px, 100%);
+    background: #fff;
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.09);
+    padding: clamp(1.8rem, 4vw, 3rem);
+  }
+  .login-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .login-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-weight: 600;
+  }
+  .login-form input {
+    border-radius: 0.8rem;
+    border: 1px solid rgba(15, 23, 42, 0.18);
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+  }
+  .status {
+    min-height: 1rem;
+    color: var(--muted);
+  }
+  .ops-panel__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  .ops-stats {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-bottom: 2rem;
+  }
+  .ops-stats article {
+    background: #f7f7f9;
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+  }
+  .ops-stats__label {
+    margin: 0;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .ops-stats__value {
+    margin: 0.3rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .ops-stats__delta {
+    margin: 0;
+    color: var(--accent-dark);
+  }
+  .ops-table {
+    margin: 3rem 0;
+    overflow-x: auto;
+  }
+  .ops-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .ops-table th,
+  .ops-table td {
+    text-align: left;
+    padding: 0.85rem 0.5rem;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .ops-content {
+    background: #0f172a;
+    color: #fff;
+    padding: 1.8rem;
+    border-radius: 1.25rem;
+  }
+  .ops-content code {
+    background: rgba(255,255,255,0.18);
+    padding: 0.1rem 0.4rem;
+    border-radius: 0.4rem;
+  }
+  .ops-content ol {
+    padding-left: 1.2rem;
+  }
+  .ops-content li + li {
+    margin-top: 0.3rem;
+  }
+  @media (max-width: 640px) {
+    .ops-panel__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script type="module">
+  const shell = document.querySelector('[data-admin-shell]');
+  const loginCard = document.querySelector('[data-admin-login]');
+  const panel = document.querySelector('[data-admin-panel]');
+  const form = document.querySelector('[data-login-form]');
+  const status = document.querySelector('[data-login-status]');
+  const logoutBtn = document.querySelector('[data-logout]');
+
+  const expectedUser = shell?.dataset.adminUser ?? 'insight';
+  const expectedPass = shell?.dataset.adminPass ?? 'hoa-lac-2025';
+  const STORAGE_KEY = 'hoa-lac-admin-auth';
+
+  function openPanel() {
+    loginCard?.setAttribute('hidden', 'hidden');
+    panel?.removeAttribute('hidden');
+    sessionStorage.setItem(STORAGE_KEY, 'true');
+  }
+
+  function closePanel() {
+    panel?.setAttribute('hidden', 'hidden');
+    loginCard?.removeAttribute('hidden');
+    sessionStorage.removeItem(STORAGE_KEY);
+    if (status) status.textContent = '';
+    form?.reset();
+  }
+
+  if (sessionStorage.getItem(STORAGE_KEY) === 'true') {
+    openPanel();
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(form));
+    if (data.username === expectedUser && data.password === expectedPass) {
+      openPanel();
+    } else if (status) {
+      status.textContent = 'Sai thông tin đăng nhập';
+    }
+  });
+
+  logoutBtn?.addEventListener('click', closePanel);
+</script>

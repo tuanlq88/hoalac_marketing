@@ -1,0 +1,26 @@
+---
+import Layout from "@components/Layout.astro";
+import { getCollection } from "astro:content";
+
+const articles = (await getCollection('articles')).sort((a, b) => (
+  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+));
+---
+<Layout title="Bài viết Hòa Lạc" description="Thư viện bài phân tích thị trường đất Hòa Lạc">
+  <section style="max-width: 900px; margin: 3rem auto;">
+    <h1 style="margin-top: 0;">Nhật ký thị trường</h1>
+    <p style="color: var(--muted);">
+      Nội dung được build tĩnh, phù hợp triển khai GitHub Pages. Thêm file Markdown mới để mở rộng thư viện.
+    </p>
+    <div style="margin-top: 2rem; display: grid; gap: 2rem;">
+      {articles.map((article) => (
+        <article>
+          <p class="tag">{article.data.tags.join(' / ')}</p>
+          <h2 style="margin: 0.5rem 0;"><a href={`/blog/${article.slug}`}>{article.data.title}</a></h2>
+          <p style="margin: 0; color: var(--muted);">{article.data.excerpt}</p>
+          <p style="margin-top: 0.5rem; font-weight: 600;">{new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,61 @@
+---
+import "@styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Insight Hòa Lạc",
+  description = "Landing page phân tích thị trường địa ốc Hòa Lạc",
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header style="padding: 1.5rem 1.5rem 0;">
+      <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <a href="/" style="font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;">
+          Insight Hòa Lạc
+        </a>
+        <nav style="display: flex; gap: 1rem; font-weight: 500;">
+          <a href="#lead-form">Form tư vấn</a>
+          <a href="/blog">Bài viết</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer style="padding: 2rem 1.5rem 3rem; background: #161616; color: #fff;">
+      <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;">
+        <div>
+          <p style="margin: 0; font-weight: 600;">Insight Hòa Lạc © {new Date().getFullYear()}</p>
+          <p style="margin: 0.35rem 0 0; color: rgba(255,255,255,0.7);">
+            Landing page thử nghiệm GitHub Pages + funnel marketing.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <a href="mailto:contact@example.com" class="tag">contact@example.com</a>
+          <a href="https://t.me/" class="tag">Telegram</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

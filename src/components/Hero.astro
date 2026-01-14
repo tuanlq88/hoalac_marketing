@@ -1,0 +1,46 @@
+---
+const {
+  eyebrow = "Bản đồ dữ liệu Hòa Lạc",
+  title = "Giải mã nhu cầu đất nền Hòa Lạc 2025",
+  description = "Tổng hợp quy hoạch, nhịp độ giao dịch và mức độ quan tâm theo phân khúc để bạn định vị sản phẩm nhanh hơn.",
+  ctaLabel = "Nhận báo cáo mới",
+} = Astro.props;
+---
+<section style="padding: 4rem 0 3rem;">
+  <div style="max-width: 1200px; margin: 0 auto; display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: center;">
+    <div>
+      <p class="tag">{eyebrow}</p>
+      <h1 style="font-size: clamp(2.4rem, 5vw, 3.8rem); line-height: 1.1; margin: 1.2rem 0;">
+        {title}
+      </h1>
+      <p style="font-size: 1.15rem; color: var(--muted); max-width: 520px;">
+        {description}
+      </p>
+      <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a class="button" href="#lead-form">{ctaLabel}</a>
+        <a class="button" href="/blog" style="background: rgba(27,27,27,0.1); color: var(--text);">
+          Xem bài phân tích
+        </a>
+      </div>
+    </div>
+    <div style="background: #fff; padding: 1.5rem; border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.08); display: grid; gap: 1.5rem;">
+      <div>
+        <p style="margin: 0; font-weight: 600; font-size: 0.9rem; color: var(--muted);">Nguồn tìm kiếm 30 ngày</p>
+        <p style="font-size: 2.8rem; margin: 0.3rem 0 0; font-weight: 700;">+312%</p>
+        <p style="margin: 0; color: var(--accent-dark);">Khu CNC & trục Láng - Hòa Lạc</p>
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+          <p style="margin: 0; font-weight: 600;">Lead nóng</p>
+          <p style="font-size: 2rem; margin: 0.2rem 0 0;">48</p>
+          <p style="margin: 0; color: var(--muted);">7 ngày gần nhất</p>
+        </div>
+        <div style="flex: 1;">
+          <p style="margin: 0; font-weight: 600;">Lead ấm</p>
+          <p style="font-size: 2rem; margin: 0.2rem 0 0;">132</p>
+          <p style="margin: 0; color: var(--muted);">7 ngày gần nhất</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
