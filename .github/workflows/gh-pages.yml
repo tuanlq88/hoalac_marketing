@@ -17,6 +17,11 @@ concurrency:
 jobs:
   build:
     environment: github-pages
+    env:
+      PUBLIC_LEAD_ENDPOINT: ${{ vars.PUBLIC_LEAD_ENDPOINT }}
+      PUBLIC_ADMIN_USER: ${{ vars.PUBLIC_ADMIN_USER }}
+      PUBLIC_ADMIN_PASS: ${{ vars.PUBLIC_ADMIN_PASS }}
+      PUBLIC_DEFAULT_LEAD_TAG: ${{ vars.PUBLIC_DEFAULT_LEAD_TAG }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
