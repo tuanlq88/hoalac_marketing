@@ -12,6 +12,7 @@ const {
 } = Astro.props;
 
 const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_classification";
+const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 ---
 ---
 <section
@@ -19,6 +20,7 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
   style="background: #0f172a; color: #fff; padding: 3rem; border-radius: 1.5rem; margin-top: 3rem;"
   data-lead-shell
   data-defer={deferDisplay}
+  data-endpoint={leadEndpoint}
 >
   <div style="display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: center;">
     <div>
@@ -142,7 +144,7 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
           name="contact"
           required
           inputmode="tel"
-          pattern="[0-9\s+()-]{8,15}"
+          pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
           placeholder="Zalo hoặc số điện thoại"
         />
       </div>
@@ -280,16 +282,84 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
 </style>
 
 <script type="module">
-  const form = document.querySelector('[data-lead-form]');
-  const status = document.querySelector('[data-status]');
-  const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT;
+  const shell = document.querySelector('[data-lead-shell]');
+  const form = shell?.querySelector('[data-lead-form]') ?? document.querySelector('[data-lead-form]');
+  const status = shell?.querySelector('[data-status]') ?? document.querySelector('[data-status]');
+  const floatingCta = shell?.querySelector('[data-floating-cta]') ?? document.querySelector('[data-floating-cta]');
+  const endpoint = shell?.dataset.endpoint ?? '';
   const AREA_LIMIT = 2;
   const SCROLL_THRESHOLD = 0.65;
-  const shell = document.querySelector('[data-lead-shell]');
-  const floatingCta = document.querySelector('[data-floating-cta]');
   const deferDisplay = shell?.dataset.defer === 'true';
+  const leadTagInput = document.querySelector('[data-lead-tag]');
+  const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
 
   const areaCheckboxes = form?.querySelectorAll('input[name="areas"]') ?? [];
+
+  const intentWeights = {
+    o_thuc: 3,
+    dau_tu_trung_han: 2,
+    luot_song: 0
+  };
+  const budgetWeights = {
+    '<1.5': 0,
+    '1.5-2.5': 1,
+    '2.5-3.5': 2,
+    '>3.5': 3
+  };
+  const legalWeights = {
+    so_do_san: 3,
+    cho_len_tho_cu: 1,
+    co_the_rui_ro: 0
+  };
+  const priorityAreas = ['gan_dhqg', 'gan_cnc'];
+
+  function setCustomMessages() {
+    if (!form) return;
+    const REQUIRED_TEXT = 'Vui lòng điền thông tin này.';
+    const PHONE_TEXT = 'Số liên hệ phải đủ 10 số và bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2|6|8|9].';
+
+    form.addEventListener('invalid', (event) => {
+      const field = event.target;
+      if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+        return;
+      }
+      if (field.validity.valueMissing) {
+        field.setCustomValidity(REQUIRED_TEXT);
+      } else if (field.type === 'tel' && field.validity.patternMismatch) {
+        field.setCustomValidity(PHONE_TEXT);
+      } else {
+        field.setCustomValidity('');
+      }
+    }, true);
+
+    form.addEventListener('input', (event) => {
+      const field = event.target;
+      if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+        field.setCustomValidity('');
+      }
+    });
+  }
+
+  function computeLeadTag({ intent, budgetRange, legalRisk, areas }) {
+    let score = 0;
+    score += intentWeights[intent] ?? 0;
+    score += budgetWeights[budgetRange] ?? 0;
+    score += legalWeights[legalRisk] ?? 0;
+    if (areas?.some((area) => priorityAreas.includes(area))) {
+      score += 1;
+    }
+
+    if (intent === 'luot_song' && legalRisk === 'co_the_rui_ro') {
+      return 'lead_cold';
+    }
+    if (score >= 6) {
+      return 'lead_hot';
+    }
+    if (score >= 3) {
+      return 'lead_warm';
+    }
+    return 'lead_cold';
+  }
 
   function serializeForm(formElement) {
     const formData = new FormData(formElement);
@@ -315,6 +385,8 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
   areaCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', handleAreaLimit);
   });
+
+  setCustomMessages();
 
   function handleScrollReveal() {
     if (!deferDisplay || !shell || !floatingCta) return;
@@ -367,13 +439,37 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
       return;
     }
 
-    const selectedAreas = form.querySelectorAll('input[name="areas"]:checked');
-    if (selectedAreas.length === 0) {
+    const selectedAreaNodes = form.querySelectorAll('input[name="areas"]:checked');
+    if (selectedAreaNodes.length === 0) {
       status.textContent = "Vui lòng chọn ít nhất 1 khu vực ưu tiên.";
       return;
     }
+    const selectedAreaValues = Array.from(selectedAreaNodes).map((input) => input.value);
+
+    const now = new Date();
+    const vnDateTime = now.toLocaleString('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
 
     const data = serializeForm(form);
+    data.areas = selectedAreaValues.join(', ');
+    const computedTag = computeLeadTag({
+      intent: data.intent,
+      budgetRange: data.budgetRange,
+      legalRisk: data.legalRisk,
+      areas: selectedAreaValues
+    }) ?? fallbackLeadTag;
+    data.leadTag = computedTag;
+    if (leadTagInput) {
+      leadTagInput.value = computedTag;
+    }
+    data.submittedAt = now.toISOString();
+    data.submittedAtLocal = vnDateTime;
 
     if (data.company) {
       status.textContent = "Đã chặn spam.";
@@ -392,10 +488,7 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          ...data,
-          submittedAt: new Date().toISOString(),
-        })
+        body: JSON.stringify(data)
       });
 
       if (!response.ok) {

@@ -4,33 +4,50 @@ const SHEET_ID = 'YOUR_SHEET_ID';
 
 function doPost(e) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
-  const payload = JSON.parse(e.postData.contents);
-  const { leadTag = 'lead_cold', ...rest } = payload;
+  const payload = JSON.parse(e.postData.contents || '{}');
+
+  if (payload.action === 'seedTestData') {
+    const seeded = seedTestData_(sheet);
+    return createCorsResponse_({ message: `Đã tạo ${seeded} mẫu test.`, seeded });
+  }
+
+  const {
+    intent = '',
+    budgetRange = '',
+    areas = '',
+    legalRisk = '',
+    contact = '',
+    leadTag = 'lead_cold',
+    source = '',
+    submittedAt = new Date().toISOString()
+  } = payload;
 
   const row = [
     new Date(),
-    rest.fullName || '',
-    rest.phone || '',
-    rest.email || '',
-    rest.budget || '',
-    rest.note || '',
+    intent,
+    budgetRange,
+    areas,
+    legalRisk,
+    contact,
     leadTag,
-    rest.source || '',
-    rest.submittedAt || new Date().toISOString()
+    source,
+    submittedAt
   ];
   sheet.appendRow(row);
 
   if (leadTag === 'lead_hot') {
-    notifyTelegram(rest, leadTag);
+    notifyTelegram({ intent, budgetRange, areas, legalRisk, contact }, leadTag);
   }
 
-  return ContentService
-    .createTextOutput(JSON.stringify({ message: 'Đã ghi nhận thông tin, cảm ơn bạn!' }))
-    .setMimeType(ContentService.MimeType.JSON);
+  return createCorsResponse_({ message: 'Đã ghi nhận thông tin, cảm ơn bạn!' });
+}
+
+function doOptions() {
+  return createCorsResponse_({ message: 'CORS preflight ok' });
 }
 
 function notifyTelegram(lead, tag) {
-  const text = `🔥 Lead ${tag} mới:\nTên: ${lead.fullName}\nPhone: ${lead.phone}\nNgân sách: ${lead.budget}\nNhu cầu: ${lead.note}`;
+  const text = `🔥 Lead ${tag} mới:\nIntent: ${lead.intent}\nTài chính: ${lead.budgetRange}\nKhu vực: ${lead.areas}\nPháp lý: ${lead.legalRisk}\nLiên hệ: ${lead.contact}`;
   const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
   const payload = {
     chat_id: TELEGRAM_CHAT_ID,
@@ -42,4 +59,63 @@ function notifyTelegram(lead, tag) {
     contentType: 'application/json',
     payload: JSON.stringify(payload)
   });
+}
+
+function createCorsResponse_(body) {
+  const output = ContentService.createTextOutput(JSON.stringify(body));
+  output.setMimeType(ContentService.MimeType.JSON);
+  output.setHeader('Access-Control-Allow-Origin', '*');
+  output.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  output.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  return output;
+}
+
+function seedTestData_(sheet) {
+  const now = new Date();
+  const samples = [
+    {
+      intent: 'o_thuc',
+      budgetRange: '2.5-3.5',
+      areas: 'gan_dhqg, gan_cnc',
+      legalRisk: 'so_do_san',
+      contact: '0987' + Math.floor(Math.random() * 100000),
+      leadTag: 'lead_hot',
+      source: 'seed_test'
+    },
+    {
+      intent: 'dau_tu_trung_han',
+      budgetRange: '1.5-2.5',
+      areas: 'binh_yen_thach_hoa',
+      legalRisk: 'cho_len_tho_cu',
+      contact: '0901' + Math.floor(Math.random() * 100000),
+      leadTag: 'lead_warm',
+      source: 'seed_test'
+    },
+    {
+      intent: 'luot_song',
+      budgetRange: '<1.5',
+      areas: 'tien_xuan_yen_binh',
+      legalRisk: 'co_the_rui_ro',
+      contact: '0938' + Math.floor(Math.random() * 100000),
+      leadTag: 'lead_cold',
+      source: 'seed_test'
+    }
+  ];
+
+  samples.forEach((lead, index) => {
+    const submittedAt = new Date(now.getTime() + index * 60000).toISOString();
+    sheet.appendRow([
+      new Date(),
+      lead.intent,
+      lead.budgetRange,
+      lead.areas,
+      lead.legalRisk,
+      lead.contact,
+      lead.leadTag,
+      lead.source,
+      submittedAt
+    ]);
+  });
+
+  return samples.length;
 }

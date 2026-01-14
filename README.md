@@ -17,14 +17,16 @@ npm run dev
 Site mặc định chạy tại `http://localhost:4321`.
 
 ## Biến môi trường
-Tạo file `.env` hoặc xuất biến hệ thống:
+1. Sao chép `.env.example` thành `.env` và cập nhật thông số thực tế:
 ```
 PUBLIC_LEAD_ENDPOINT=https://script.google.com/macros/s/xxx/exec
 PUBLIC_ADMIN_USER=insight
 PUBLIC_ADMIN_PASS=hoa-lac-2025
 PUBLIC_DEFAULT_LEAD_TAG=pending_classification
 ```
-Endpoint nên là Apps Script (hoặc Cloud Function) xử lý ghi Google Sheet + gọi Telegram/Zalo OA. Các biến `PUBLIC_ADMIN_*` dùng cho route `/ops`, có thể thay bằng giá trị riêng trước khi build.
+2. Khi deploy GitHub Pages: vào **Settings → Pages → Environment variables** và khai báo cùng các biến `PUBLIC_*` như trên để workflow build sử dụng.
+
+`PUBLIC_LEAD_ENDPOINT` nên là Apps Script (hoặc Cloud Function) xử lý ghi Google Sheet + gọi Telegram/Zalo OA. Các biến `PUBLIC_ADMIN_*` dùng cho route `/ops`, có thể thay bằng giá trị riêng trước khi build.
 
 ## Apps Script mẫu
 Tham khảo `apps-script/lead_webhook.gs`. Thay `SHEET_ID`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` rồi deploy dạng web app (cho phép anyone). Script:
