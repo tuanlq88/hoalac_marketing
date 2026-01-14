@@ -2,7 +2,8 @@
 const stats = [
   { label: "Diện tích tự nhiên", value: "41,11 km²" },
   { label: "Dân số 2025", value: "30.864 người" },
-  { label: "Mật độ", value: "751 người/km²" }
+  { label: "Mật độ", value: "751 người/km²" },
+  { label: "Ngày hiệu lực", value: "01/07/2025" }
 ];
 
 const mergedUnits = [
@@ -14,7 +15,8 @@ const mergedUnits = [
   "Tân Xã (phần còn lại)"
 ];
 
-const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.46%2C20.98%2C105.57%2C21.05&layer=mapnik&marker=21.0119%2C105.514";
+const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.44%2C20.97%2C105.59%2C21.06&layer=mapnik&marker=21.0119%2C105.514";
+const adminMapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.44%2C20.97%2C105.59%2C21.06&layer=transportmap";
 ---
 <section class="geo">
   <div class="geo__inner">
@@ -23,8 +25,8 @@ const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.46%2C20
         <p class="tag">Hành chính 2025</p>
         <h2>Bản đồ xã Hòa Lạc sau sáp nhập</h2>
         <p class="geo__lead">
-          Ngày 01/07/2025, xã Hòa Lạc chính thức vận hành với quy mô 41,11 km² và 30.864 cư dân,
-          đóng vai trò vùng đệm chiến lược dọc Đại Lộ Thăng Long.
+          Một khối hành chính mới rộng 41,11 km² ôm trọn hành lang Đại Lộ Thăng Long, giữ vai trò vùng đệm chiến lược
+          giữa khu Công nghệ cao và các đô thị vệ tinh phía Tây.
         </p>
       </div>
       <div class="geo__badge">
@@ -32,54 +34,61 @@ const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.46%2C20
       </div>
     </header>
 
-    <div class="geo__layout">
-      <article class="geo__card">
-        <div class="geo__stats">
-          {stats.map((item) => (
-            <div>
-              <p class="geo__stat-label">{item.label}</p>
-              <p class="geo__stat-value">{item.value}</p>
-            </div>
-          ))}
+    <div class="geo__map-hero">
+      <iframe
+        src={mapSrc}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        aria-label="Bản đồ xã Hòa Lạc"
+      ></iframe>
+      <div class="geo__map-pillars">
+        <div>
+          <p>Toạ độ trung tâm</p>
+          <strong>21.0119°N • 105.514°E</strong>
         </div>
-        <div class="geo__meta">
-          <div>
-            <p class="geo__meta-label">Nguồn gốc</p>
-            <p class="geo__meta-value">
-              Hợp nhất 6 xã theo Nghị quyết 202/2025/QH15, chính thức hiệu lực từ 01/07/2025.
-            </p>
-          </div>
-          <div>
-            <p class="geo__meta-label">Trụ sở</p>
-            <p class="geo__meta-value">Thôn 1, Thạch Hòa, xã Hòa Lạc</p>
-          </div>
-          <div>
-            <p class="geo__meta-label">Định hướng</p>
-            <p class="geo__meta-value">
-              Vùng đệm phát triển nông nghiệp công nghệ cao, du lịch sinh thái và logistic kết nối CNC.
-            </p>
-          </div>
+        <div>
+          <p>Trụ sở</p>
+          <strong>Thôn 1, Thạch Hòa</strong>
         </div>
-        <div class="geo__list">
-          <p>Thành phần sáp nhập:</p>
+        <div>
+          <p>Portal</p>
+          <strong><a href="https://hoalac.hanoi.gov.vn/" target="_blank" rel="noreferrer">hoalac.hanoi.gov.vn</a></strong>
+        </div>
+      </div>
+      <p class="geo__source">Nguồn dữ liệu: TinhThanhVN 11/2025 · Map layer: OpenStreetMap</p>
+    </div>
+
+    <div class="geo__details">
+      <div class="geo__stats">
+        {stats.map((item) => (
+          <article>
+            <p class="geo__stat-label">{item.label}</p>
+            <p class="geo__stat-value">{item.value}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="geo__admin">
+        <div class="geo__admin-map">
+          <iframe
+            src={adminMapSrc}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            aria-label="Bản đồ hành chính Hòa Lạc"
+          ></iframe>
+        </div>
+        <div class="geo__admin-info">
+          <h3>Bản đồ hành chính</h3>
+          <p>
+            Nghị quyết 202/2025/QH15 hợp nhất 6 xã: {mergedUnits.join(', ')}. Khối mới được quy hoạch cho
+            nông nghiệp công nghệ cao, du lịch sinh thái và logistic hỗ trợ khu CNC.
+          </p>
           <ul>
-            {mergedUnits.map((item) => (
-              <li>{item}</li>
-            ))}
+            <li>Trạng thái: hoạt động từ 01/07/2025</li>
+            <li>Đơn vị quản lý: UBND xã Hòa Lạc</li>
+            <li>Mã định danh: 09988</li>
           </ul>
         </div>
-      </article>
-
-      <div class="geo__map">
-        <iframe
-          src={mapSrc}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          aria-label="Bản đồ xã Hòa Lạc"
-        ></iframe>
-        <p class="geo__source">
-          Dữ liệu: TinhThanhVN (11/2025) • Nền tảng bản đồ: OpenStreetMap
-        </p>
       </div>
     </div>
   </div>
@@ -126,85 +135,115 @@ const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.46%2C20
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-  .geo__layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
+  .geo__map-hero {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+    border-radius: 1.75rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    color: #fff;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
   }
-  .geo__card {
-    background: #fff;
-    border-radius: 1.5rem;
-    padding: 2rem;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  .geo__map-hero iframe {
+    width: 100%;
+    height: clamp(380px, 60vw, 540px);
+    border: 0;
+    border-radius: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .geo__map-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+  .geo__map-pillars div {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+  .geo__map-pillars p {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .geo__map-pillars strong {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 1.1rem;
+  }
+  .geo__map-pillars a {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .geo__source {
+    margin: 0.75rem 0 0;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.75);
+    text-align: right;
+  }
+  .geo__details {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
   .geo__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 1rem;
+  }
+  .geo__stats article {
+    background: #fff;
+    padding: 1.2rem 1.4rem;
+    border-radius: 1rem;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
   }
   .geo__stat-label {
     margin: 0;
-    text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--muted);
   }
   .geo__stat-value {
-    margin: 0.3rem 0 0;
-    font-size: 1.5rem;
+    margin: 0.5rem 0 0;
+    font-size: 1.6rem;
     font-weight: 700;
   }
-  .geo__meta-label {
-    margin: 0;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: rgba(15, 23, 42, 0.8);
+  .geo__admin {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
   }
-  .geo__meta-value {
-    margin: 0.2rem 0 0.8rem;
+  .geo__admin-map iframe {
+    width: 100%;
+    min-height: 260px;
+    border: 0;
+    border-radius: 1.2rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .geo__admin-info {
+    background: #fff;
+    border-radius: 1.2rem;
+    padding: 1.8rem;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  }
+  .geo__admin-info h3 {
+    margin: 0 0 0.6rem;
+  }
+  .geo__admin-info p {
+    margin: 0 0 0.8rem;
     color: var(--text);
   }
-  .geo__list ul {
-    margin: 0.6rem 0 0;
-    padding-left: 1.3rem;
-    columns: 2;
-    column-gap: 1rem;
-  }
-  .geo__list li {
-    margin-bottom: 0.2rem;
-  }
-  .geo__map {
-    background: #0f172a;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    color: #fff;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .geo__map iframe {
-    width: 100%;
-    min-height: 360px;
-    border: 0;
-    border-radius: 1rem;
-  }
-  .geo__source {
+  .geo__admin-info ul {
     margin: 0;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.85);
+    padding-left: 1.2rem;
+    color: var(--muted);
   }
   @media (max-width: 640px) {
     .geo__badge {
       width: 100%;
       text-align: center;
-    }
-    .geo__list ul {
-      columns: 1;
     }
   }
 </style>
