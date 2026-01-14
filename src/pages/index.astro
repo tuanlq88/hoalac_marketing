@@ -1,6 +1,7 @@
 ---
 import Layout from "@components/Layout.astro";
 import Hero from "@components/Hero.astro";
+import GeoHighlight from "@components/GeoHighlight.astro";
 import LeadForm from "@components/LeadForm.astro";
 import ArticleList from "@components/ArticleList.astro";
 import { getCollection } from "astro:content";
@@ -11,6 +12,7 @@ const articles = (await getCollection('articles')).sort((a, b) => (
 ---
 <Layout>
   <Hero />
+  <GeoHighlight />
   <ArticleList articles={articles} />
   <LeadForm />
 </Layout>
