@@ -1,5 +1,6 @@
 ---
 import Layout from "@components/Layout.astro";
+import LeadForm from "@components/LeadForm.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -23,5 +24,20 @@ const { Content } = await article.render();
     <div class="reading-content">
       <Content />
     </div>
+    {article.data.leadFormCTA && (
+      <div class="reading-cta">
+        <LeadForm
+          headline="Kiểm tra nhanh mức phù hợp với Hòa Lạc"
+          description="Điền 5 câu để đội ngũ gợi ý khu vực và mức pháp lý khớp ngân sách của anh/chị trong 24h."
+          deferDisplay={false}
+        />
+      </div>
+    )}
   </article>
 </Layout>
+
+<style>
+  .reading-cta {
+    margin-top: 4rem;
+  }
+</style>

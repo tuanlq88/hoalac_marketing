@@ -7,7 +7,8 @@ const articles = defineCollection({
     excerpt: z.string(),
     publishedAt: z.string(),
     tags: z.array(z.string()).default([]),
-    heroImage: z.string().optional()
+    heroImage: z.string().optional(),
+    leadFormCTA: z.boolean().optional()
   })
 });
 
