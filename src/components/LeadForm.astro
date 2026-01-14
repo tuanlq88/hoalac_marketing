@@ -31,6 +31,14 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
       </div>
       <div class="field">
         <label>Số điện thoại</label>
+        <input
+          type="tel"
+          name="phone"
+          required
+          inputmode="tel"
+          pattern="[0-9\s+()-]{8,15}"
+          placeholder="09xx xxx xxx"
+        />
       </div>
       <div class="field">
         <label>Email (tùy chọn)</label>
