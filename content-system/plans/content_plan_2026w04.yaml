@@ -1,0 +1,88 @@
+items:
+  - slug: lo-trinh-ha-tang-thach-hoa-2026
+    pillar: tong-quan-quy-hoach
+    intent: informational
+    funnel: TOFU
+    goal: educate
+    internal_links:
+      pillar: /pillars/tong-quan-quy-hoach
+      related:
+        - /blog/ban-do-quy-hoach-moi-hoa-lac
+    allowed_cta: tofu
+  - slug: diem-nong-dau-tu-tien-xuan
+    pillar: phan-tich-khu-vuc
+    intent: commercial
+    funnel: MOFU
+    goal: compare
+    internal_links:
+      pillar: /pillars/phan-tich-khu-vuc
+      related:
+        - /blog/so-sanh-binh-yen-vs-thach-hoa
+    allowed_cta: mofu
+  - slug: quy-trinh-kiem-tra-so-do-hoa-lac
+    pillar: phap-ly-va-rui-ro
+    intent: commercial
+    funnel: MOFU-BOFU
+    goal: qualify
+    internal_links:
+      pillar: /pillars/phap-ly-va-rui-ro
+      related:
+        - /blog/checklist-phap-ly-dat-vuon-tho-cu
+    allowed_cta: mofu
+  - slug: hoi-dap-phap-ly-danh-cho-nguoi-moi
+    pillar: phap-ly-va-rui-ro
+    intent: informational
+    funnel: TOFU-MOFU
+    goal: educate
+    internal_links:
+      pillar: /pillars/phap-ly-va-rui-ro
+      related:
+        - /blog/quy-trinh-kiem-tra-so-do-hoa-lac
+    allowed_cta: tofu
+  - slug: bao-cao-nhu-cau-o-that-hoa-lac-2026
+    pillar: tong-quan-quy-hoach
+    intent: informational
+    funnel: TOFU
+    goal: educate
+    internal_links:
+      pillar: /pillars/tong-quan-quy-hoach
+      related:
+        - /blog/bao-cao-gia-hoa-lac-q1-2026
+    allowed_cta: tofu
+  - slug: cac-moc-gia-khu-cong-nghe-cao-mo-rong
+    pillar: gia-va-co-hoi-dau-tu
+    intent: commercial
+    funnel: MOFU
+    goal: compare
+    internal_links:
+      pillar: /pillars/gia-va-co-hoi-dau-tu
+      related:
+        - /blog/du-bao-dong-luc-gia-hoa-lac-2026
+    allowed_cta: mofu
+  - slug: chien-luoc-giu-room-dau-tu-hoa-lac
+    pillar: gia-va-co-hoi-dau-tu
+    intent: transactional
+    funnel: BOFU
+    goal: convert
+    internal_links:
+      pillar: /pillars/gia-va-co-hoi-dau-tu
+      related:
+        - /blog/case-study-chot-lo-hanh-lang-cnc
+    allowed_cta: bofu
+  - slug: case-study-mua-dat-dinh-cu-duong-lang
+    pillar: gia-va-co-hoi-dau-tu
+    intent: transactional
+    funnel: BOFU
+    goal: convert
+    internal_links:
+      pillar: /pillars/gia-va-co-hoi-dau-tu
+      related:
+        - /blog/chien-luoc-giu-room-dau-tu-hoa-lac
+    allowed_cta: bofu
+notes:
+  writer_seo: |
+    - Mở bài bằng số liệu hoặc quy định mới, ghi rõ nguồn.
+    - Frontmatter phải chứa intent/funnel để auto-CTA hoạt động.
+    - Các bài transactional cần section "Bài học & rủi ro" trước CTA.
+    - Internal link ưu tiên anchor mô tả và luôn có link về pillar hub.
+    - Khi đề cập giá, cập nhật dateModified và schema Article.

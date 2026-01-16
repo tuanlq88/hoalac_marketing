@@ -2,37 +2,201 @@
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  articles: CollectionEntry<'articles'>[];
+  posts: CollectionEntry<'posts'>[];
 }
 
-const { articles = [] } = Astro.props;
+const { posts = [] } = Astro.props;
+
+const getTags = (entry: CollectionEntry<'posts'>) =>
+  Array.isArray(entry.data.tags) ? entry.data.tags : [];
+
+const resolveDateLabel = (entry: CollectionEntry<'posts'>) => {
+  const sources = [entry.data.publishedAt, entry.data.updatedAt];
+  for (const source of sources) {
+    if (!source) continue;
+    const parsed = new Date(source);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toLocaleDateString('vi-VN');
+    }
+  }
+  const weekPlan = typeof entry.data.week_plan === 'string' ? entry.data.week_plan : '';
+  const weekMatch = weekPlan.match(/^(\d{4})w(\d{2})$/i);
+  if (weekMatch) {
+    const [, year, week] = weekMatch;
+    return `Tuần ${parseInt(week, 10)} / ${year}`;
+  }
+  return 'Đang cập nhật';
+};
+
+const resolveExcerpt = (entry: CollectionEntry<'posts'>) =>
+  entry.data.excerpt ?? entry.data.description ?? '';
 
 const filterPublicTags = (tags: string[]) => tags.filter((tag) => !tag.startsWith('lead_'));
 const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 const blogHref = `${basePath}/blog`;
 ---
-<section style="margin-top: 3rem;">
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <h2 style="margin: 0;">Snapshot thị trường</h2>
-    <a class="button" href={blogHref} style="background: rgba(27,27,27,0.1); color: var(--text);">Xem tất cả bài</a>
-  </div>
-  <div style="display: grid; gap: 1.5rem; margin-top: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-    {articles.map((article) => {
-      const publicTags = filterPublicTags(article.data.tags);
-      const articleHref = `${basePath}/blog/${article.slug}`;
+<section class="section-shell section-shell--alt" data-article-shelf>
+  <div class="shell-inner">
+    <div class="article-list__head">
+      <div>
+        <h2>Snapshot thị trường</h2>
+        <p data-article-context>Chưa chọn ưu tiên cụ thể.</p>
+      </div>
+      <a class="button button--ghost" href={blogHref}>Xem tất cả bài</a>
+    </div>
+    <div class="article-list__grid">
+    {posts.map((post) => {
+      const rawTags = getTags(post);
+      const publicTags = filterPublicTags(rawTags);
+      const articleHref = `${basePath}/blog/${post.slug}`;
       return (
-        <article style="background: #fff; padding: 1.5rem; border-radius: 1.25rem; box-shadow: 0 15px 45px rgba(0,0,0,0.05);">
+        <article
+          class="article-card"
+          data-article-tags={publicTags.join(',')}
+        >
           {publicTags.length > 0 && <p class="tag">{publicTags.join(' / ')}</p>}
           <h3 style="margin: 0.8rem 0 0.5rem;">
-            <a href={articleHref}>{article.data.title}</a>
+            <a href={articleHref}>{post.data.title}</a>
           </h3>
-          <p style="margin: 0; color: var(--muted);">{article.data.excerpt}</p>
+          <p style="margin: 0; color: var(--muted);">{resolveExcerpt(post)}</p>
+          <p class="article-card__status" style="margin: 0.75rem 0 0; color: var(--accent-dark); display: none;" data-personalized-badge>
+            Khớp với ưu tiên của bạn
+          </p>
           <p style="margin-top: 1rem; font-weight: 600;">
-            {new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}
+            {resolveDateLabel(post)}
           </p>
         </article>
       );
     })}
+    </div>
   </div>
 </section>
+
+<style>
+  .article-list__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .article-list__head p {
+    margin: 0.25rem 0 0;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .article-list__grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .article-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .article-card[data-highlight="true"] {
+    box-shadow: 0 25px 60px rgba(212, 72, 9, 0.18);
+    border: 1px solid rgba(212, 72, 9, 0.35);
+    transform: translateY(-4px);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .article-card[data-highlight="true"] [data-personalized-badge] {
+    display: block;
+  }
+</style>
+
+<script type="module">
+  const shelf = document.querySelector('[data-article-shelf]');
+  if (!shelf) {
+    console.warn('Article shelf not found.');
+  } else {
+    const contextLine = shelf.querySelector('[data-article-context]');
+    const cards = shelf.querySelectorAll('.article-card');
+
+    const intentToKeywords = {
+      o_thuc: ['ở thật', 'an cư', 'pháp lý'],
+      dau_tu_trung_han: ['đầu tư', 'room tài chính', 'lợi nhuận'],
+      luot_song: ['thanh khoản', 'sóng']
+    };
+
+    const areaKeywords = {
+      'ĐHQG': ['ĐHQG', 'Đại học Quốc gia'],
+      'khu CNC': ['CNC', 'công nghệ cao'],
+      'Bình Yên': ['Bình Yên', 'Thạch Hòa'],
+      'Tiến Xuân': ['Tiến Xuân', 'Yên Bình']
+    };
+
+    const highlightArticles = ({ intent, areas }) => {
+      cards.forEach((card) => {
+        card.removeAttribute('data-highlight');
+      });
+
+      if (!intent && (!areas || areas.length === 0)) {
+        if (contextLine) contextLine.textContent = 'Chưa chọn ưu tiên cụ thể.';
+        return;
+      }
+
+      const hasAreas = Array.isArray(areas) && areas.length > 0;
+
+      const keywords = new Set();
+      if (intent && intentToKeywords[intent]) {
+        intentToKeywords[intent].forEach((word) => keywords.add(word));
+      }
+      if (hasAreas) {
+        areas.forEach((areaLabel) => {
+          Object.entries(areaKeywords).forEach(([key, values]) => {
+            if (areaLabel.toLowerCase().includes(key.toLowerCase())) {
+              values.forEach((word) => keywords.add(word));
+            }
+          });
+        });
+      }
+
+      const matched = [];
+      cards.forEach((card) => {
+        const tagString = card.dataset.articleTags ?? '';
+        const tagList = tagString.split(',').map((tag) => tag.trim().toLowerCase());
+        const hasMatch = Array.from(keywords).some((word) =>
+          tagList.some((tag) => tag.includes(word.toLowerCase()))
+        );
+        if (hasMatch) {
+          card.setAttribute('data-highlight', 'true');
+          matched.push(card);
+        }
+      });
+
+      if (contextLine) {
+        if (matched.length > 0) {
+          const intentLabel = intent
+            ? intent === 'o_thuc'
+              ? 'an cư'
+              : intent === 'dau_tu_trung_han'
+                ? 'đầu tư'
+                : 'sóng'
+            : 'khu vực đã chọn';
+          contextLine.textContent = `Đang ưu tiên ${intentLabel}, ${matched.length} bài viết khớp.`;
+        } else {
+          contextLine.textContent = 'Chưa tìm thấy bài nào khớp, xem tất cả bên dưới.';
+        }
+      }
+    };
+
+    let currentIntent = '';
+    let currentAreas = [];
+
+    window.addEventListener('lead-intent-change', (event) => {
+      currentIntent = event?.detail?.intent ?? '';
+      highlightArticles({ intent: currentIntent, areas: currentAreas });
+    });
+
+    window.addEventListener('lead-areas-change', (event) => {
+      currentAreas = event?.detail?.areas ?? [];
+      highlightArticles({ intent: currentIntent, areas: currentAreas });
+    });
+  }
+</script>

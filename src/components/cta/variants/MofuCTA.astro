@@ -1,0 +1,18 @@
+---
+import LeadForm from "@components/LeadForm.astro";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const sectionClass = ['cta-module', className].filter(Boolean).join(' ');
+---
+<section class={sectionClass} data-cta-key="mofu">
+  <LeadForm
+    eyebrow="So sánh khu vực"
+    headline="Nhận shortlist khu vực khớp room tài chính"
+    description="Ghi chú ngân sách, yêu cầu pháp lý để nhận 2-3 phương án cụ thể cùng checklist làm việc với môi giới tại Hòa Lạc."
+    deferDisplay={false}
+  />
+</section>

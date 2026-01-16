@@ -1,28 +1,74 @@
 ---
 import Layout from "@components/Layout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
-const articles = (await getCollection('articles')).sort((a, b) => (
-  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-));
+const parseDateValue = (entry: CollectionEntry<'posts'>) => {
+  const candidates = [entry.data.publishedAt, entry.data.updatedAt];
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const parsed = new Date(candidate);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.getTime();
+    }
+  }
+  const weekPlan = typeof entry.data.week_plan === 'string' ? entry.data.week_plan : '';
+  const weekMatch = weekPlan.match(/^(\d{4})w(\d{2})$/i);
+  if (weekMatch) {
+    const [, year, week] = weekMatch;
+    const dayOfYear = (parseInt(week, 10) - 1) * 7;
+    const base = new Date(Number(year), 0, 1);
+    base.setDate(base.getDate() + dayOfYear);
+    return base.getTime();
+  }
+  return 0;
+};
+
+const resolveDateLabel = (entry: CollectionEntry<'posts'>) => {
+  const sources = [entry.data.publishedAt, entry.data.updatedAt];
+  for (const source of sources) {
+    if (!source) continue;
+    const parsed = new Date(source);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toLocaleDateString('vi-VN');
+    }
+  }
+  const weekPlan = typeof entry.data.week_plan === 'string' ? entry.data.week_plan : '';
+  const weekMatch = weekPlan.match(/^(\d{4})w(\d{2})$/i);
+  if (weekMatch) {
+    const [, year, week] = weekMatch;
+    return `Tuần ${parseInt(week, 10)} / ${year}`;
+  }
+  return 'Đang cập nhật';
+};
+
+const resolveTags = (entry: CollectionEntry<'posts'>) =>
+  Array.isArray(entry.data.tags) ? entry.data.tags : [];
+
+const resolveExcerpt = (entry: CollectionEntry<'posts'>) =>
+  entry.data.excerpt ?? entry.data.description ?? '';
+
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => parseDateValue(b) - parseDateValue(a));
 const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 ---
 <Layout title="Bài viết Hòa Lạc" description="Thư viện bài phân tích thị trường đất Hòa Lạc">
   <section style="max-width: 900px; margin: 3rem auto;">
-    <h1 style="margin-top: 0;">Nhật ký thị trường</h1>
+    <h1 style="margin-top: 0;">Bản tin thị trường Hòa Lạc</h1>
     <p style="color: var(--muted);">
-      Nội dung được build tĩnh, phù hợp triển khai GitHub Pages. Thêm file Markdown mới để mở rộng thư viện.
+      Tổng hợp phân tích thực địa, dữ liệu quy hoạch và báo cáo giao dịch mới nhất dành cho nhà đầu tư và gia đình đang săn đất Hòa Lạc.
     </p>
     <div style="margin-top: 2rem; display: grid; gap: 2rem;">
-      {articles.map((article) => {
-        const articleHref = `${basePath}/blog/${article.slug}`;
+      {posts.map((post) => {
+        const articleHref = `${basePath}/blog/${post.slug}`;
+        const tags = resolveTags(post);
         return (
         <article>
-          <p class="tag">{article.data.tags.join(' / ')}</p>
-          <h2 style="margin: 0.5rem 0;"><a href={articleHref}>{article.data.title}</a></h2>
-          <p style="margin: 0; color: var(--muted);">{article.data.excerpt}</p>
-          <p style="margin-top: 0.5rem; font-weight: 600;">{new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}</p>
+          {tags.length > 0 && <p class="tag">{tags.join(' / ')}</p>}
+          <h2 style="margin: 0.5rem 0;"><a href={articleHref}>{post.data.title}</a></h2>
+          <p style="margin: 0; color: var(--muted);">{resolveExcerpt(post)}</p>
+          <p style="margin-top: 0.5rem; font-weight: 600;">{resolveDateLabel(post)}</p>
         </article>
         );
       })}

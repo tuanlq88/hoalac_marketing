@@ -1,0 +1,189 @@
+---
+import Layout from "@components/Layout.astro";
+import LeadForm from "@components/LeadForm.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const pillars = await getCollection('pillars');
+  return pillars.map((pillar) => ({
+    params: { slug: pillar.slug },
+    props: { pillar }
+  }));
+}
+
+const { pillar } = Astro.props;
+const { Content } = await pillar.render();
+
+const [articles, posts] = await Promise.all([
+  getCollection('articles'),
+  getCollection('posts')
+]);
+
+const relatedTags = pillar.data.relatedTags ?? [];
+const pillarSlug = pillar.slug;
+const baseEnv = import.meta.env.BASE_URL ?? '/';
+const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
+
+const relatedArticles = (relatedTags.length > 0
+  ? articles.filter((article) => article.data.tags.some((tag) => relatedTags.includes(tag)))
+  : articles
+).sort((a, b) => (
+  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+));
+
+const relatedPosts = posts
+  .filter((post) => post.data.pillar === pillarSlug && !post.data.draft)
+  .sort((a, b) => a.data.week_plan.localeCompare(b.data.week_plan))
+  .reverse();
+---
+<Layout title={pillar.data.title} description={pillar.data.excerpt}>
+  <section class="pillar-shell">
+    <header class="pillar-hero">
+      <p class="pillar-eyebrow">Pillar hub · {pillar.data.stageFocus ?? pillar.data.priorityIntents.join(' / ')}</p>
+      <h1>{pillar.data.title}</h1>
+      <p class="pillar-lede">{pillar.data.excerpt}</p>
+      <p class="pillar-meta">Cập nhật: {new Date(pillar.data.updatedAt).toLocaleDateString('vi-VN')}</p>
+    </header>
+    <div class="pillar-grid">
+      <article class="pillar-body">
+        <Content />
+      </article>
+      <aside class="pillar-aside">
+        {relatedArticles.length > 0 && (
+          <div class="pillar-card">
+            <p class="pillar-card-eyebrow">Bài blog liên quan</p>
+            <ul>
+              {relatedArticles.slice(0, 4).map((article) => (
+                <li>
+                  <a href={`${basePath}/blog/${article.slug}`}>{article.data.title}</a>
+                  <span>{new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {relatedPosts.length > 0 && (
+          <div class="pillar-card">
+            <p class="pillar-card-eyebrow">Bài phân tích mới</p>
+            <ul>
+              {relatedPosts.slice(0, 4).map((post) => (
+                <li>
+                  <span class="tag">Week {post.data.week_plan}</span>
+                  <strong>{post.data.title}</strong>
+                  <p>{post.data.primary_goal}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <div class="pillar-card">
+          <p class="pillar-card-eyebrow">Cần tư vấn?</p>
+          <LeadForm
+            headline="Điền 5 câu để đội ngũ phản hồi 24h"
+            description="Checklist cá nhân hóa theo khu vực ưu tiên và tiến độ quy hoạch mới nhất."
+            deferDisplay={false}
+          />
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .pillar-shell {
+    max-width: 1100px;
+    margin: 3rem auto;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .pillar-hero {
+    margin-bottom: 2.5rem;
+  }
+
+  .pillar-eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+
+  .pillar-lede {
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 720px;
+  }
+
+  .pillar-meta {
+    margin-top: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
+    gap: 2.5rem;
+  }
+
+  .pillar-body :global(h2) {
+    margin-top: 2.5rem;
+  }
+
+  .pillar-aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .pillar-card {
+    padding: 1.5rem;
+    border: 1px solid var(--shell-border, rgba(255, 255, 255, 0.08));
+    border-radius: 1.25rem;
+    background: var(--shell-bg, rgba(255, 255, 255, 0.02));
+  }
+
+  .pillar-card-eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .pillar-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pillar-card li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .pillar-card a {
+    color: inherit;
+    font-weight: 600;
+  }
+
+  .pillar-card span {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .pillar-card .tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  @media (max-width: 960px) {
+    .pillar-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

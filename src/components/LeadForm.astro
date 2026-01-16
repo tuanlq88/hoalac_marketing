@@ -3,12 +3,14 @@ interface Props {
   headline?: string;
   description?: string;
   deferDisplay?: boolean;
+  eyebrow?: string;
 }
 
 const {
   headline = "Đánh giá mức phù hợp Hòa Lạc",
   description = "Trả lời 5 câu để đội ngũ gợi ý khu vực, pháp lý và room tài chính khớp với nhu cầu trong 24 giờ.",
   deferDisplay = true,
+  eyebrow = "Lead Qualification",
 } = Astro.props;
 
 const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_classification";
@@ -17,16 +19,16 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 ---
 <section
   id="lead-form"
-  style="background: #0f172a; color: #fff; padding: 3rem; border-radius: 1.5rem; margin-top: 3rem;"
+  class="section-shell section-shell--lead"
   data-lead-shell
   data-defer={deferDisplay}
   data-endpoint={leadEndpoint}
 >
-  <div style="display: grid; gap: 2.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); align-items: center;">
-    <div>
-      <p class="tag" style="background: rgba(255,255,255,0.15); color: #fff;">Lead Qualification</p>
-      <h2 style="margin: 1rem 0 0;">{headline}</h2>
-      <p style="color: rgba(255,255,255,0.8);">{description}</p>
+  <div class="shell-inner lead-shell">
+    <div class="lead-copy">
+      <p class="tag">{eyebrow}</p>
+      <h2>{headline}</h2>
+      <p>{description}</p>
     </div>
     <form class="lead-form" data-lead-form>
       <fieldset class="field">
@@ -162,6 +164,30 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 </section>
 
 <style>
+  .lead-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    align-items: stretch;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .lead-copy {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .lead-copy .tag {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+  .lead-copy h2 {
+    margin: 1rem 0 0;
+  }
+  .lead-copy p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0;
+  }
   .lead-form {
     background: #fff;
     color: var(--text);
@@ -294,6 +320,7 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
   const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
 
   const areaCheckboxes = form?.querySelectorAll('input[name="areas"]') ?? [];
+  const intentInputs = form?.querySelectorAll('input[name="intent"]') ?? [];
 
   const intentWeights = {
     o_thuc: 3,
@@ -384,6 +411,36 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 
   areaCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', handleAreaLimit);
+  });
+
+  const broadcastIntentChange = (intentValue) => {
+    if (typeof window === 'undefined' || !intentValue) return;
+    window.dispatchEvent(new CustomEvent('lead-intent-change', {
+      detail: { intent: intentValue }
+    }));
+  };
+
+  intentInputs.forEach((input) => {
+    input.addEventListener('change', () => broadcastIntentChange(input.value));
+    if (input.checked) {
+      broadcastIntentChange(input.value);
+    }
+  });
+
+  const areaInputs = form?.querySelectorAll('input[name="areas"]') ?? [];
+
+  const broadcastAreasChange = () => {
+    if (typeof window === 'undefined') return;
+    const selected = Array.from(form?.querySelectorAll('input[name="areas"]:checked') ?? [])
+      .map((input) => input.nextElementSibling?.textContent?.trim())
+      .filter(Boolean);
+    window.dispatchEvent(new CustomEvent('lead-areas-change', {
+      detail: { areas: selected }
+    }));
+  };
+
+  areaInputs.forEach((input) => {
+    input.addEventListener('change', broadcastAreasChange);
   });
 
   setCustomMessages();

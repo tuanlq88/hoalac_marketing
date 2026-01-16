@@ -1,0 +1,116 @@
+---
+const {
+  advisor = {
+    name: "Lê Quốc Tuấn",
+    title: "Lead Advisor • Hòa Lạc",
+    availability: "Online 9h00 - 21h00",
+    avatar: "https://placehold.co/96x96",
+    quote:
+      "Anh/chị mô tả nhu cầu càng cụ thể, em càng dễ shortlist sản phẩm đủ pháp lý và thanh khoản nhanh.",
+    highlight:
+      "Chuyên sâu các khu vực: ĐHQG, CNC, cụm Bình Yên - Thạch Hòa. Đã chốt 38 giao dịch trong 12 tháng." ,
+    zalo: "https://zalo.me/",
+    telegram: "https://t.me/"
+  }
+} = Astro.props;
+---
+<section class="section-shell section-shell--dark advisor">
+  <div class="shell-inner advisor__inner">
+    <div class="advisor__profile">
+      <img src={advisor.avatar} alt={`Advisor ${advisor.name}`} loading="lazy" width="96" height="96" />
+      <div>
+        <p class="tag" style="background: rgba(255,255,255,0.2); color: #fff;">Advisor on demand</p>
+        <h2>{advisor.name}</h2>
+        <p class="advisor__meta">{advisor.title} · {advisor.availability}</p>
+      </div>
+    </div>
+    <blockquote>
+      <p>{advisor.quote}</p>
+      <footer>{advisor.highlight}</footer>
+    </blockquote>
+    <div class="advisor__cta">
+      <a class="button" href="#lead-form">Tùy chỉnh shortlist trong 24h</a>
+      <div class="advisor__quick">
+        <p>Hoặc chat nhanh:</p>
+        <div class="advisor__quick-links">
+          <a href={advisor.zalo} target="_blank" rel="noreferrer">Zalo</a>
+          <a href={advisor.telegram} target="_blank" rel="noreferrer">Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .advisor__inner {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .advisor__profile {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .advisor__profile img {
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+  }
+  .advisor__profile h2 {
+    margin: 0.2rem 0 0.15rem;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+  }
+  .advisor__meta {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+  }
+  blockquote {
+    margin: 0;
+    padding: 1.5rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 1.15rem;
+    line-height: 1.6;
+  }
+  blockquote footer {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .advisor__cta {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    align-items: center;
+  }
+  .advisor__quick {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 1rem 1.2rem;
+  }
+  .advisor__quick p {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+  }
+  .advisor__quick-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .advisor__quick-links a {
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    font-weight: 600;
+  }
+  @media (max-width: 640px) {
+    .advisor__profile {
+      flex-direction: column;
+      text-align: center;
+    }
+    .advisor__profile img {
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>

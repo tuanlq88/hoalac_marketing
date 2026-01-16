@@ -1,37 +1,69 @@
 ---
 import Layout from "@components/Layout.astro";
-import LeadForm from "@components/LeadForm.astro";
-import { getCollection } from "astro:content";
+import CTAEngine from "@components/cta/CTAEngine.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const articles = await getCollection('articles');
-  return articles.map((article) => ({
-    params: { slug: article.slug },
-    props: { article }
-  }));
+  const posts = await getCollection('posts');
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post }
+    }));
 }
 
-const { article } = Astro.props;
-const { Content } = await article.render();
+const resolveDateLabel = (entry: CollectionEntry<'posts'>) => {
+  const sources = [entry.data.publishedAt, entry.data.updatedAt];
+  for (const source of sources) {
+    if (!source) continue;
+    const parsed = new Date(source);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.toLocaleDateString('vi-VN');
+    }
+  }
+  const weekPlan = typeof entry.data.week_plan === 'string' ? entry.data.week_plan : '';
+  const weekMatch = weekPlan.match(/^(\d{4})w(\d{2})$/i);
+  if (weekMatch) {
+    const [, year, week] = weekMatch;
+    return `Tuần ${parseInt(week, 10)} / ${year}`;
+  }
+  return 'Đang cập nhật';
+};
+
+const resolveTags = (entry: CollectionEntry<'posts'>) =>
+  Array.isArray(entry.data.tags) ? entry.data.tags : [];
+
+const resolveExcerpt = (entry: CollectionEntry<'posts'>) =>
+  entry.data.excerpt ?? entry.data.description ?? '';
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const allowedCTA = post.data.allowed_cta ?? null;
+const intent = post.data.search_intent ?? null;
+const funnelStage = post.data.funnel_stage ?? null;
+const shouldRenderCTA = Boolean(intent && funnelStage && allowedCTA);
+const tags = resolveTags(post);
+const dateLabel = resolveDateLabel(post);
+const excerpt = resolveExcerpt(post);
 ---
-<Layout title={article.data.title} description={article.data.excerpt}>
+<Layout title={post.data.title} description={excerpt}>
   <article class="reading-shell">
     <div class="reading-meta">
-      <p class="tag">{article.data.tags.join(' / ')}</p>
-      <p>{new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}</p>
+      {tags.length > 0 && <p class="tag">{tags.join(' / ')}</p>}
+      <p>{dateLabel}</p>
     </div>
-    <h1 class="reading-title">{article.data.title}</h1>
+    <h1 class="reading-title">{post.data.title}</h1>
     <div class="reading-content">
       <Content />
     </div>
-    {article.data.leadFormCTA && (
-      <div class="reading-cta">
-        <LeadForm
-          headline="Kiểm tra nhanh mức phù hợp với Hòa Lạc"
-          description="Điền 5 câu để đội ngũ gợi ý khu vực và mức pháp lý khớp ngân sách của anh/chị trong 24h."
-          deferDisplay={false}
-        />
-      </div>
+    {shouldRenderCTA && (
+      <CTAEngine
+        class="reading-cta"
+        intent={intent}
+        funnel={funnelStage}
+        allowedCta={allowedCTA}
+      />
     )}
   </article>
 </Layout>

@@ -1,0 +1,26 @@
+---
+import { resolveCTA } from "@lib/cta";
+import type { CTAKey } from "@lib/cta";
+import TofuCTA from "./variants/TofuCTA.astro";
+import MofuCTA from "./variants/MofuCTA.astro";
+import BofuCTA from "./variants/BofuCTA.astro";
+
+interface Props {
+  intent?: string | null;
+  funnel?: string | null;
+  allowedCta?: string | null;
+  class?: string;
+}
+
+const { intent = null, funnel = null, allowedCta = null, class: className } = Astro.props;
+
+const variantKey = resolveCTA({ intent, funnel, allowedCta });
+const components = {
+  tofu: TofuCTA,
+  mofu: MofuCTA,
+  bofu: BofuCTA
+} as const satisfies Record<CTAKey, unknown>;
+
+const VariantComponent = variantKey ? components[variantKey] : null;
+---
+{VariantComponent && <VariantComponent class={className} />}

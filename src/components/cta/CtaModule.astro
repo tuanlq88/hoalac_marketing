@@ -1,0 +1,31 @@
+---
+import LeadForm from "@components/LeadForm.astro";
+import type { CTAKey } from "@lib/cta";
+import { getCtaConfig } from "@lib/cta";
+
+interface Props {
+  allowedCta?: string | null;
+  fallback?: CTAKey;
+  class?: string;
+}
+
+const { allowedCta = null, fallback, class: className } = Astro.props;
+const config = getCtaConfig({ allowedCta, fallback });
+const sectionClass = ['cta-module', className].filter(Boolean).join(' ');
+---
+{config && (
+  <section class={sectionClass} data-cta-key={config.key}>
+    <LeadForm
+      eyebrow={config.badge}
+      headline={config.headline}
+      description={config.description}
+      deferDisplay={config.deferDisplay}
+    />
+  </section>
+)}
+
+<style>
+  .cta-module {
+    width: 100%;
+  }
+</style>

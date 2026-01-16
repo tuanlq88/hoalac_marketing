@@ -1,0 +1,82 @@
+---
+import Layout from "@components/Layout.astro";
+import { getCollection } from "astro:content";
+
+const pillars = await getCollection('pillars');
+const baseEnv = import.meta.env.BASE_URL ?? '/';
+const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
+const sorted = pillars.sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+<Layout title="Pillars Hòa Lạc" description="Các hub kiến thức giúp anh/chị nắm tổng thể quy hoạch và hành động theo từng mục tiêu.">
+  <section class="pillar-index">
+    <header>
+      <p class="pillar-eyebrow">System</p>
+      <h1>Pillar Hub</h1>
+      <p>Những trang tổng hợp này đóng vai trò "điểm chuẩn" để kiểm tra timeline, danh mục hạ tầng và checklist pháp lý trước khi đi sâu vào từng khu vực.</p>
+    </header>
+    <div class="pillar-grid">
+      {sorted.map((pillar) => (
+        <article class="pillar-card">
+          <p class="pillar-card-eyebrow">{pillar.data.stageFocus ?? 'Hub'}</p>
+          <h2><a href={`${basePath}/pillars/${pillar.slug}`}>{pillar.data.title}</a></h2>
+          <p>{pillar.data.excerpt}</p>
+          <p class="pillar-updated">Cập nhật {new Date(pillar.data.updatedAt).toLocaleDateString('vi-VN')}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .pillar-index {
+    max-width: 1100px;
+    margin: 3rem auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  .pillar-index > header {
+    max-width: 720px;
+    margin-bottom: 2.5rem;
+  }
+
+  .pillar-eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .pillar-card {
+    padding: 1.75rem;
+    border-radius: 1.25rem;
+    border: 1px solid var(--shell-border, rgba(255, 255, 255, 0.08));
+    background: var(--shell-bg, rgba(255, 255, 255, 0.02));
+  }
+
+  .pillar-card h2 {
+    margin: 0.5rem 0;
+  }
+
+  .pillar-card a {
+    color: inherit;
+  }
+
+  .pillar-card-eyebrow {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .pillar-updated {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+</style>

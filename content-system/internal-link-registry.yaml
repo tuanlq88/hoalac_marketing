@@ -1,0 +1,25 @@
+pillars:
+  tong-quan-quy-hoach:
+    slug: /pillars/tong-quan-quy-hoach
+    level: TOFU
+    supports:
+      - ban-do-quy-hoach-moi-hoa-lac
+      - lo-trinh-ha-tang-thach-hoa-2026
+  phan-tich-khu-vuc:
+    slug: /pillars/phan-tich-khu-vuc
+    level: MOFU
+    supports:
+      - diem-nong-dau-tu-tien-xuan
+
+handoff_rules:
+  TOFU:
+    can_link_to: [TOFU, MOFU]
+    forbidden: [BOFU]
+
+  MOFU:
+    can_link_to: [TOFU, MOFU, BOFU]
+
+  BOFU:
+    can_link_to: []
+
+violations: []

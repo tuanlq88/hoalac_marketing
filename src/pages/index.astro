@@ -4,15 +4,39 @@ import Hero from "@components/Hero.astro";
 import GeoHighlight from "@components/GeoHighlight.astro";
 import LeadForm from "@components/LeadForm.astro";
 import ArticleList from "@components/ArticleList.astro";
-import { getCollection } from "astro:content";
+import AdvisorCTA from "@components/AdvisorCTA.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
 
-const articles = (await getCollection('articles')).sort((a, b) => (
-  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-)).slice(0, 3);
+const parseDateValue = (entry: CollectionEntry<'posts'>) => {
+  const candidates = [entry.data.publishedAt, entry.data.updatedAt];
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const parsed = new Date(candidate);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.getTime();
+    }
+  }
+  const weekPlan = typeof entry.data.week_plan === 'string' ? entry.data.week_plan : '';
+  const weekMatch = weekPlan.match(/^(\d{4})w(\d{2})$/i);
+  if (weekMatch) {
+    const [, year, week] = weekMatch;
+    const dayOfYear = (parseInt(week, 10) - 1) * 7;
+    const base = new Date(Number(year), 0, 1);
+    base.setDate(base.getDate() + dayOfYear);
+    return base.getTime();
+  }
+  return 0;
+};
+
+const posts = (await getCollection('posts'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => parseDateValue(b) - parseDateValue(a))
+  .slice(0, 3);
 ---
 <Layout>
   <Hero />
   <GeoHighlight />
-  <ArticleList articles={articles} />
+  <ArticleList posts={posts} />
+  <AdvisorCTA />
   <LeadForm />
 </Layout>
