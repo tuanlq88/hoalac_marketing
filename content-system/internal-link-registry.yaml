@@ -10,6 +10,15 @@ pillars:
     level: MOFU
     supports:
       - diem-nong-dau-tu-tien-xuan
+  phap-ly-va-rui-ro:
+    slug: /pillars/phap-ly-va-rui-ro
+    level: MIXED
+    supports:
+      - quy-trinh-kiem-tra-so-do-hoa-lac
+  gia-va-co-hoi-dau-tu:
+    slug: /pillars/gia-va-co-hoi-dau-tu
+    level: MISSING
+    supports: []
 
 handoff_rules:
   TOFU:
@@ -22,4 +31,8 @@ handoff_rules:
   BOFU:
     can_link_to: []
 
-violations: []
+violations:
+  - post: diem-nong-dau-tu-tien-xuan
+    issue: "MOFU post lacks BOFU handoff because no BOFU asset exists yet."
+  - post: quy-trinh-kiem-tra-so-do-hoa-lac
+    issue: "MOFU-BOFU post is missing required BOFU internal link; repository has no BOFU destination."

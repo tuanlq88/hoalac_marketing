@@ -94,6 +94,13 @@
         shell.classList.remove('is-modal-open');
         overlay?.setAttribute('aria-hidden', 'true');
         setBodyScrollLock(false);
+        form.reset();
+        if (leadTagInput) {
+          leadTagInput.value = fallbackLeadTag;
+        }
+        if (status) {
+          status.textContent = '';
+        }
         shell.classList.remove('is-expanded');
         if (deferDisplay && showFloatingCta) {
           shell.classList.add('is-collapsed');
@@ -134,6 +141,20 @@
 
       updateModalPreference();
 
+      const revealLeadCapture = () => {
+        if (shouldUseModal()) {
+          openModal();
+          return;
+        }
+        shell.classList.add('is-expanded');
+        shell.classList.remove('is-collapsed');
+        shell.classList.remove('cta-visible');
+        floatingCta?.setAttribute('aria-hidden', 'true');
+        const firstField = form.querySelector('input, select, textarea');
+        firstField?.focus();
+        form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
       closeControls.forEach((control) => {
         control.addEventListener('click', closeModal);
       });
@@ -173,24 +194,28 @@
         window.addEventListener('scroll', onScroll, { passive: true });
         setTimeout(showCta, 8000);
 
-        const revealLeadCapture = () => {
-          if (shouldUseModal()) {
-            openModal();
-            return;
-          }
-          shell.classList.add('is-expanded');
-          shell.classList.remove('is-collapsed');
-          shell.classList.remove('cta-visible');
-          floatingCta?.setAttribute('aria-hidden', 'true');
-          const firstField = form.querySelector('input, select, textarea');
-          firstField?.focus();
-          form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        };
-
         floatingCta.addEventListener('click', revealLeadCapture);
       }
 
       handleScrollReveal();
+
+      function attachAnchorReveal() {
+        if (!shell.id) return;
+        const inlineAnchors = Array.from(document.querySelectorAll(`a[href="#${shell.id}"]`));
+        if (inlineAnchors.length === 0) return;
+
+        inlineAnchors.forEach((anchor) => {
+          anchor.addEventListener('click', (event) => {
+            if (!shell.classList.contains('is-collapsed')) return;
+            if (!deferDisplay || !showFloatingCta) return;
+            if (shouldUseModal()) return;
+            event.preventDefault();
+            revealLeadCapture();
+          });
+        });
+      }
+
+      attachAnchorReveal();
 
       if (isGlobalFallback) {
         const portalQueueKey = '__hoaLacLeadPortalQueue__';
@@ -217,7 +242,19 @@
       }
 
       form.addEventListener('submit', (event) => {
-        submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag });
+        submitLead({
+          event,
+          form,
+          status,
+          endpoint,
+          leadTagInput,
+          fallbackLeadTag,
+          onSuccess: () => {
+            if (shell.classList.contains('is-modal-open')) {
+              setTimeout(() => closeModal(), 2000);
+            }
+          }
+        });
       });
     }
 
@@ -308,7 +345,7 @@
       return 'lead_cold';
     }
 
-    async function submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag }) {
+    async function submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag, onSuccess }) {
       event.preventDefault();
       if (!form || !status) return;
       if (!form.reportValidity()) {
@@ -382,6 +419,9 @@
           }
           status.textContent = payloadMessage;
           form.reset();
+          if (typeof onSuccess === 'function') {
+            onSuccess();
+          }
           return;
         }
 
@@ -390,6 +430,9 @@
         console.error(error);
         if (error instanceof TypeError) {
           status.textContent = 'Đã nhận thông tin!';
+          if (typeof onSuccess === 'function') {
+            onSuccess();
+          }
           form.reset();
         } else {
           status.textContent = 'Không gửi được, vui lòng thử lại.';
