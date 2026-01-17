@@ -1,4 +1,10 @@
 ---
+strategy_override:
+  allow_no_bofu: true
+  mode: educate_only
+  reason: "Giai đoạn này chỉ phân tích & so sánh, chưa kích hoạt chuyển đổi"
+  review_after: "2026-03-01"
+  
 title: "Quy trình kiểm tra sổ đỏ Hòa Lạc: 6 bước xác nhận pháp lý trước khi đặt cọc"
 description: "Quy trình 6 bước để kiểm tra sổ đỏ, nguồn gốc và rủi ro quy hoạch tại Hòa Lạc trước khi xuống tiền trong giai đoạn 2026."
 slug: "quy-trinh-kiem-tra-so-do-hoa-lac"
