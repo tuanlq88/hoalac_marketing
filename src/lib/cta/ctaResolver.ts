@@ -1,3 +1,10 @@
+
+/**
+ * CTA Resolver
+ * - Does NOT decide strategy
+ * - Uses CTA_RULES as single source of truth
+ * - Enforces allowedCta as hard upper bound
+ */
 import { CTA_RULES } from './ctaRules';
 import type {
   CTAKey,

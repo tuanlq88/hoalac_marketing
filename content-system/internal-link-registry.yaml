@@ -11,17 +11,24 @@ pillars:
     level: MOFU
     supports:
       - diem-nong-dau-tu-tien-xuan
+      - khu-cong-nghe-cao-hoa-lac
+      - so-sanh-binh-yen-vs-thach-hoa
   phap-ly-va-rui-ro:
     slug: /pillars/phap-ly-va-rui-ro
     level: MIXED
     supports:
+      - checklist-phap-ly-dat-vuon-tho-cu
       - hoi-dap-phap-ly-danh-cho-nguoi-moi
       - quy-trinh-kiem-tra-so-do-hoa-lac
   gia-va-co-hoi-dau-tu:
     slug: /pillars/gia-va-co-hoi-dau-tu
-    level: MOFU
+    level: MIXED
     supports:
+      - bao-cao-gia-hoa-lac-q1-2026
       - cac-moc-gia-khu-cong-nghe-cao-mo-rong
+      - chien-luoc-giu-room-dau-tu-hoa-lac
+      - case-study-mua-dat-dinh-cu-duong-lang
+      - du-bao-dong-luc-gia-hoa-lac-2026
 
 handoff_rules:
   TOFU:

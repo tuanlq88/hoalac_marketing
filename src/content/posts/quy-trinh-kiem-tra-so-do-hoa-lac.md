@@ -15,7 +15,8 @@ primary_goal: "qualify"
 week_plan: "2026w04"
 draft: false
 allowed_cta: "mofu"
-updatedAt: "2026-01-17"
+updatedAt: "2026-01-19"
+dateModified: "2026-01-19"
 ---
 
 Nhà đầu tư và người mua để ở tại Hòa Lạc thường cảm thấy thiếu tự tin trước khi đặt cọc vì hồ sơ địa chính phức tạp, lịch sử chuyển đổi mục đích đa tầng và tốc độ điều chỉnh quy hoạch diễn ra liên tục. Báo cáo của Phòng Tài nguyên & Môi trường huyện Thạch Thất (12/2025) cho biết 17% hồ sơ chuyển nhượng bị trả lại do sai thông tin thửa đất hoặc vướng tranh chấp tài sản gắn liền. Bài viết này tổng hợp một quy trình kiểm tra sổ đỏ gồm 6 bước, giúp người mua tự đối chiếu với thực tế và nhận diện rủi ro ngay từ giai đoạn thương lượng.
@@ -93,6 +94,8 @@ Khi năm bước trên đã rõ ràng, người mua mới tiến hành đặt c�
 
 Việc chuẩn bị kỹ giúp người mua thương lượng mức đặt cọc hợp lý, tránh bị ép tiến độ khi vẫn còn điểm chưa rõ.
 
+Ngay sau bước này, hãy tham khảo bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để duy trì hạn mức tín dụng và pháp lý trong suốt giai đoạn BOFU.
+
 ## 9. Ví dụ thực tế: Thửa đất 250 m² tại Tiến Xuân giáp Hòa Lạc
 
 Một nhà đầu tư cá nhân tìm mua đất xây homestay ở Tiến Xuân cuối 2025. Thửa đất 250 m² có sổ đỏ đất trồng cây lâu năm, nằm trong khu vực sẽ chuyển thành đất ở nông thôn sau 2026. Áp dụng quy trình trên, nhóm tư vấn phát hiện:
@@ -143,7 +146,7 @@ Việc ghi chép chi tiết từng lần làm việc với cơ quan nhà nước
 	"headline": "Quy trình kiểm tra sổ đỏ Hòa Lạc: 6 bước xác nhận pháp lý trước khi đặt cọc",
 	"description": "Quy trình 6 bước để kiểm tra sổ đỏ, nguồn gốc và rủi ro quy hoạch tại Hòa Lạc trước khi xuống tiền trong giai đoạn 2026.",
 	"datePublished": "2026-01-17",
-	"dateModified": "2026-01-17",
+	"dateModified": "2026-01-19",
 	"author": {
 		"@type": "Organization",
 		"name": "Hòa Lạc Marketing"
@@ -154,5 +157,3 @@ Việc ghi chép chi tiết từng lần làm việc với cơ quan nhà nước
 	}
 }
 </script>
-
-<!-- SEO-TECH: No BOFU article published yet for required funnel handoff link. -->

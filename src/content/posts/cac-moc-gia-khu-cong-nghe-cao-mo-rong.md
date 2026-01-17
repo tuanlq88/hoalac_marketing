@@ -1,4 +1,9 @@
 ---
+strategy_override:
+  allow_no_bofu: true
+  mode: educate_only
+  reason: "Giai đoạn này chỉ phân tích & so sánh, chưa kích hoạt chuyển đổi"
+  review_after: "2026-03-01"
 title: "Các mốc giá khu Công nghệ cao mở rộng: cập nhật 2026"
 slug: "cac-moc-gia-khu-cong-nghe-cao-mo-rong"
 pillar: "gia-va-co-hoi-dau-tu"
