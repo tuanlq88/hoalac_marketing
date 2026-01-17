@@ -4,6 +4,7 @@ pillars:
     level: TOFU
     supports:
       - ban-do-quy-hoach-moi-hoa-lac
+      - bao-cao-nhu-cau-o-that-hoa-lac-2026
       - lo-trinh-ha-tang-thach-hoa-2026
   phan-tich-khu-vuc:
     slug: /pillars/phan-tich-khu-vuc
@@ -14,11 +15,13 @@ pillars:
     slug: /pillars/phap-ly-va-rui-ro
     level: MIXED
     supports:
+      - hoi-dap-phap-ly-danh-cho-nguoi-moi
       - quy-trinh-kiem-tra-so-do-hoa-lac
   gia-va-co-hoi-dau-tu:
     slug: /pillars/gia-va-co-hoi-dau-tu
-    level: MISSING
-    supports: []
+    level: MOFU
+    supports:
+      - cac-moc-gia-khu-cong-nghe-cao-mo-rong
 
 handoff_rules:
   TOFU:
@@ -31,8 +34,4 @@ handoff_rules:
   BOFU:
     can_link_to: []
 
-violations:
-  - post: diem-nong-dau-tu-tien-xuan
-    issue: "MOFU post lacks BOFU handoff because no BOFU asset exists yet."
-  - post: quy-trinh-kiem-tra-so-do-hoa-lac
-    issue: "MOFU-BOFU post is missing required BOFU internal link; repository has no BOFU destination."
+violations: []
