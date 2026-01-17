@@ -36,7 +36,7 @@ const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 const blogHref = `${basePath}/blog`;
 ---
-<section class="section-shell section-shell--alt" data-article-shelf>
+<section class="section-shell section-shell--alt article-list" data-article-shelf>
   <div class="shell-inner">
     <div class="article-list__head">
       <div>
@@ -107,6 +107,22 @@ const blogHref = `${basePath}/blog`;
   }
   .article-card[data-highlight="true"] [data-personalized-badge] {
     display: block;
+  }
+  @media (max-width: 768px) {
+    .article-list {
+      padding-left: clamp(1.5rem, 6vw, 2.5rem);
+      padding-right: clamp(1.5rem, 6vw, 2.5rem);
+      margin-left: clamp(0.75rem, 4vw, 1.5rem);
+      margin-right: clamp(0.75rem, 4vw, 1.5rem);
+    }
+  }
+  @media (max-width: 480px) {
+    .article-list {
+      margin-left: 0.65rem;
+      margin-right: 0.65rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
   }
 </style>
 

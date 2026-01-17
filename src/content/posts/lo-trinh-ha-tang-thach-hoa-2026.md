@@ -77,7 +77,7 @@ Nếu cần xem một ví dụ MOFU về cách lựa chọn cụm đầu tư gi�
 
 Lộ trình hạ tầng Thạch Hòa 2026 là cơ hội cho những ai ưu tiên ở thật hoặc đầu tư trung hạn. Tuy nhiên, kỳ vọng cần bám vào tiến độ thực tế chứ không nên chạy theo tin đồn “mở đường là giá tăng gấp đôi”. Việc chuẩn bị hồ sơ pháp lý kỹ lưỡng, cập nhật thông tin trực tiếp từ chính quyền và giữ kỷ luật tài chính sẽ giúp anh/chị đi trước nhưng không phải gánh rủi ro quá lớn.
 
-Để hiểu sâu hơn toàn cảnh quy hoạch, hãy xem lại hub [`Tổng quan & Quy hoạch`](/pillars/tong-quan-quy-hoach). Khi cần lọc khu vực hoặc sản phẩm cụ thể, anh/chị có thể ghi chú nhu cầu và làm việc với đội ngũ tư vấn theo đúng quy trình của website.
+Để hiểu sâu hơn toàn cảnh quy hoạch, hãy xem lại [`Tổng quan & Quy hoạch`](/pillars/tong-quan-quy-hoach). Khi cần lọc khu vực hoặc sản phẩm cụ thể, anh/chị có thể ghi chú nhu cầu và làm việc với đội ngũ tư vấn theo đúng quy trình của website.
 
 <script type="application/ld+json">
 {

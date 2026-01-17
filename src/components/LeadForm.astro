@@ -4,6 +4,9 @@ interface Props {
   description?: string;
   deferDisplay?: boolean;
   eyebrow?: string;
+  formId?: string;
+  showFloatingCta?: boolean;
+  isGlobalFallback?: boolean;
 }
 
 const {
@@ -11,195 +14,231 @@ const {
   description = "Trả lời 5 câu để đội ngũ gợi ý khu vực, pháp lý và room tài chính khớp với nhu cầu trong 24 giờ.",
   deferDisplay = true,
   eyebrow = "Lead Qualification",
+  formId = "lead-form",
+  showFloatingCta = true,
+  isGlobalFallback = false,
 } = Astro.props;
 
 const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_classification";
 const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
----
+
+const intentOptions = [
+  { value: "o_thuc", label: "Ở thật" },
+  { value: "dau_tu_trung_han", label: "Đầu tư trung hạn" },
+  { value: "luot_song", label: "Lướt sóng" }
+];
+
+const budgetOptions = [
+  { value: "<1.5", label: "< 1,5 tỷ" },
+  { value: "1.5-2.5", label: "1,5 – 2,5 tỷ" },
+  { value: "2.5-3.5", label: "2,5 – 3,5 tỷ" },
+  { value: ">3.5", label: "> 3,5 tỷ" }
+];
+
+const areaOptions = [
+  { value: "gan_dhqg", label: "Gần ĐHQG" },
+  { value: "gan_cnc", label: "Gần khu CNC" },
+  { value: "binh_yen_thach_hoa", label: "Bình Yên – Thạch Hòa" },
+  { value: "tien_xuan_yen_binh", label: "Tiến Xuân – Yên Bình" },
+  { value: "hoa_lac_trung_tam", label: "Trung tâm Hòa Lạc" },
+  { value: "khu_tay_bac", label: "Cụm Tây Bắc" }
+];
+
+const legalOptions = [
+  {
+    value: "so_do_san",
+    label: "Chỉ sổ đỏ",
+    hint: "Nhận đất ở ngay, pháp lý chuẩn"
+  },
+  {
+    value: "cho_len_tho_cu",
+    label: "Chờ lên thổ cư",
+    hint: "Chấp nhận 6–12 tháng làm thủ tục"
+  },
+  {
+    value: "co_the_rui_ro",
+    label: "Có thể rủi ro",
+    hint: "Chấp nhận đất vườn, quy hoạch chờ"
+  }
+];
 ---
 <section
-  id="lead-form"
-  class="section-shell section-shell--lead"
+  id={formId}
+  class:list={["section-shell", "section-shell--lead", isGlobalFallback && "lead-shell--portal"]}
   data-lead-shell
-  data-defer={deferDisplay}
+  data-defer={String(deferDisplay)}
   data-endpoint={leadEndpoint}
+  data-global={String(isGlobalFallback)}
+  data-force-modal={String(isGlobalFallback)}
+  data-floating-enabled={String(showFloatingCta)}
 >
+  <div class="lead-modal-overlay" data-lead-overlay aria-hidden="true"></div>
   <div class="shell-inner lead-shell">
-    <div class="lead-copy">
-      <p class="tag">{eyebrow}</p>
-      <h2>{headline}</h2>
-      <p>{description}</p>
-    </div>
-    <form class="lead-form" data-lead-form>
-      <fieldset class="field">
-        <legend>Anh/chị quan tâm đất Hòa Lạc để:</legend>
-        <div class="option-grid">
-          <label class="option">
-            <input type="radio" name="intent" value="o_thuc" required />
-            <div class="option-text">
-              <span>Ở thật</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="intent" value="dau_tu_trung_han" required />
-            <div class="option-text">
-              <span>Đầu tư trung hạn</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="intent" value="luot_song" required />
-            <div class="option-text">
-              <span>Lướt sóng</span>
-            </div>
-          </label>
-        </div>
-      </fieldset>
-      <fieldset class="field">
-        <legend>Tầm tài chính:</legend>
-        <div class="option-grid">
-          <label class="option">
-            <input type="radio" name="budgetRange" value="&lt;1.5" required />
-            <div class="option-text">
-              <span>&lt; 1,5 tỷ</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="budgetRange" value="1.5-2.5" required />
-            <div class="option-text">
-              <span>1,5 – 2,5 tỷ</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="budgetRange" value="2.5-3.5" required />
-            <div class="option-text">
-              <span>2,5 – 3,5 tỷ</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="budgetRange" value="&gt;3.5" required />
-            <div class="option-text">
-              <span>&gt; 3,5 tỷ</span>
-            </div>
-          </label>
-        </div>
-      </fieldset>
-      <fieldset class="field">
-        <legend>Khu vực anh/chị ưu tiên:</legend>
-        <p class="hint">Chọn tối đa 2 khu vực (nếu cần).</p>
-        <div class="option-grid" data-required-group="areas">
-          <label class="option">
-            <input type="checkbox" name="areas" value="gan_dhqg" />
-            <div class="option-text">
-              <span>Gần ĐHQG</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="checkbox" name="areas" value="gan_cnc" />
-            <div class="option-text">
-              <span>Gần khu CNC</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="checkbox" name="areas" value="binh_yen_thach_hoa" />
-            <div class="option-text">
-              <span>Bình Yên – Thạch Hòa</span>
-            </div>
-          </label>
-          <label class="option">
-            <input type="checkbox" name="areas" value="tien_xuan_yen_binh" />
-            <div class="option-text">
-              <span>Tiến Xuân – Yên Bình</span>
-            </div>
-          </label>
-        </div>
-      </fieldset>
-      <fieldset class="field">
-        <legend>Mức chấp nhận pháp lý:</legend>
-        <div class="option-grid">
-          <label class="option">
-            <input type="radio" name="legalRisk" value="so_do_san" required />
-            <div class="option-text">
-              <span>Chỉ sổ đỏ</span>
-              <small>Nhận đất ở ngay, pháp lý chuẩn</small>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="legalRisk" value="cho_len_tho_cu" required />
-            <div class="option-text">
-              <span>Chờ lên thổ cư</span>
-              <small>Chấp nhận 6–12 tháng làm thủ tục</small>
-            </div>
-          </label>
-          <label class="option">
-            <input type="radio" name="legalRisk" value="co_the_rui_ro" required />
-            <div class="option-text">
-              <span>Có thể rủi ro</span>
-              <small>Chấp nhận đất vườn, quy hoạch chờ</small>
-            </div>
-          </label>
-        </div>
-      </fieldset>
-      <div class="field">
-        <label>Để lại Zalo / SĐT</label>
-        <input
-          type="tel"
-          name="contact"
-          required
-          inputmode="tel"
-          pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
-          placeholder="Zalo hoặc số điện thoại"
-        />
+    <div class="lead-card">
+      <div class="lead-copy">
+        <p class="tag">{eyebrow}</p>
+        <h2>{headline}</h2>
+        <p>{description}</p>
       </div>
-      <input type="hidden" name="source" value="hoa-lac-landing" />
-      <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
-      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
-      <button class="button" type="submit">Gửi yêu cầu</button>
-      <p class="status" data-status></p>
-    </form>
+      <form class="lead-form" data-lead-form novalidate>
+        <button class="lead-form__close" type="button" data-lead-close aria-label="Đóng form">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          </svg>
+        </button>
+        <fieldset class="field">
+          <legend>Anh/chị quan tâm đất Hòa Lạc để:</legend>
+          <div class="option-grid">
+            {intentOptions.map((option) => (
+              <label class="option">
+                <input type="radio" name="intent" value={option.value} required />
+                <div class="option-text">
+                  <span>{option.label}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Tầm tài chính:</legend>
+          <div class="option-grid">
+            {budgetOptions.map((option) => (
+              <label class="option">
+                <input type="radio" name="budgetRange" value={option.value} required />
+                <div class="option-text">
+                  <span>{option.label}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Khu vực ưu tiên:</legend>
+          <p class="hint">Chọn tối đa 2 khu vực (nếu cần).</p>
+          <div class="option-grid">
+            {areaOptions.map((option) => (
+              <label class="option">
+                <input type="checkbox" name="areas" value={option.value} />
+                <div class="option-text">
+                  <span>{option.label}</span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Mức chấp nhận pháp lý:</legend>
+          <div class="option-grid option-grid--legal">
+            {legalOptions.map((option) => (
+              <label class="option">
+                <input type="radio" name="legalRisk" value={option.value} required />
+                <div class="option-text">
+                  <span>{option.label}</span>
+                  <small>{option.hint}</small>
+                </div>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div class="field">
+          <label>Để lại Zalo / SĐT</label>
+          <input
+            type="tel"
+            name="contact"
+            required
+            inputmode="tel"
+            pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
+            placeholder="Zalo hoặc số điện thoại"
+          />
+        </div>
+        <input type="hidden" name="source" value={isGlobalFallback ? "lead-portal" : "lead-inline"} />
+        <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
+        <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
+        <button class="button" type="submit">Gửi yêu cầu</button>
+        <p class="status" data-status role="status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
-  <button class="floating-cta" type="button" data-floating-cta aria-hidden="true">
-    <span>Đánh giá mức phù hợp</span>
-    <small>Trả lời 5 câu, nhận shortlist trong 24h</small>
-  </button>
+  {showFloatingCta && (
+    <button class="floating-cta" type="button" data-floating-cta aria-hidden="true">
+      <span>Đánh giá mức phù hợp</span>
+      <small>Trả lời 5 câu, nhận shortlist trong 24h</small>
+    </button>
+  )}
 </section>
 
 <style>
+  .section-shell--lead {
+    padding-top: clamp(2rem, 5vw, 4rem);
+    padding-bottom: clamp(2rem, 5vw, 4rem);
+  }
+  .lead-shell--portal {
+    display: none;
+    padding: 0;
+  }
+  .lead-shell--portal.is-modal-open {
+    display: block;
+  }
   .lead-shell {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    align-items: stretch;
     max-width: 960px;
     margin: 0 auto;
   }
+  .lead-card {
+    position: relative;
+    background: #fff;
+    border-radius: 1.75rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    box-shadow: 0 35px 80px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+    color: #0f172a;
+  }
+  .lead-card::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -30%;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.18), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
   .lead-copy {
     text-align: center;
-    max-width: 720px;
-    margin: 0 auto;
+    max-width: 640px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 1;
   }
   .lead-copy .tag {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
   .lead-copy h2 {
-    margin: 1rem 0 0;
+    margin: 1rem 0 0.5rem;
+    font-size: clamp(2rem, 4vw, 2.8rem);
   }
   .lead-copy p {
-    color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 0;
+    margin: 0;
+    color: var(--muted);
   }
   .lead-form {
+    position: relative;
     background: #fff;
-    color: var(--text);
-    padding: 2rem;
     border-radius: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
     display: grid;
     gap: 1.25rem;
-  }
-  .lead-form .field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
+    z-index: 1;
+    color: #0f172a;
   }
   .lead-form fieldset {
     border: 1px solid rgba(15, 23, 42, 0.12);
@@ -207,28 +246,32 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
     padding: 1rem 1.25rem;
     margin: 0;
   }
-  .lead-form legend,
-  .lead-form label {
-    font-weight: 600;
-  }
   .lead-form legend {
-    margin-bottom: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.65rem;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .option-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 0.75rem;
+  }
+  .option-grid--legal {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
   .option {
     border: 1px solid rgba(15, 23, 42, 0.16);
     border-radius: 0.9rem;
-    padding: 0.75rem 0.9rem;
+    padding: 0.85rem 1rem;
     display: flex;
     gap: 0.65rem;
-    font-size: 0.95rem;
     cursor: pointer;
     background: #fff;
-    align-items: flex-start;
+    transition: border-color 140ms ease, box-shadow 140ms ease;
   }
   .option input {
     margin-top: 0.15rem;
@@ -242,18 +285,22 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
     font-weight: 600;
   }
   .option-text small {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--muted);
   }
+  .option:has(input:checked) {
+    border-color: rgba(249, 115, 22, 0.6);
+    box-shadow: 0 10px 25px rgba(249, 115, 22, 0.15);
+  }
   .hint {
-    margin: 0 0 0.75rem;
-    font-size: 0.85rem;
+    margin: 0 0 0.35rem;
+    font-size: 0.9rem;
     color: var(--muted);
   }
   .lead-form input,
   .lead-form select,
   .lead-form textarea {
-    border-radius: 0.75rem;
+    border-radius: 0.9rem;
     border: 1px solid rgba(15, 23, 42, 0.16);
     padding: 0.9rem 1rem;
     font-size: 1rem;
@@ -261,6 +308,33 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
   }
   .lead-form .hp {
     display: none;
+  }
+  .lead-form__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: none;
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 160ms ease, transform 160ms ease;
+    z-index: 2;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .lead-form__close:hover {
+    background: rgba(15, 23, 42, 0.18);
+    transform: translateY(-1px);
+  }
+  .lead-form__close svg {
+    width: 1.1rem;
+    height: 1.1rem;
   }
   .status {
     min-height: 1.2rem;
@@ -291,6 +365,7 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
     z-index: 50;
     max-width: 260px;
     text-align: left;
+    animation: floatPulse 6s ease-in-out infinite;
   }
   .floating-cta small {
     font-size: 0.8rem;
@@ -302,281 +377,482 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
   [data-lead-shell] .floating-cta[aria-hidden="true"] {
     display: none;
   }
-  [data-lead-shell].is-expanded .floating-cta {
+  [data-lead-shell].is-expanded .floating-cta,
+  [data-lead-shell].is-modal-open .floating-cta {
     display: none;
+  }
+  [data-lead-shell].is-modal-open .lead-form__close {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  [data-lead-shell].is-modal-open .lead-form {
+    position: fixed;
+    top: clamp(0.75rem, 6vh, 2.5rem);
+    left: 50%;
+    transform: translate(-50%, -30px);
+    width: min(640px, 92vw);
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    z-index: 60;
+    animation: dropIn 280ms cubic-bezier(0.21, 0.61, 0.35, 1) forwards;
+  }
+  [data-lead-shell].is-modal-open .lead-form::before {
+    opacity: 0.9;
+  }
+  .lead-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+    z-index: 50;
+  }
+  [data-lead-shell].is-modal-open .lead-modal-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  [data-lead-shell].is-modal-open .lead-form::-webkit-scrollbar {
+    width: 0.45rem;
+  }
+  [data-lead-shell].is-modal-open .lead-form::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 999px;
+  }
+  @media (max-width: 768px) {
+    .lead-form {
+      padding: 2.2rem 1.5rem 1.75rem;
+    }
+    .option-grid {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    .floating-cta {
+      bottom: 1rem;
+      right: 1rem;
+    }
+  }
+  @keyframes floatPulse {
+    0% {
+      transform: translate3d(0, 0, 0) scale(0.98);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translate3d(2%, -2%, 0) scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(-1%, 1%, 0) scale(0.98);
+      opacity: 0.5;
+    }
+  }
+  @keyframes dropIn {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -60px);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   }
 </style>
 
 <script type="module">
-  const shell = document.querySelector('[data-lead-shell]');
-  const form = shell?.querySelector('[data-lead-form]') ?? document.querySelector('[data-lead-form]');
-  const status = shell?.querySelector('[data-status]') ?? document.querySelector('[data-status]');
-  const floatingCta = shell?.querySelector('[data-floating-cta]') ?? document.querySelector('[data-floating-cta]');
-  const endpoint = shell?.dataset.endpoint ?? '';
-  const AREA_LIMIT = 2;
-  const SCROLL_THRESHOLD = 0.65;
-  const deferDisplay = shell?.dataset.defer === 'true';
-  const leadTagInput = document.querySelector('[data-lead-tag]');
-  const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
+  (() => {
+    const AREA_LIMIT = 2;
+    const SCROLL_THRESHOLD = 0.65;
+    const intentWeights = {
+      o_thuc: 3,
+      dau_tu_trung_han: 2,
+      luot_song: 0
+    };
+    const budgetWeights = {
+      '<1.5': 0,
+      '1.5-2.5': 1,
+      '2.5-3.5': 2,
+      '>3.5': 3
+    };
+    const legalWeights = {
+      so_do_san: 3,
+      cho_len_tho_cu: 1,
+      co_the_rui_ro: 0
+    };
+    const priorityAreas = ['gan_dhqg', 'gan_cnc'];
 
-  const areaCheckboxes = form?.querySelectorAll('input[name="areas"]') ?? [];
-  const intentInputs = form?.querySelectorAll('input[name="intent"]') ?? [];
-
-  const intentWeights = {
-    o_thuc: 3,
-    dau_tu_trung_han: 2,
-    luot_song: 0
-  };
-  const budgetWeights = {
-    '<1.5': 0,
-    '1.5-2.5': 1,
-    '2.5-3.5': 2,
-    '>3.5': 3
-  };
-  const legalWeights = {
-    so_do_san: 3,
-    cho_len_tho_cu: 1,
-    co_the_rui_ro: 0
-  };
-  const priorityAreas = ['gan_dhqg', 'gan_cnc'];
-
-  function setCustomMessages() {
-    if (!form) return;
-    const REQUIRED_TEXT = 'Vui lòng điền thông tin này.';
-    const PHONE_TEXT = 'Số liên hệ phải đủ 10 số và bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2|6|8|9].';
-
-    form.addEventListener('invalid', (event) => {
-      const field = event.target;
-      if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
-        return;
-      }
-      if (field.validity.valueMissing) {
-        field.setCustomValidity(REQUIRED_TEXT);
-      } else if (field.type === 'tel' && field.validity.patternMismatch) {
-        field.setCustomValidity(PHONE_TEXT);
-      } else {
-        field.setCustomValidity('');
-      }
-    }, true);
-
-    form.addEventListener('input', (event) => {
-      const field = event.target;
-      if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
-        field.setCustomValidity('');
-      }
-    });
-  }
-
-  function computeLeadTag({ intent, budgetRange, legalRisk, areas }) {
-    let score = 0;
-    score += intentWeights[intent] ?? 0;
-    score += budgetWeights[budgetRange] ?? 0;
-    score += legalWeights[legalRisk] ?? 0;
-    if (areas?.some((area) => priorityAreas.includes(area))) {
-      score += 1;
+    const initKey = '__hoaLacLeadFormInit__';
+    if (window[initKey]) {
+      return;
     }
 
-    if (intent === 'luot_song' && legalRisk === 'co_the_rui_ro') {
+    window[initKey] = true;
+
+    const boot = () => {
+      const shells = Array.from(document.querySelectorAll('[data-lead-shell]'));
+      shells.forEach((shell) => initLeadShell(shell));
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot, { once: true });
+    } else {
+      boot();
+    }
+
+    function initLeadShell(shell) {
+      const form = shell.querySelector('[data-lead-form]');
+      if (!form) return;
+
+      const status = shell.querySelector('[data-status]');
+      const floatingCta = shell.querySelector('button[data-floating-cta]');
+      const overlay = shell.querySelector('[data-lead-overlay]');
+      const closeControls = Array.from(shell.querySelectorAll('[data-lead-close]'));
+      const endpoint = shell.dataset.endpoint ?? '';
+      const deferDisplay = shell.dataset.defer === 'true';
+      const showFloatingCta = shell.dataset.floatingEnabled !== 'false';
+      const isGlobalFallback = shell.dataset.global === 'true';
+      const forceModal = shell.dataset.forceModal === 'true';
+      const leadTagInput = form.querySelector('[data-lead-tag]');
+      const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
+      let modalQuery;
+      let preferModal = forceModal;
+      let previousOverflow = '';
+
+      setCustomMessages(form);
+
+      const areaCheckboxes = form.querySelectorAll('input[name="areas"]');
+      areaCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', (event) => handleAreaLimit(event, form, status));
+      });
+
+      const intentInputs = form.querySelectorAll('input[name="intent"]');
+      intentInputs.forEach((input) => {
+        input.addEventListener('change', () => broadcastIntentChange(input.value));
+        if (input.checked) {
+          broadcastIntentChange(input.value);
+        }
+      });
+
+      const areaInputs = form.querySelectorAll('input[name="areas"]');
+      areaInputs.forEach((input) => {
+        input.addEventListener('change', () => broadcastAreasChange(getSelectedAreaLabels(form)));
+      });
+
+      const setBodyScrollLock = (locked) => {
+        if (typeof document === 'undefined') return;
+        if (locked) {
+          previousOverflow = document.body.style.overflow;
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = previousOverflow;
+        }
+      };
+
+      const closeModal = () => {
+        if (!shell.classList.contains('is-modal-open')) return;
+        shell.classList.remove('is-modal-open');
+        overlay?.setAttribute('aria-hidden', 'true');
+        setBodyScrollLock(false);
+        shell.classList.remove('is-expanded');
+        if (deferDisplay && showFloatingCta) {
+          shell.classList.add('is-collapsed');
+          shell.classList.add('cta-visible');
+          floatingCta?.removeAttribute('aria-hidden');
+        }
+      };
+
+      const openModal = () => {
+        shell.classList.add('is-modal-open');
+        shell.classList.add('is-expanded');
+        shell.classList.remove('is-collapsed');
+        shell.classList.remove('cta-visible');
+        floatingCta?.setAttribute('aria-hidden', 'true');
+        overlay?.removeAttribute('aria-hidden');
+        setBodyScrollLock(true);
+        const firstField = form.querySelector('input, select, textarea');
+        firstField?.focus({ preventScroll: true });
+      };
+
+      const shouldUseModal = () => forceModal || preferModal;
+
+      const updateModalPreference = () => {
+        if (typeof window === 'undefined' || !deferDisplay || !showFloatingCta || forceModal) {
+          return;
+        }
+        if (!modalQuery) {
+          modalQuery = window.matchMedia('(max-width: 768px)');
+          modalQuery.addEventListener('change', (event) => {
+            preferModal = event.matches;
+            if (!preferModal) {
+              closeModal();
+            }
+          });
+        }
+        preferModal = modalQuery.matches;
+      };
+
+      updateModalPreference();
+
+      closeControls.forEach((control) => {
+        control.addEventListener('click', closeModal);
+      });
+      overlay?.addEventListener('click', closeModal);
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+      window.addEventListener('resize', updateModalPreference);
+
+      function handleScrollReveal() {
+        if (!deferDisplay || !floatingCta || !showFloatingCta) return;
+        shell.classList.add('is-collapsed');
+
+        const showCta = () => {
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = maxScroll <= 0 ? 1 : window.scrollY / maxScroll;
+          if (progress >= SCROLL_THRESHOLD) {
+            shell.classList.add('cta-visible');
+            floatingCta.removeAttribute('aria-hidden');
+            window.removeEventListener('scroll', onScroll);
+          }
+        };
+
+        let ticking = false;
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            showCta();
+            ticking = false;
+          });
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        setTimeout(showCta, 8000);
+
+        const revealLeadCapture = () => {
+          if (shouldUseModal()) {
+            openModal();
+            return;
+          }
+          shell.classList.add('is-expanded');
+          shell.classList.remove('is-collapsed');
+          shell.classList.remove('cta-visible');
+          floatingCta?.setAttribute('aria-hidden', 'true');
+          const firstField = form.querySelector('input, select, textarea');
+          firstField?.focus();
+          form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+
+        floatingCta.addEventListener('click', revealLeadCapture);
+      }
+
+      handleScrollReveal();
+
+      if (isGlobalFallback) {
+        const portalQueueKey = '__hoaLacLeadPortalQueue__';
+        window.addEventListener('lead-form:request-open', openModal);
+        window.addEventListener('lead-form:request-close', closeModal);
+
+        window.__hoaLacLeadPortal = {
+          open: () => openModal(),
+          close: () => closeModal()
+        };
+
+        const queue = window[portalQueueKey];
+        if (Array.isArray(queue) && queue.length > 0) {
+          while (queue.length > 0) {
+            const action = queue.shift();
+            if (action === 'open') {
+              openModal();
+            } else if (action === 'close') {
+              closeModal();
+            }
+          }
+        }
+        window[portalQueueKey] = [];
+      }
+
+      form.addEventListener('submit', (event) => {
+        submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag });
+      });
+    }
+
+    function handleAreaLimit(event, form, status) {
+      const checkedAreas = form.querySelectorAll('input[name="areas"]:checked');
+      if (checkedAreas.length > AREA_LIMIT) {
+        event.target.checked = false;
+        if (status) {
+          status.textContent = `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`;
+        }
+      }
+    }
+
+    function getSelectedAreaLabels(form) {
+      return Array.from(form.querySelectorAll('input[name="areas"]:checked'))
+        .map((input) => input.nextElementSibling?.textContent?.trim())
+        .filter((label) => Boolean(label));
+    }
+
+    function broadcastIntentChange(intentValue) {
+      if (typeof window === 'undefined' || !intentValue) return;
+      window.dispatchEvent(new CustomEvent('lead-intent-change', {
+        detail: { intent: intentValue }
+      }));
+    }
+
+    function broadcastAreasChange(labels) {
+      if (typeof window === 'undefined') return;
+      window.dispatchEvent(new CustomEvent('lead-areas-change', {
+        detail: { areas: labels }
+      }));
+    }
+
+    function setCustomMessages(form) {
+      const REQUIRED_TEXT = 'Vui lòng điền thông tin này.';
+      const PHONE_TEXT = 'Số liên hệ phải đủ 10 số và bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2|6|8|9].';
+
+      form.addEventListener('invalid', (event) => {
+        const field = event.target;
+        if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+          return;
+        }
+        if (field.validity.valueMissing) {
+          field.setCustomValidity(REQUIRED_TEXT);
+        } else if (field.type === 'tel' && field.validity.patternMismatch) {
+          field.setCustomValidity(PHONE_TEXT);
+        } else {
+          field.setCustomValidity('');
+        }
+      }, true);
+
+      form.addEventListener('input', (event) => {
+        const field = event.target;
+        if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+          field.setCustomValidity('');
+        }
+      });
+    }
+
+    function serializeForm(formElement) {
+      const formData = new FormData(formElement);
+      const data = Object.fromEntries(formData);
+      const selectedAreas = formData.getAll('areas');
+      if (selectedAreas.length > 0) {
+        data.areas = selectedAreas.join(', ');
+      }
+      return data;
+    }
+
+    function computeLeadTag({ intent, budgetRange, legalRisk, areas }) {
+      let score = 0;
+      score += intentWeights[intent] ?? 0;
+      score += budgetWeights[budgetRange] ?? 0;
+      score += legalWeights[legalRisk] ?? 0;
+      if (areas?.some((area) => priorityAreas.includes(area))) {
+        score += 1;
+      }
+
+      if (intent === 'luot_song' && legalRisk === 'co_the_rui_ro') {
+        return 'lead_cold';
+      }
+      if (score >= 6) {
+        return 'lead_hot';
+      }
+      if (score >= 3) {
+        return 'lead_warm';
+      }
       return 'lead_cold';
     }
-    if (score >= 6) {
-      return 'lead_hot';
-    }
-    if (score >= 3) {
-      return 'lead_warm';
-    }
-    return 'lead_cold';
-  }
 
-  function serializeForm(formElement) {
-    const formData = new FormData(formElement);
-    const data = Object.fromEntries(formData);
-    const selectedAreas = formData.getAll('areas');
-    if (selectedAreas.length > 0) {
-      data.areas = selectedAreas.join(', ');
-    }
-    return data;
-  }
-
-  function handleAreaLimit(event) {
-    if (!form) return;
-    const checkedAreas = form.querySelectorAll('input[name="areas"]:checked');
-    if (checkedAreas.length > AREA_LIMIT) {
-      event.target.checked = false;
-      if (status) {
-        status.textContent = `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`;
-      }
-    }
-  }
-
-  areaCheckboxes.forEach((checkbox) => {
-    checkbox.addEventListener('change', handleAreaLimit);
-  });
-
-  const broadcastIntentChange = (intentValue) => {
-    if (typeof window === 'undefined' || !intentValue) return;
-    window.dispatchEvent(new CustomEvent('lead-intent-change', {
-      detail: { intent: intentValue }
-    }));
-  };
-
-  intentInputs.forEach((input) => {
-    input.addEventListener('change', () => broadcastIntentChange(input.value));
-    if (input.checked) {
-      broadcastIntentChange(input.value);
-    }
-  });
-
-  const areaInputs = form?.querySelectorAll('input[name="areas"]') ?? [];
-
-  const broadcastAreasChange = () => {
-    if (typeof window === 'undefined') return;
-    const selected = Array.from(form?.querySelectorAll('input[name="areas"]:checked') ?? [])
-      .map((input) => input.nextElementSibling?.textContent?.trim())
-      .filter(Boolean);
-    window.dispatchEvent(new CustomEvent('lead-areas-change', {
-      detail: { areas: selected }
-    }));
-  };
-
-  areaInputs.forEach((input) => {
-    input.addEventListener('change', broadcastAreasChange);
-  });
-
-  setCustomMessages();
-
-  function handleScrollReveal() {
-    if (!deferDisplay || !shell || !floatingCta) return;
-    shell.classList.add('is-collapsed');
-
-    const showCta = () => {
-      if (!shell || !floatingCta) return;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = maxScroll <= 0 ? 1 : window.scrollY / maxScroll;
-      if (progress >= SCROLL_THRESHOLD) {
-        shell.classList.add('cta-visible');
-        floatingCta.removeAttribute('aria-hidden');
-        window.removeEventListener('scroll', onScroll);
-      }
-    };
-
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        showCta();
-        ticking = false;
-      });
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    setTimeout(showCta, 8000);
-
-    const expandForm = () => {
-      if (!shell) return;
-      shell.classList.add('is-expanded');
-      shell.classList.remove('is-collapsed');
-      shell.classList.remove('cta-visible');
-      floatingCta?.setAttribute('aria-hidden', 'true');
-      const firstField = form?.querySelector('input, select, textarea');
-      firstField?.focus();
-      form?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    };
-
-    floatingCta?.addEventListener('click', expandForm);
-  }
-
-  handleScrollReveal();
-
-  async function submitLead(event) {
-    event.preventDefault();
-    if (!form || !status) return;
-    if (!form.reportValidity()) {
-      return;
-    }
-
-    const selectedAreaNodes = form.querySelectorAll('input[name="areas"]:checked');
-    if (selectedAreaNodes.length === 0) {
-      status.textContent = "Vui lòng chọn ít nhất 1 khu vực ưu tiên.";
-      return;
-    }
-    const selectedAreaValues = Array.from(selectedAreaNodes).map((input) => input.value);
-
-    const now = new Date();
-    const vnDateTime = now.toLocaleString('vi-VN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    });
-
-    const data = serializeForm(form);
-    data.areas = selectedAreaValues.join(', ');
-    const computedTag = computeLeadTag({
-      intent: data.intent,
-      budgetRange: data.budgetRange,
-      legalRisk: data.legalRisk,
-      areas: selectedAreaValues
-    }) ?? fallbackLeadTag;
-    data.leadTag = computedTag;
-    if (typeof data.contact === 'string') {
-      data.contact = data.contact.replace(/\s+/g, '').replace(/^0*/, (match) => (match ? '0' : ''));
-    }
-    if (leadTagInput) {
-      leadTagInput.value = computedTag;
-    }
-    data.submittedAt = now.toISOString();
-    data.submittedAtLocal = vnDateTime;
-
-    if (data.company) {
-      status.textContent = "Đã chặn spam.";
-      return;
-    }
-
-    if (!endpoint) {
-      status.textContent = "Chưa cấu hình PUBLIC_LEAD_ENDPOINT.";
-      return;
-    }
-
-    status.textContent = "Đang gửi...";
-    try {
-      const body = new URLSearchParams();
-      Object.entries(data).forEach(([key, value]) => {
-        body.append(key, typeof value === 'string' ? value : String(value ?? ''));
-      });
-
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body
-      });
-
-      if (response.ok) {
-        let payloadMessage = 'Đã nhận thông tin!';
-        try {
-          const payload = await response.json();
-          if (payload?.message) payloadMessage = payload.message;
-        } catch (parseErr) {
-          console.warn('Không parse được payload, dùng message mặc định.', parseErr);
-        }
-        status.textContent = payloadMessage;
-        form.reset();
+    async function submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag }) {
+      event.preventDefault();
+      if (!form || !status) return;
+      if (!form.reportValidity()) {
         return;
       }
 
-      throw new Error(`Request failed with status ${response.status}`);
-    } catch (error) {
-      console.error(error);
-      if (error instanceof TypeError) {
-        status.textContent = 'Đã nhận thông tin!';
-        form.reset();
-      } else {
-        status.textContent = "Không gửi được, vui lòng thử lại.";
+      const selectedAreaNodes = form.querySelectorAll('input[name="areas"]:checked');
+      if (selectedAreaNodes.length === 0) {
+        status.textContent = 'Vui lòng chọn ít nhất 1 khu vực ưu tiên.';
+        return;
+      }
+      const selectedAreaValues = Array.from(selectedAreaNodes).map((input) => input.value);
+
+      const now = new Date();
+      const vnDateTime = now.toLocaleString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+
+      const data = serializeForm(form);
+      data.areas = selectedAreaValues.join(', ');
+      const computedTag = computeLeadTag({
+        intent: data.intent,
+        budgetRange: data.budgetRange,
+        legalRisk: data.legalRisk,
+        areas: selectedAreaValues
+      }) ?? fallbackLeadTag;
+      data.leadTag = computedTag;
+      if (typeof data.contact === 'string') {
+        data.contact = data.contact.replace(/\s+/g, '').replace(/^0*/, (match) => (match ? '0' : ''));
+      }
+      if (leadTagInput) {
+        leadTagInput.value = computedTag;
+      }
+      data.submittedAt = now.toISOString();
+      data.submittedAtLocal = vnDateTime;
+
+      if (data.company) {
+        status.textContent = 'Đã chặn spam.';
+        return;
+      }
+
+      if (!endpoint) {
+        status.textContent = 'Chưa cấu hình PUBLIC_LEAD_ENDPOINT.';
+        return;
+      }
+
+      status.textContent = 'Đang gửi...';
+      try {
+        const body = new URLSearchParams();
+        Object.entries(data).forEach(([key, value]) => {
+          body.append(key, typeof value === 'string' ? value : String(value ?? ''));
+        });
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body
+        });
+
+        if (response.ok) {
+          let payloadMessage = 'Đã nhận thông tin!';
+          try {
+            const payload = await response.json();
+            if (payload?.message) payloadMessage = payload.message;
+          } catch (parseErr) {
+            console.warn('Không parse được payload, dùng message mặc định.', parseErr);
+          }
+          status.textContent = payloadMessage;
+          form.reset();
+          return;
+        }
+
+        throw new Error(`Request failed with status ${response.status}`);
+      } catch (error) {
+        console.error(error);
+        if (error instanceof TypeError) {
+          status.textContent = 'Đã nhận thông tin!';
+          form.reset();
+        } else {
+          status.textContent = 'Không gửi được, vui lòng thử lại.';
+        }
       }
     }
-  }
-
-  form?.addEventListener('submit', submitLead);
+  })();
 </script>

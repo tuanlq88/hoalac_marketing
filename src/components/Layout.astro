@@ -1,5 +1,6 @@
 ---
 import "@styles/global.css";
+import LeadForm from "@components/LeadForm.astro";
 
 interface Props {
   title?: string;
@@ -15,37 +16,7 @@ const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 const homeHref = basePath || '/';
 const blogHref = `${basePath}/blog`;
-const navButtonStyle = [
-  'display: inline-flex',
-  'align-items: center',
-  'gap: 0.3rem',
-  'padding: 0.35rem 0.75rem',
-  'border-radius: 999px',
-  'border: 1px solid rgba(212, 72, 9, 0.3)',
-  'background: rgba(212, 72, 9, 0.1)',
-  'color: var(--accent-dark)',
-  'font-weight: 600',
-  'font-size: 0.9rem',
-  'text-transform: uppercase',
-  'letter-spacing: 0.04em',
-  'text-decoration: none'
-].join('; ');
-const navButtonAccent = [
-  navButtonStyle,
-  'background: rgba(15, 23, 42, 0.1)',
-  'border: 1px solid rgba(15, 23, 42, 0.2)',
-  'color: #0f172a'
-].join('; ');
-const brandStyle = [
-  'font-size: 1.15rem',
-  'font-weight: 600',
-  'letter-spacing: 0.02em',
-  'text-transform: none',
-  'font-family: "Manrope", system-ui, sans-serif',
-  'color: #0f172a',
-  'text-decoration: none'
-].join('; ');
-const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, color 150ms ease;';
+const pillarsHref = `${basePath}/pillars`;
 ---
 <!DOCTYPE html>
 <html lang="vi">
@@ -64,18 +35,15 @@ const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, 
       rel="stylesheet"
     />
   </head>
-  <body style="min-height: 100vh; display: flex; flex-direction: column;">
-    <header style="padding: 1.5rem 1.5rem 0;">
-      <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-        <a href={homeHref} style={`${brandStyle}; ${navHoverStyle}`}
-          onmouseover="this.style.transform='translateY(-1px)'"
-          onmouseout="this.style.transform='translateY(0)'">
-          Insight Hòa Lạc
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a href={homeHref} class="site-brand">
+          <span class="site-brand__title">Insight Hòa Lạc</span>
+          <span class="site-brand__subtitle">Bản tin dữ liệu &amp; funnel 2026</span>
         </a>
-        <nav style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
-          <a href="#lead-form" style={`${navButtonStyle}; ${navHoverStyle}`}
-            onmouseover="this.style.background='rgba(212,72,9,0.18)'; this.style.transform='translateY(-1px)';"
-            onmouseout="this.style.background='rgba(212,72,9,0.1)'; this.style.transform='translateY(0)';">
+        <nav class="site-nav" aria-label="Điều hướng chính">
+          <a href="#lead-form" class="site-nav__pill">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -84,7 +52,6 @@ const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, 
               stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              style="width: 1rem; height: 1rem;"
               aria-hidden="true"
             >
               <path d="M8 6h8" />
@@ -94,9 +61,7 @@ const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, 
             </svg>
             <span>Form tư vấn</span>
           </a>
-          <a href={blogHref} style={`${navButtonAccent}; ${navHoverStyle}`}
-            onmouseover="this.style.background='rgba(15,23,42,0.2)'; this.style.transform='translateY(-1px)';"
-            onmouseout="this.style.background='rgba(15,23,42,0.1)'; this.style.transform='translateY(0)';">
+          <a href={blogHref} class="site-nav__pill site-nav__pill--accent">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -105,7 +70,6 @@ const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, 
               stroke-width="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
-              style="width: 1rem; height: 1rem;"
               aria-hidden="true"
             >
               <path d="M4 19.5C4 18.12 5.12 17 6.5 17h13" />
@@ -115,25 +79,86 @@ const navHoverStyle = 'transition: transform 150ms ease, background 150ms ease, 
             </svg>
             <span>Bài viết</span>
           </a>
+          <a href={pillarsHref} class="site-nav__pill">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="3.5" />
+              <path d="M12 2v3" />
+              <path d="M12 19v3" />
+              <path d="M4 12h3" />
+              <path d="M17 12h3" />
+            </svg>
+            <span>Trung tâm trụ cột</span>
+          </a>
         </nav>
       </div>
+      <div class="site-header__meta">
+        <a href="mailto:contact@example.com" class="site-meta__item">contact@example.com</a>
+        <span class="site-meta__divider" aria-hidden="true">•</span>
+        <a href="https://t.me/" class="site-meta__item" target="_blank" rel="noreferrer">Telegram cập nhật</a>
+      </div>
     </header>
-    <main style="flex: 1 0 auto; display: flex; flex-direction: column;">
+    <main class="site-main">
       <slot />
     </main>
-    <footer style="padding: 2rem 1.5rem 3rem; background: #161616; color: #fff; margin-top: auto;">
-      <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; justify-content: space-between;">
+    <footer class="site-footer">
+      <div class="site-footer__inner">
         <div>
-          <p style="margin: 0; font-weight: 600;">Insight Hòa Lạc © {new Date().getFullYear()}</p>
-          <p style="margin: 0.35rem 0 0; color: rgba(255,255,255,0.7);">
-            Landing page thử nghiệm GitHub Pages + funnel marketing.
-          </p>
+          <p class="site-footer__brand">Insight Hòa Lạc © {new Date().getFullYear()}</p>
+          <p class="site-footer__copy">Landing page thử nghiệm GitHub Pages + funnel marketing.</p>
         </div>
-        <div style="display: flex; gap: 0.75rem;">
-          <a href="mailto:contact@example.com" class="tag">contact@example.com</a>
-          <a href="https://t.me/" class="tag">Telegram</a>
+        <div class="site-footer__links">
+          <a href={blogHref}>Truy cập blog</a>
+          <a href="#lead-form" class="site-footer__cta">Đăng ký tư vấn</a>
+        </div>
+        <div class="site-footer__contact">
+          <a href="mailto:contact@example.com">contact@example.com</a>
+          <a href="https://t.me/" target="_blank" rel="noreferrer">Telegram</a>
         </div>
       </div>
     </footer>
+    <LeadForm
+      formId="lead-form-global"
+      deferDisplay={true}
+      showFloatingCta={false}
+      isGlobalFallback={true}
+    />
+    <script type="module">
+      const anchors = Array.from(document.querySelectorAll('a[href="#lead-form"]'));
+      const portalQueueKey = '__hoaLacLeadPortalQueue__';
+      window[portalQueueKey] = window[portalQueueKey] || [];
+
+      const requestPortalOpen = () => {
+        window.dispatchEvent(new CustomEvent('lead-form:request-open', {
+          detail: { source: 'global-nav' }
+        }));
+
+        if (window.__hoaLacLeadPortal?.open) {
+          window.__hoaLacLeadPortal.open();
+          return;
+        }
+
+        window[portalQueueKey].push('open');
+      };
+
+      anchors.forEach((anchor) => {
+        anchor.addEventListener('click', (event) => {
+          const inlineForm = document.getElementById('lead-form');
+          if (inlineForm) {
+            return;
+          }
+          event.preventDefault();
+          requestPortalOpen();
+        });
+      });
+    </script>
   </body>
 </html>
