@@ -86,7 +86,7 @@ const legalOptions = [
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
           </svg>
         </button>
-        <fieldset class="field">
+        <fieldset class="field" data-field-group="intent">
           <legend>Anh/chị quan tâm đất Hòa Lạc để:</legend>
           <div class="option-grid">
             {intentOptions.map((option) => (
@@ -99,7 +99,8 @@ const legalOptions = [
             ))}
           </div>
         </fieldset>
-        <fieldset class="field">
+        <p class="field-error" data-error-for="intent" role="status" aria-live="polite"></p>
+        <fieldset class="field" data-field-group="budgetRange">
           <legend>Tầm tài chính:</legend>
           <div class="option-grid">
             {budgetOptions.map((option) => (
@@ -112,7 +113,8 @@ const legalOptions = [
             ))}
           </div>
         </fieldset>
-        <fieldset class="field">
+        <p class="field-error" data-error-for="budgetRange" role="status" aria-live="polite"></p>
+        <fieldset class="field" data-field-group="areas">
           <legend>Khu vực ưu tiên:</legend>
           <p class="hint">Chọn tối đa 2 khu vực (nếu cần).</p>
           <div class="option-grid">
@@ -126,7 +128,8 @@ const legalOptions = [
             ))}
           </div>
         </fieldset>
-        <fieldset class="field">
+        <p class="field-error" data-error-for="areas" role="status" aria-live="polite"></p>
+        <fieldset class="field" data-field-group="legalRisk">
           <legend>Mức chấp nhận pháp lý:</legend>
           <div class="option-grid option-grid--legal">
             {legalOptions.map((option) => (
@@ -140,7 +143,8 @@ const legalOptions = [
             ))}
           </div>
         </fieldset>
-        <div class="field">
+        <p class="field-error" data-error-for="legalRisk" role="status" aria-live="polite"></p>
+        <div class="field" data-field-group="contact">
           <label>Để lại Zalo / SĐT</label>
           <input
             type="tel"
@@ -150,6 +154,7 @@ const legalOptions = [
             pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
             placeholder="Zalo hoặc số điện thoại"
           />
+          <p class="field-error" data-error-for="contact" role="status" aria-live="polite"></p>
         </div>
         <input type="hidden" name="source" value={isGlobalFallback ? "lead-portal" : "lead-inline"} />
         <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
@@ -169,8 +174,8 @@ const legalOptions = [
 
 <style>
   .section-shell--lead {
-    padding-top: clamp(2rem, 5vw, 4rem);
-    padding-bottom: clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+    padding-inline: clamp(1.25rem, 5vw, 2.75rem);
   }
   .lead-shell--portal {
     display: none;
@@ -187,10 +192,11 @@ const legalOptions = [
     position: relative;
     background: #fff;
     border-radius: 1.75rem;
-    padding: clamp(1.5rem, 4vw, 2.75rem);
+    padding: clamp(1.25rem, 3.5vw, 2.5rem) clamp(1.25rem, 4vw, 2.75rem);
     box-shadow: 0 35px 80px rgba(15, 23, 42, 0.18);
     overflow: hidden;
     color: #0f172a;
+    scroll-margin-top: 5rem;
   }
   .lead-card::before {
     content: "";
@@ -239,12 +245,16 @@ const legalOptions = [
     gap: 1.25rem;
     z-index: 1;
     color: #0f172a;
+    width: 100%;
+    min-width: 0;
   }
   .lead-form fieldset {
     border: 1px solid rgba(15, 23, 42, 0.12);
     border-radius: 1rem;
     padding: 1rem 1.25rem;
     margin: 0;
+    width: 100%;
+    min-width: 0;
   }
   .lead-form legend {
     font-weight: 600;
@@ -257,8 +267,10 @@ const legalOptions = [
   }
   .option-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 0.75rem;
+    width: 100%;
+    min-width: 0;
   }
   .option-grid--legal {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -296,6 +308,25 @@ const legalOptions = [
     margin: 0 0 0.35rem;
     font-size: 0.9rem;
     color: var(--muted);
+  }
+  .field-error {
+    margin: 0.1rem 0 0.75rem;
+    font-size: 0.85rem;
+    color: #dc2626;
+    min-height: 1rem;
+    transition: opacity 150ms ease;
+  }
+  .field-error[hidden] {
+    opacity: 0;
+    height: 0;
+    margin: 0;
+  }
+  fieldset.field.is-invalid {
+    border-color: rgba(216, 94, 38, 1);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.2);
+  }
+  fieldset.field.is-invalid legend {
+    color: rgba(216, 94, 38, 1);
   }
   .lead-form input,
   .lead-form select,
@@ -338,8 +369,18 @@ const legalOptions = [
   }
   .status {
     min-height: 1.2rem;
-    color: var(--muted);
+    color: #475569;
     font-size: 0.9rem;
+    transition: color 150ms ease;
+  }
+  .status[data-state="error"] {
+    color: #dc2626;
+  }
+  .status[data-state="success"] {
+    color: #15803d;
+  }
+  .status[data-state="warning"] {
+    color: #b45309;
   }
   [data-lead-shell] {
     position: relative;
@@ -349,13 +390,14 @@ const legalOptions = [
   }
   .floating-cta {
     position: fixed;
-    bottom: 1.5rem;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     right: 1.5rem;
     background: #f97316;
     color: #fff;
     border: none;
     border-radius: 999px;
     padding: 0.85rem 1.5rem;
+    padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
     box-shadow: 0 20px 35px rgba(15, 23, 42, 0.25);
     display: none;
     flex-direction: column;
@@ -390,11 +432,14 @@ const legalOptions = [
     top: clamp(0.75rem, 6vh, 2.5rem);
     left: 50%;
     transform: translate(-50%, -30px);
-    width: min(640px, 92vw);
+    width: min(640px, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    min-width: 0;
     max-height: calc(100vh - 2.5rem);
     overflow-y: auto;
     z-index: 60;
     animation: dropIn 280ms cubic-bezier(0.21, 0.61, 0.35, 1) forwards;
+    margin: 0 auto;
   }
   [data-lead-shell].is-modal-open .lead-form::before {
     opacity: 0.9;
@@ -428,8 +473,14 @@ const legalOptions = [
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     }
     .floating-cta {
-      bottom: 1rem;
+      bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
       right: 1rem;
+    }
+  }
+  @media (max-width: 420px) {
+    .option-grid,
+    .option-grid--legal {
+      grid-template-columns: 1fr;
     }
   }
   @keyframes floatPulse {
@@ -479,6 +530,15 @@ const legalOptions = [
       co_the_rui_ro: 0
     };
     const priorityAreas = ['gan_dhqg', 'gan_cnc'];
+    const SECTION_FLOW = ['intent', 'budgetRange', 'areas', 'legalRisk', 'contact'];
+    const SECTION_MESSAGES = {
+      intent: 'Vui lòng chọn mục đích sử dụng.',
+      budgetRange: 'Vui lòng chọn tầm tài chính.',
+      areas: 'Vui lòng chọn ít nhất 1 khu vực ưu tiên.',
+      legalRisk: 'Vui lòng chọn mức chấp nhận pháp lý.',
+      contact: 'Vui lòng nhập số liên hệ hợp lệ.'
+    };
+    const PHONE_PATTERN = /^(03|05|07|08|09|01[2689])[0-9]{8}$/;
 
     const initKey = '__hoaLacLeadFormInit__';
     if (window[initKey]) {
@@ -503,6 +563,8 @@ const legalOptions = [
       if (!form) return;
 
       const status = shell.querySelector('[data-status]');
+      const setStatus = createStatusSetter(status);
+      const fieldErrors = createFieldErrorRegistry(form);
       const floatingCta = shell.querySelector('button[data-floating-cta]');
       const overlay = shell.querySelector('[data-lead-overlay]');
       const closeControls = Array.from(shell.querySelectorAll('[data-lead-close]'));
@@ -517,11 +579,14 @@ const legalOptions = [
       let preferModal = forceModal;
       let previousOverflow = '';
 
-      setCustomMessages(form);
+      setupValidationListeners(form, fieldErrors, setStatus);
+      applySequentialTabIndex(form);
+      const sectionFlow = setupSectionFlow(form, fieldErrors);
+      form.addEventListener('reset', () => sectionFlow?.reset?.());
 
       const areaCheckboxes = form.querySelectorAll('input[name="areas"]');
       areaCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', (event) => handleAreaLimit(event, form, status));
+        checkbox.addEventListener('change', (event) => handleAreaLimit(event, form, setStatus, fieldErrors));
       });
 
       const intentInputs = form.querySelectorAll('input[name="intent"]');
@@ -553,12 +618,12 @@ const legalOptions = [
         overlay?.setAttribute('aria-hidden', 'true');
         setBodyScrollLock(false);
         form.reset();
+        sectionFlow?.reset();
         if (leadTagInput) {
           leadTagInput.value = fallbackLeadTag;
         }
-        if (status) {
-          status.textContent = '';
-        }
+        setStatus('');
+        fieldErrors.clearAll();
         shell.classList.remove('is-expanded');
         if (deferDisplay && showFloatingCta) {
           shell.classList.add('is-collapsed');
@@ -703,7 +768,9 @@ const legalOptions = [
         submitLead({
           event,
           form,
-          status,
+          setStatus,
+          fieldErrors,
+          sectionFlow,
           endpoint,
           leadTagInput,
           fallbackLeadTag,
@@ -716,14 +783,37 @@ const legalOptions = [
       });
     }
 
-    function handleAreaLimit(event, form, status) {
+    function createStatusSetter(statusEl) {
+      const setter = (message = '', state = 'info') => {
+        if (!statusEl) return;
+        const text = message ?? '';
+        statusEl.textContent = text;
+        if (text) {
+          statusEl.dataset.state = state;
+        } else {
+          statusEl.removeAttribute('data-state');
+        }
+        setter.currentMessage = text;
+        setter.currentState = text ? state : undefined;
+      };
+      setter.currentMessage = statusEl?.textContent ?? '';
+      setter.currentState = statusEl?.dataset?.state;
+      return setter;
+    }
+
+    function handleAreaLimit(event, form, setStatus, fieldErrors) {
       const checkedAreas = form.querySelectorAll('input[name="areas"]:checked');
       if (checkedAreas.length > AREA_LIMIT) {
         event.target.checked = false;
-        if (status) {
-          status.textContent = `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`;
-        }
+        setStatus(`Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`, 'error');
+        fieldErrors?.set('areas', `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`);
+        focusField(event.target);
+        return;
       }
+      if (typeof setStatus === 'function' && setStatus.currentMessage?.includes('Chỉ chọn tối đa')) {
+        setStatus('');
+      }
+      fieldErrors?.clear('areas');
     }
 
     function getSelectedAreaLabels(form) {
@@ -746,29 +836,30 @@ const legalOptions = [
       }));
     }
 
-    function setCustomMessages(form) {
-      const REQUIRED_TEXT = 'Vui lòng điền thông tin này.';
-      const PHONE_TEXT = 'Số liên hệ phải đủ 10 số và bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2|6|8|9].';
+    function setupValidationListeners(form, fieldErrors, setStatus) {
+      if (!form) return;
+      SECTION_FLOW.forEach((key) => {
+        const group = form.querySelector(`[data-field-group="${key}"]`);
+        if (!group) return;
+        const inputs = group.querySelectorAll('input, select, textarea');
+        inputs.forEach((input) => {
+          const eventName = input.type === 'radio' || input.type === 'checkbox' ? 'change' : 'input';
+          input.addEventListener(eventName, () => {
+            const result = validateSection(key, form);
+            if (result.valid) {
+              fieldErrors?.clear(key);
+              if (allSectionsValid(form) && setStatus?.currentState !== 'success') {
+                setStatus?.('');
+              }
+            } else if (result.message) {
+              fieldErrors?.set(key, result.message);
+            }
+          });
+        });
+      });
 
-      form.addEventListener('invalid', (event) => {
-        const field = event.target;
-        if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
-          return;
-        }
-        if (field.validity.valueMissing) {
-          field.setCustomValidity(REQUIRED_TEXT);
-        } else if (field.type === 'tel' && field.validity.patternMismatch) {
-          field.setCustomValidity(PHONE_TEXT);
-        } else {
-          field.setCustomValidity('');
-        }
-      }, true);
-
-      form.addEventListener('input', (event) => {
-        const field = event.target;
-        if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
-          field.setCustomValidity('');
-        }
+      form.addEventListener('reset', () => {
+        fieldErrors?.clearAll();
       });
     }
 
@@ -803,19 +894,17 @@ const legalOptions = [
       return 'lead_cold';
     }
 
-    async function submitLead({ event, form, status, endpoint, leadTagInput, fallbackLeadTag, onSuccess }) {
+    async function submitLead({ event, form, setStatus, fieldErrors, sectionFlow, endpoint, leadTagInput, fallbackLeadTag, onSuccess }) {
       event.preventDefault();
-      if (!form || !status) return;
-      if (!form.reportValidity()) {
+      if (!form) return;
+
+      const validation = runSequentialValidation({ form, fieldErrors, setStatus });
+      if (!validation.ok) {
+        focusSection(validation.section, form);
         return;
       }
 
-      const selectedAreaNodes = form.querySelectorAll('input[name="areas"]:checked');
-      if (selectedAreaNodes.length === 0) {
-        status.textContent = 'Vui lòng chọn ít nhất 1 khu vực ưu tiên.';
-        return;
-      }
-      const selectedAreaValues = Array.from(selectedAreaNodes).map((input) => input.value);
+      const selectedAreaValues = Array.from(form.querySelectorAll('input[name="areas"]:checked')).map((input) => input.value);
 
       const now = new Date();
       const vnDateTime = now.toLocaleString('vi-VN', {
@@ -846,16 +935,16 @@ const legalOptions = [
       data.submittedAtLocal = vnDateTime;
 
       if (data.company) {
-        status.textContent = 'Đã chặn spam.';
+        setStatus?.('Đã chặn spam.', 'warning');
         return;
       }
 
       if (!endpoint) {
-        status.textContent = 'Chưa cấu hình PUBLIC_LEAD_ENDPOINT.';
+        setStatus?.('Chưa cấu hình PUBLIC_LEAD_ENDPOINT.', 'error');
         return;
       }
 
-      status.textContent = 'Đang gửi...';
+      setStatus?.('Đang gửi...', 'info');
       try {
         const body = new URLSearchParams();
         Object.entries(data).forEach(([key, value]) => {
@@ -875,8 +964,10 @@ const legalOptions = [
           } catch (parseErr) {
             console.warn('Không parse được payload, dùng message mặc định.', parseErr);
           }
-          status.textContent = payloadMessage;
+          setStatus?.(payloadMessage, 'success');
           form.reset();
+          sectionFlow?.reset?.();
+          fieldErrors?.clearAll();
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
@@ -887,15 +978,240 @@ const legalOptions = [
       } catch (error) {
         console.error(error);
         if (error instanceof TypeError) {
-          status.textContent = 'Đã nhận thông tin!';
+          setStatus?.('Đã nhận thông tin!', 'success');
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
           form.reset();
+          sectionFlow?.reset?.();
+          fieldErrors?.clearAll();
         } else {
-          status.textContent = 'Không gửi được, vui lòng thử lại.';
+          setStatus?.('Không gửi được, vui lòng thử lại.', 'error');
         }
       }
+    }
+
+    function runSequentialValidation({ form, fieldErrors, setStatus }) {
+      if (!form) {
+        return { ok: false, section: undefined };
+      }
+      for (const key of SECTION_FLOW) {
+        const result = validateSection(key, form);
+        if (!result.valid) {
+          if (result.message) {
+            fieldErrors?.set(key, result.message);
+            setStatus?.(result.message, 'error');
+          }
+          return { ok: false, section: key };
+        }
+        fieldErrors?.clear(key);
+      }
+      if (setStatus?.currentState !== 'success') {
+        setStatus?.('');
+      }
+      return { ok: true };
+    }
+
+    function createFieldErrorRegistry(form) {
+      const errorNodes = new Map();
+      form.querySelectorAll('[data-error-for]').forEach((node) => {
+        if (!(node instanceof HTMLElement)) return;
+        const key = node.dataset.errorFor;
+        if (!key) return;
+        errorNodes.set(key, node);
+        node.setAttribute('hidden', 'hidden');
+      });
+
+      const getGroup = (key) => form.querySelector(`[data-field-group="${key}"]`);
+
+      const set = (key, message = '') => {
+        if (!key) return;
+        const node = errorNodes.get(key);
+        const text = message?.trim() ?? '';
+        if (node) {
+          if (text) {
+            node.textContent = text;
+            node.removeAttribute('hidden');
+          } else {
+            node.textContent = '';
+            node.setAttribute('hidden', 'hidden');
+          }
+        }
+        const group = getGroup(key);
+        if (group) {
+          if (text) {
+            group.classList.add('is-invalid');
+          } else {
+            group.classList.remove('is-invalid');
+          }
+        }
+      };
+
+      const clear = (key) => set(key, '');
+      const clearAll = () => {
+        errorNodes.forEach((_node, key) => {
+          clear(key);
+        });
+      };
+
+      return { set, clear, clearAll };
+    }
+
+    function focusField(field) {
+      if (!field) return;
+      requestAnimationFrame(() => {
+        if (typeof field.scrollIntoView === 'function') {
+          field.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        }
+        if (typeof field.focus === 'function') {
+          field.focus({ preventScroll: true });
+        }
+      });
+    }
+
+    function getFieldErrorKey(field) {
+      if (!field) return '';
+      if (field.name) return field.name;
+      if (field.dataset?.errorKey) return field.dataset.errorKey;
+      const group = field.closest('[data-field-group]');
+      return group instanceof HTMLElement ? group.dataset.fieldGroup ?? '' : '';
+    }
+
+    function setupSectionFlow(form, fieldErrors) {
+      if (!form) return null;
+      const completedSections = new Set();
+
+      const handleProgress = (key) => {
+        if (!isSectionComplete(key, form)) {
+          completedSections.delete(key);
+          return;
+        }
+        if (completedSections.has(key)) {
+          return;
+        }
+        completedSections.add(key);
+        fieldErrors?.clear(key);
+        const nextKey = getNextSectionKey(key);
+        if (nextKey) {
+          focusSection(nextKey, form);
+        } else {
+          const submitButton = form.querySelector('button[type="submit"]');
+          focusField(submitButton);
+        }
+      };
+
+      SECTION_FLOW.forEach((key) => {
+        const group = form.querySelector(`[data-field-group="${key}"]`);
+        if (!group) return;
+        const inputs = group.querySelectorAll('input, select, textarea');
+        inputs.forEach((input) => {
+          const eventName = input.type === 'radio' || input.type === 'checkbox' ? 'change' : 'input';
+          input.addEventListener(eventName, () => handleProgress(key));
+        });
+      });
+
+      return {
+        reset: () => completedSections.clear()
+      };
+    }
+
+    function isSectionComplete(key, form) {
+      switch (key) {
+        case 'intent':
+        case 'budgetRange':
+        case 'legalRisk':
+          return Boolean(form.querySelector(`input[name="${key}"]:checked`));
+        case 'areas':
+          return form.querySelectorAll('input[name="areas"]:checked').length > 0;
+        case 'contact': {
+          const input = form.querySelector('input[name="contact"]');
+          const value = input?.value?.trim() ?? '';
+          return PHONE_PATTERN.test(value);
+        }
+        default:
+          return true;
+      }
+    }
+
+    function validateSection(key, form) {
+      switch (key) {
+        case 'intent': {
+          const checked = form.querySelector('input[name="intent"]:checked');
+          return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.intent };
+        }
+        case 'budgetRange': {
+          const checked = form.querySelector('input[name="budgetRange"]:checked');
+          return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.budgetRange };
+        }
+        case 'areas': {
+          const checkedCount = form.querySelectorAll('input[name="areas"]:checked').length;
+          if (checkedCount === 0) {
+            return { valid: false, message: SECTION_MESSAGES.areas };
+          }
+          if (checkedCount > AREA_LIMIT) {
+            return { valid: false, message: `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.` };
+          }
+          return { valid: true };
+        }
+        case 'legalRisk': {
+          const checked = form.querySelector('input[name="legalRisk"]:checked');
+          return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.legalRisk };
+        }
+        case 'contact': {
+          const input = form.querySelector('input[name="contact"]');
+          const value = input?.value?.trim() ?? '';
+          if (!value) {
+            return { valid: false, message: 'Vui lòng nhập số liên hệ.' };
+          }
+          if (!PHONE_PATTERN.test(value)) {
+            return { valid: false, message: 'Số liên hệ phải đủ 10 số và bắt đầu bằng 03, 05, 07, 08, 09 hoặc 01[2|6|8|9].' };
+          }
+          return { valid: true };
+        }
+        default:
+          return { valid: true };
+      }
+    }
+
+    function focusSection(key, form) {
+      if (!key || !form) return;
+      const group = form.querySelector(`[data-field-group="${key}"]`);
+      if (!group) return;
+      const focusable = group.querySelector('input:not([type="hidden"]), select, textarea, button');
+      if (focusable) {
+        focusField(focusable);
+      }
+    }
+
+    function getNextSectionKey(key) {
+      const index = SECTION_FLOW.indexOf(key);
+      if (index === -1) return undefined;
+      return SECTION_FLOW[index + 1];
+    }
+
+    function allSectionsValid(form) {
+      return SECTION_FLOW.every((key) => validateSection(key, form).valid);
+    }
+
+    function applySequentialTabIndex(form) {
+      if (!form) return;
+      const focusableSelectors = [
+        'input:not([type="hidden"]):not(.hp)',
+        'select',
+        'textarea',
+        'button'
+      ].join(',');
+      const focusables = Array.from(form.querySelectorAll(focusableSelectors));
+      let order = 1;
+      focusables.forEach((node) => {
+        if (node instanceof HTMLInputElement || node instanceof HTMLSelectElement || node instanceof HTMLTextAreaElement || node instanceof HTMLButtonElement) {
+          if (node.disabled || node.tabIndex < 0) {
+            return;
+          }
+          node.tabIndex = order;
+          order += 1;
+        }
+      });
     }
   })();
 </script>

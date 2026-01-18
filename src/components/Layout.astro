@@ -160,5 +160,93 @@ const pillarsHref = `${basePath}/pillars`;
         });
       });
     </script>
+    <script type="module">
+      const MIN_STACK_COLUMNS = 5;
+
+      const enhanceTables = () => {
+        const tables = Array.from(document.querySelectorAll('.reading-content table'));
+        if (tables.length === 0) return;
+
+        tables.forEach((table) => {
+          if (table.dataset.tableEnhanced === 'true') {
+            return;
+          }
+
+          const parent = table.parentElement;
+          if (!parent) return;
+
+          const columnCount = getColumnCount(table);
+          const shouldStack = columnCount >= MIN_STACK_COLUMNS;
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'table-responsive';
+          const scroller = document.createElement('div');
+          scroller.className = 'table-scroll';
+
+          parent.insertBefore(wrapper, table);
+          scroller.appendChild(table);
+          wrapper.appendChild(scroller);
+
+          table.dataset.tableEnhanced = 'true';
+          if (shouldStack) {
+            table.dataset.tableStack = 'true';
+            applyDataLabels(table);
+          }
+
+          const hint = document.createElement('div');
+          hint.className = 'table-scroll-hint';
+          hint.innerHTML = '<span>Kéo ngang để xem đủ cột</span>';
+          wrapper.appendChild(hint);
+
+          const updateOverflow = () => {
+            const overflow = scroller.scrollWidth - scroller.clientWidth > 4;
+            wrapper.dataset.overflow = overflow ? 'true' : 'false';
+            if (!overflow) {
+              wrapper.dataset.scrolled = 'true';
+            }
+          };
+
+          updateOverflow();
+
+          if (typeof ResizeObserver !== 'undefined') {
+            const resizeObserver = new ResizeObserver(updateOverflow);
+            resizeObserver.observe(scroller);
+          } else {
+            window.addEventListener('resize', updateOverflow);
+          }
+
+          scroller.addEventListener('scroll', () => {
+            if (scroller.scrollLeft > 12) {
+              wrapper.dataset.scrolled = 'true';
+            }
+          });
+        });
+      };
+
+      function getColumnCount(table) {
+        const headerRow = table.querySelector('thead tr') || table.querySelector('tr');
+        return headerRow ? headerRow.children.length : 0;
+      }
+
+      function applyDataLabels(table) {
+        const headers = Array.from(table.querySelectorAll('thead th')).map((cell, index) => {
+          const text = cell.textContent?.trim();
+          return text && text.length > 0 ? text : `Cột ${index + 1}`;
+        });
+
+        Array.from(table.querySelectorAll('tbody tr')).forEach((row) => {
+          Array.from(row.cells).forEach((cell, index) => {
+            const label = headers[index] || headers[headers.length - 1] || `Cột ${index + 1}`;
+            cell.setAttribute('data-label', label);
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', enhanceTables, { once: true });
+      } else {
+        enhanceTables();
+      }
+    </script>
   </body>
 </html>
