@@ -1,5 +1,6 @@
 ---
 title: "Hỏi đáp pháp lý dành cho người mới mua đất Hòa Lạc"
+description: "Bộ hỏi đáp pháp lý cho người mới mua đất Hòa Lạc 2026, hướng dẫn kiểm tra sổ đỏ, quy hoạch và nghĩa vụ thuế cần hoàn tất."
 slug: "hoi-dap-phap-ly-danh-cho-nguoi-moi"
 pillar: "phap-ly-va-rui-ro"
 search_intent: "informational"
@@ -9,6 +10,7 @@ week_plan: "2026w04"
 draft: false
 allowed_cta: "tofu"
 updatedAt: "2026-01-17"
+dateModified: "2026-01-19"
 ---
 
 Theo thống kê sơ bộ của Văn phòng Đăng ký đất đai huyện Quốc Oai cuối năm 2025, có hơn 430 hồ sơ chuyển nhượng ở Hòa Lạc bị yêu cầu bổ sung vì thiếu chứng thực hoặc chưa hoàn thành nghĩa vụ thuế. Với người mới, hệ thống văn bản và thủ tục pháp lý dễ gây quá tải. Bài hỏi đáp dưới đây tổng hợp những thắc mắc phổ biến nhất trong nhóm khách mua để ở hoặc đầu tư vừa phải, giúp bạn hình dung rõ các bước cần chuẩn bị trước khi xuống tiền.

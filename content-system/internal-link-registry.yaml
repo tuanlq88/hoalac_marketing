@@ -8,7 +8,7 @@ pillars:
       - lo-trinh-ha-tang-thach-hoa-2026
   phan-tich-khu-vuc:
     slug: /pillars/phan-tich-khu-vuc
-    level: MOFU
+    level: MIXED
     supports:
       - diem-nong-dau-tu-tien-xuan
       - khu-cong-nghe-cao-hoa-lac

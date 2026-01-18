@@ -4,11 +4,13 @@ Act as the SEO CONTENT AGENT.
 
 BẮT BUỘC TUÂN THỦ:
 - agents/seo/seo_content.prompt.md
+- agents/seo/seo_rules.md
 
 NGUỒN DỮ LIỆU (READ ONLY):
 - content-system/content_strategy.md
 - content-system/plans/content_plan_2026w04.yaml
 - src/content/posts/*.md
+- src/content/pillars/*.md
 
 NHIỆM VỤ DUY NHẤT:
 - Tối ưu SEO ON-PAGE cho các bài viết ĐÃ TỒN TẠI

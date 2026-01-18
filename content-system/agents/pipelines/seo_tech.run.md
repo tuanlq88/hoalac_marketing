@@ -8,7 +8,8 @@ BẮT BUỘC TUÂN THỦ:
 
 INPUT:
 - Các file markdown (.md) đã tồn tại trong:
-  src/content/posts/
+  - src/content/posts/
+  - src/content/pillars/
 
 NHIỆM VỤ DUY NHẤT:
 - Tối ưu SEO KỸ THUẬT:
