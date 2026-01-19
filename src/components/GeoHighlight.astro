@@ -16,7 +16,7 @@ const mergedUnits = [
 ];
 
 const mapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.44%2C20.97%2C105.59%2C21.06&layer=mapnik&marker=21.0119%2C105.514";
-const adminMapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.44%2C20.97%2C105.59%2C21.06&layer=transportmap";
+const adminMapSrc = "https://umap.openstreetmap.fr/en/map/hoalac_market_1346350#13/20.9897/105.5304";
 ---
 <section class="geo" data-geo>
   <div class="geo__inner">
@@ -106,12 +106,13 @@ const adminMapSrc = "https://www.openstreetmap.org/export/embed.html?bbox=105.44
 
 <style>
   .geo {
-    margin: 0 auto 4rem;
-    padding: 4rem 1.5rem;
-    background: radial-gradient(circle at top right, rgba(29, 174, 152, 0.25), transparent 55%),
-      radial-gradient(circle at bottom left, rgba(236, 118, 38, 0.2), transparent 45%),
-      #f0f8f4;
-  }
+      margin: 0 auto 4rem;
+      padding: 4rem 1.5rem;
+      background:
+        radial-gradient(circle at center left, rgba(29, 174, 152, 0.35), transparent 55%),
+        radial-gradient(circle at center right, rgba(236, 117, 38, 0.35), transparent 45%),
+        #f0f8f4;
+    }
   .geo__inner {
     max-width: 1200px;
     margin: 0 auto;
