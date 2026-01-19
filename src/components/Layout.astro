@@ -142,12 +142,9 @@ const pillarsHref = `${basePath}/pillars`;
           detail: { source: 'global-nav' }
         }));
 
-        if (window.__hoaLacLeadPortal?.open) {
-          window.__hoaLacLeadPortal.open();
-          return;
+        if (!window.__hoaLacLeadPortal?.open) {
+          window[portalQueueKey].push('open');
         }
-
-        window[portalQueueKey].push('open');
       };
 
       anchors.forEach((anchor) => {

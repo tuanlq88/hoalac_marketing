@@ -633,10 +633,12 @@ const legalOptions = [
       };
 
       const closeModal = () => {
-        if (!shell.classList.contains('is-modal-open')) return;
+        const wasModal = shell.classList.contains('is-modal-open');
         shell.classList.remove('is-modal-open');
         overlay?.setAttribute('aria-hidden', 'true');
-        setBodyScrollLock(false);
+        if (wasModal) {
+          setBodyScrollLock(false);
+        }
         form.reset();
         sectionFlow?.reset();
         if (leadTagInput) {
@@ -653,6 +655,9 @@ const legalOptions = [
       };
 
       const openModal = () => {
+        if (shell.classList.contains('is-modal-open')) {
+          return;
+        }
         shell.classList.add('is-modal-open');
         shell.classList.add('is-expanded');
         shell.classList.remove('is-collapsed');
