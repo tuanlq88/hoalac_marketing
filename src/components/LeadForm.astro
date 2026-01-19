@@ -731,7 +731,6 @@ const legalOptions = [
           anchor.addEventListener('click', (event) => {
             if (!shell.classList.contains('is-collapsed')) return;
             if (!deferDisplay || !showFloatingCta) return;
-            if (shouldUseModal()) return;
             event.preventDefault();
             revealLeadCapture();
           });
