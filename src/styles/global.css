@@ -242,6 +242,10 @@ main {
   animation: footerCtaPulse 2.2s ease-in-out infinite;
 }
 
+.site-footer__cta--hidden {
+  display: none;
+}
+
 .site-footer__cta::after {
   content: "";
   position: absolute;

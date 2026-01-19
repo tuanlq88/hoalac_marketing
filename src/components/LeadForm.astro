@@ -579,6 +579,26 @@ const legalOptions = [
       let preferModal = forceModal;
       let previousOverflow = '';
 
+      const emitFloatingToggle = (visible) => {
+        window.dispatchEvent(new CustomEvent('lead-floating-cta-toggle', {
+          detail: { visible }
+        }));
+      };
+
+      const showFloatingCtaButton = () => {
+        if (!floatingCta) return;
+        floatingCta.removeAttribute('aria-hidden');
+        emitFloatingToggle(true);
+      };
+
+      const hideFloatingCtaButton = () => {
+        if (!floatingCta) return;
+        floatingCta.setAttribute('aria-hidden', 'true');
+        emitFloatingToggle(false);
+      };
+
+      hideFloatingCtaButton();
+
       setupValidationListeners(form, fieldErrors, setStatus);
       applySequentialTabIndex(form);
       const sectionFlow = setupSectionFlow(form, fieldErrors);
@@ -628,7 +648,7 @@ const legalOptions = [
         if (deferDisplay && showFloatingCta) {
           shell.classList.add('is-collapsed');
           shell.classList.add('cta-visible');
-          floatingCta?.removeAttribute('aria-hidden');
+          showFloatingCtaButton();
         }
       };
 
@@ -637,7 +657,7 @@ const legalOptions = [
         shell.classList.add('is-expanded');
         shell.classList.remove('is-collapsed');
         shell.classList.remove('cta-visible');
-        floatingCta?.setAttribute('aria-hidden', 'true');
+        hideFloatingCtaButton();
         overlay?.removeAttribute('aria-hidden');
         setBodyScrollLock(true);
         const firstField = form.querySelector('input, select, textarea');
@@ -672,7 +692,7 @@ const legalOptions = [
         shell.classList.add('is-expanded');
         shell.classList.remove('is-collapsed');
         shell.classList.remove('cta-visible');
-        floatingCta?.setAttribute('aria-hidden', 'true');
+        hideFloatingCtaButton();
         const firstField = form.querySelector('input, select, textarea');
         firstField?.focus();
         form.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -699,7 +719,7 @@ const legalOptions = [
           const progress = maxScroll <= 0 ? 1 : window.scrollY / maxScroll;
           if (progress >= SCROLL_THRESHOLD) {
             shell.classList.add('cta-visible');
-            floatingCta.removeAttribute('aria-hidden');
+            showFloatingCtaButton();
             window.removeEventListener('scroll', onScroll);
           }
         };
