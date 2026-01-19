@@ -87,7 +87,7 @@ Room pháp lý chỉ thực sự an toàn khi nhóm “Sẵn sàng giao dịch�
 - **Tuyến giao thông chuyển trạng thái cấm tải**: giảm room cho các lô logistic vì khả năng khai thác bị giới hạn.
 
 ### 4.3 Đồng bộ với hệ sinh thái nội dung
-Để đảm bảo quyết định luôn bám vào dữ liệu mới nhất, nhà đầu tư nên quay lại hub [`Giá & cơ hội đầu tư`](/pillars/gia-va-co-hoi-dau-tu) mỗi quý. Hub này tổng hợp báo cáo giá, cập nhật tiến độ hạ tầng và khuyến nghị phân bổ vốn, giúp việc điều chỉnh room diễn ra nhanh chóng khi thị trường thay đổi.
+Để đảm bảo quyết định luôn bám vào dữ liệu mới nhất, nhà đầu tư nên định kỳ rà soát các cập nhật trong toàn bộ hệ sinh thái nội dung nội bộ. Các báo cáo giá, tiến độ hạ tầng và khuyến nghị phân bổ vốn cần được lưu lại để đội ngũ điều chỉnh room kịp thời khi thị trường thay đổi.
 
 ## 5. Bài học & rủi ro
 1. **Đừng giữ room dựa trên “kỳ vọng mở đường”**: nếu dự án hạ tầng chưa có thời hạn nghiệm thu rõ ràng, mọi room gắn với kỳ vọng đó đều mang tính đầu cơ. Ưu tiên sản phẩm đã có lợi thế hiện hữu thay vì chờ kịch bản tốt nhất.
@@ -101,6 +101,8 @@ Room pháp lý chỉ thực sự an toàn khi nhóm “Sẵn sàng giao dịch�
 - **90 ngày**: đánh giá lại toàn bộ danh mục; nếu tỷ lệ “Sẵn sàng giao dịch” <60%, giảm nhịp mua và tập trung vào giải phóng room chứ không mở rộng thêm.
 
 Giữ room đầu tư không chỉ là chuyện tín dụng mà là nghệ thuật vận hành song song tài chính, pháp lý và hạ tầng. Khi duy trì được kỷ luật này, nhà đầu tư sẽ luôn ở vị thế chủ động, sẵn sàng chốt giao dịch chất lượng ngay khi thị trường xuất hiện tín hiệu tích cực tiếp theo.
+
+Toàn bộ chiến lược trong bài nằm trong hệ sinh thái [hub Gia & cơ hội đầu tư](/pillars/gia-va-co-hoi-dau-tu); hãy quay lại hub để cập nhật thêm báo cáo giá, case study và các hướng dẫn MOFU/BOFU liên quan khi cần đồng bộ đội ngũ.
 
 <script type="application/ld+json">
 {

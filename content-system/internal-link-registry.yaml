@@ -8,7 +8,7 @@ pillars:
       - lo-trinh-ha-tang-thach-hoa-2026
   phan-tich-khu-vuc:
     slug: /pillars/phan-tich-khu-vuc
-    level: MIXED
+    level: MOFU
     supports:
       - diem-nong-dau-tu-tien-xuan
       - khu-cong-nghe-cao-hoa-lac
@@ -22,12 +22,12 @@ pillars:
       - quy-trinh-kiem-tra-so-do-hoa-lac
   gia-va-co-hoi-dau-tu:
     slug: /pillars/gia-va-co-hoi-dau-tu
-    level: MIXED
+    level: MOFU
     supports:
       - bao-cao-gia-hoa-lac-q1-2026
       - cac-moc-gia-khu-cong-nghe-cao-mo-rong
-      - chien-luoc-giu-room-dau-tu-hoa-lac
       - case-study-mua-dat-dinh-cu-duong-lang
+      - chien-luoc-giu-room-dau-tu-hoa-lac
       - du-bao-dong-luc-gia-hoa-lac-2026
 
 handoff_rules:
@@ -41,4 +41,10 @@ handoff_rules:
   BOFU:
     can_link_to: []
 
-violations: []
+violations:
+  - post: case-study-mua-dat-dinh-cu-duong-lang
+    issue: Missing required link back to pillar hub gia-va-co-hoi-dau-tu.
+  - post: chien-luoc-giu-room-dau-tu-hoa-lac
+    issue: Missing required link back to pillar hub gia-va-co-hoi-dau-tu.
+  - post: tong-quan-quy-hoach
+    issue: TOFU pillar only links to TOFU articles and lacks a MOFU handoff.

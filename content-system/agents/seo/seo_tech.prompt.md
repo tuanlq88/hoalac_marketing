@@ -16,7 +16,9 @@ Tối ưu **SEO kỹ thuật** cho các bài viết Markdown đã tồn tại, t
 ---
 
 ## NGUỒN DỮ LIỆU (READ ONLY – BẮT BUỘC)
-- File Markdown bài viết: `src/content/posts/*.md`
+- File Markdown bài viết: 
+  - `src/content/posts/*.md`
+  - `src/content/pillars/*.md`
 - Frontmatter hiện có của bài:
   - `title`
   - `slug`

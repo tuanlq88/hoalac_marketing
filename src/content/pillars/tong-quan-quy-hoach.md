@@ -71,10 +71,34 @@ Pillar tận dụng báo cáo này để định hướng người đọc: mọi
 2. **Đào sâu động lực hạ tầng** – chuyển sang [`Lộ trình hạ tầng Thạch Hòa 2026`](/blog/lo-trinh-ha-tang-thach-hoa-2026) nhằm biết dự án nào sẽ triển khai trong ngắn hạn, khu vực nào hưởng lợi, khu nào cần cẩn trọng vì nguy cơ giải toả.
 3. **Đối chiếu nhu cầu cư trú** – kết thúc bằng [`Báo cáo nhu cầu ở thật Hòa Lạc 2026`](/blog/bao-cao-nhu-cau-o-that-hoa-lac-2026) để kiểm chứng xem nguồn cầu có đủ mạnh cho chiến lược bạn đang cân nhắc.
 
-Bạn có thể quay lại pillar ở mỗi bước để ghi chú tiến độ và cập nhật checklist cá nhân. Nếu cần mở rộng sang các trục nội dung khác (phân tích khu vực cụ thể, pháp lý hay giá), hãy truy cập các pillar tương ứng ngay khi chúng được xuất bản.
+Bạn có thể quay lại pillar ở mỗi bước để ghi chú tiến độ và cập nhật checklist cá nhân. Nếu cần mở rộng sang các trục nội dung khác (phân tích khu vực cụ thể, pháp lý hay giá), hãy truy cập các pillar tương ứng – ví dụ [hub Phân tích khu vực](/pillars/phan-tich-khu-vuc) – ngay khi chúng được xuất bản để tiếp tục hành trình MOFU.
 
 ## 7. Kết luận & định hướng tiếp theo
 
 Hòa Lạc đang trải qua giai đoạn chuyển tiếp từ kỳ vọng sang hiện thực: quy hoạch được cập nhật, hạ tầng mũi nhọn bắt đầu lên công trường, cộng đồng cư dân thật sự dịch chuyển. Pillar “Tổng quan quy hoạch & Động lực hạ tầng” tồn tại để đảm bảo mọi người chơi – từ gia đình tìm nơi an cư đến nhà đầu tư trung hạn – đều có chung một bộ dữ liệu nền trước khi bàn về cơ hội chi tiết. Hãy xem đây là trang “gốc rễ”: mỗi khi xuất hiện thông tin mới, đối chiếu nó với ba trụ dữ liệu (bản đồ, hạ tầng, nhu cầu) rồi mới quyết định có đào sâu hay không.
 
 Trong thời gian tới, khi các pillar khác (Phân tích khu vực, Pháp lý & Rủi ro, Giá & Cơ hội đầu tư) được hoàn thiện, bạn sẽ có một hệ thống liên kết chặt chẽ giúp di chuyển mượt giữa các mức độ chi tiết. Giữ nhịp cập nhật định kỳ, kiểm chứng thông tin tại nguồn chính thống và tránh thái độ “FOMO hạ tầng” là chìa khóa để đi xa tại thị trường vệ tinh đang thay đổi từng quý như Hòa Lạc.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Tổng quan Quy hoạch & Động lực hạ tầng Hòa Lạc",
+  "description": "Hub hệ thống hóa khung quy hoạch, tiến độ hạ tầng và nhu cầu cư trú Hòa Lạc để người đọc nắm vững nền tảng trước khi nghiên cứu từng khu vực hoặc sản phẩm cụ thể.",
+  "datePublished": "2026-01-19",
+  "dateModified": "2026-01-19",
+  "inLanguage": "vi-VN",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://hoalac.marketing/pillars/tong-quan-quy-hoach"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Hòa Lạc Marketing"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Hòa Lạc Marketing"
+  }
+}
+</script>

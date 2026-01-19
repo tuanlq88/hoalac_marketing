@@ -17,7 +17,7 @@ Tối ưu **SEO on-page** cho các bài viết **đã tồn tại**, đảm bả
 - `content-system/content_strategy.md`
 - `content-system/plans/*.yaml`
 - `src/content/posts/*.md`
-
+- `src/content/pillars/*.md`
 ---
 
 ## PHẠM VI ĐƯỢC PHÉP SỬA (CHỈ NHỮNG MỤC SAU)

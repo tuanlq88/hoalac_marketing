@@ -84,7 +84,7 @@ Gia đình chỉ rót 3,9 tỷ vốn tự có vào giao dịch, phần còn lạ
 4. **Xử lý thế chấp**: sổ đang thế chấp Agribank Thạch Thất cho khoản vay 1,1 tỷ. Người bán giải chấp trong 7 ngày, giao sổ gốc trước khi công chứng.
 5. **Đặt điều kiện chuyển mục đích**: nếu UBND huyện không ra thông báo trong 120 ngày, gia đình được quyền hủy giao dịch và nhận lại 100% tiền đã thanh toán.
 
-Song song, họ áp dụng checklist từ bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để đồng bộ hạn mức với tiến độ thanh toán.
+Song song, họ áp dụng checklist nội bộ về chiến lược giữ room để đồng bộ hạn mức với tiến độ thanh toán.
 
 ## 6. Timeline 90 ngày
 
@@ -119,8 +119,8 @@ Chi phí xây dựng dự kiến 6,8 triệu/m² cho phần thô, 3,2 triệu/m�
 
 ## Bước tiếp theo
 
-- Rà soát thêm các mô hình tối ưu vốn được tổng hợp tại hub [`Gia & cơ hội đầu tư`](/pillars/gia-va-co-hoi-dau-tu) để cập nhật dải giá mới 2026.
-- Khi cần giữ room cho nhiều hồ sơ song song, tiếp tục áp dụng bộ chiến lược trong bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) trước khi ký hợp đồng xây dựng.
+- Rà soát thêm các mô hình tối ưu vốn trong [hub Gia & cơ hội đầu tư](/pillars/gia-va-co-hoi-dau-tu) để cập nhật dải giá mới 2026.
+- Khi cần giữ room cho nhiều hồ sơ song song, tiếp tục áp dụng bộ chiến lược giữ room trước khi ký hợp đồng xây dựng.
 - Hoàn thiện bộ hồ sơ xin phép xây dựng ngay sau khi có quyết định chuyển mục đích để kịp dọn về trước năm học 2027.
 
 <script type="application/ld+json">
