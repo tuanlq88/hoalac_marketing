@@ -82,7 +82,7 @@ const relatedPosts = posts
             </ul>
           </div>
         )}
-        <div class="pillar-card">
+        <div class="pillar-card pillar-card--leadform">
           <p class="pillar-card-eyebrow">Cần tư vấn?</p>
           <LeadForm
             headline="Điền 5 câu để đội ngũ phản hồi 24h"
@@ -146,6 +146,38 @@ const relatedPosts = posts
     border: 1px solid var(--shell-border, rgba(255, 255, 255, 0.08));
     border-radius: 1.25rem;
     background: var(--shell-bg, rgba(255, 255, 255, 0.02));
+  }
+
+  .pillar-card--leadform {
+    padding: 1rem;
+  }
+
+  .pillar-card--leadform :global(.section-shell--lead) {
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .pillar-card--leadform :global(.lead-shell) {
+    max-width: none;
+    margin: 0;
+  }
+
+  .pillar-card--leadform :global(.lead-card) {
+    padding: clamp(1rem, 3vw, 1.5rem);
+    background: #fff;
+    border-radius: 1rem;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: none;
+  }
+
+  .pillar-card--leadform :global(.lead-copy) {
+    text-align: left;
+    margin-bottom: 0.85rem;
+  }
+
+  .pillar-card--leadform :global(.lead-form) {
+    padding: 0.75rem 0.5rem 0.5rem;
   }
 
   .pillar-card-eyebrow {
