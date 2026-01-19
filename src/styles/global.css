@@ -9,6 +9,32 @@
   --display-font: "Playfair Display", "Times New Roman", serif;
 }
 
+.pillar-content {
+  font-size: 1.04rem;
+  line-height: 1.8;
+}
+
+.pillar-content p {
+  margin: 1.25rem 0;
+}
+
+.pillar-content a[href^="/"],
+.pillar-content a[href^="./"],
+.pillar-content a[href^="../"] {
+  position: relative;
+  padding: 0 0.08em;
+  border-radius: 0.35rem;
+  box-shadow: inset 0 -0.35em rgba(212, 72, 9, 0.12);
+  transition: box-shadow 150ms ease, color 150ms ease;
+}
+
+.pillar-content a[href^="/"]:hover,
+.pillar-content a[href^="./"]:hover,
+.pillar-content a[href^="../"]:hover {
+  box-shadow: inset 0 -0.6em rgba(212, 72, 9, 0.22);
+  color: var(--accent-dark);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -409,7 +435,7 @@ main {
   margin: 1.5rem 0;
 }
 
-.reading-content table {
+:is(.reading-content, .pillar-content) table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -420,36 +446,36 @@ main {
   overflow: hidden;
 }
 
-.reading-content th,
-.reading-content td {
+:is(.reading-content, .pillar-content) th,
+:is(.reading-content, .pillar-content) td {
   padding: 0.85rem 1rem;
   text-align: left;
   border-bottom: 1px solid rgba(27, 27, 27, 0.08);
 }
 
-.reading-content th {
+:is(.reading-content, .pillar-content) th {
   background: rgba(212, 72, 9, 0.08);
   font-weight: 700;
   color: var(--accent-dark);
 }
 
-.reading-content tr:last-child td {
+:is(.reading-content, .pillar-content) tr:last-child td {
   border-bottom: none;
 }
 
-.reading-content table tbody tr:nth-child(even) {
+:is(.reading-content, .pillar-content) table tbody tr:nth-child(even) {
   background: rgba(0, 0, 0, 0.02);
 }
 
-.reading-content table-wrapper {
+:is(.reading-content, .pillar-content) table-wrapper {
   width: 100%;
 }
 
-.reading-content table-container {
+:is(.reading-content, .pillar-content) table-container {
   overflow-x: auto;
 }
 
-.reading-content table-container table {
+:is(.reading-content, .pillar-content) table-container table {
   min-width: 520px;
 }
 
@@ -528,13 +554,13 @@ main {
 }
 
 @media (max-width: 640px) {
-  .reading-content table[data-table-stack="true"] {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] {
     border: none;
     border-radius: 0;
     box-shadow: none;
   }
 
-  .reading-content table[data-table-stack="true"] thead {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] thead {
     border: 0;
     clip: rect(0 0 0 0);
     height: 1px;
@@ -545,20 +571,20 @@ main {
     position: absolute;
   }
 
-  .reading-content table[data-table-stack="true"] tbody,
-  .reading-content table[data-table-stack="true"] tr,
-  .reading-content table[data-table-stack="true"] td {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] tbody,
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] tr,
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] td {
     display: block;
     width: 100%;
   }
 
-  .reading-content table[data-table-stack="true"] tbody {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] tbody {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
 
-  .reading-content table[data-table-stack="true"] tr {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] tr {
     border: 1px solid rgba(27, 27, 27, 0.12);
     border-radius: 1rem;
     padding: 1rem 1.15rem;
@@ -566,18 +592,18 @@ main {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
   }
 
-  .reading-content table[data-table-stack="true"] td {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] td {
     border-bottom: none;
     padding: 0.35rem 0;
   }
 
-  .reading-content table[data-table-stack="true"] td + td {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] td + td {
     border-top: 1px solid rgba(27, 27, 27, 0.05);
     padding-top: 0.5rem;
     margin-top: 0.35rem;
   }
 
-  .reading-content table[data-table-stack="true"] td::before {
+  :is(.reading-content, .pillar-content) table[data-table-stack="true"] td::before {
     content: attr(data-label);
     font-weight: 600;
     font-size: 0.85rem;
