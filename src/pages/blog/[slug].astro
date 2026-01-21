@@ -38,7 +38,9 @@ const resolveExcerpt = (entry: CollectionEntry<'posts'>) =>
   entry.data.excerpt ?? entry.data.description ?? '';
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
+const tocEntries = (headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
+const hasToc = tocEntries.length > 0;
 const allowedCTA = post.data.allowed_cta ?? null;
 const intent = post.data.search_intent ?? null;
 const funnelStage = post.data.funnel_stage ?? null;
@@ -48,28 +50,238 @@ const dateLabel = resolveDateLabel(post);
 const excerpt = resolveExcerpt(post);
 ---
 <Layout title={post.data.title} description={excerpt}>
-  <article class="reading-shell">
-    <div class="reading-meta">
-      {tags.length > 0 && <p class="tag">{tags.join(' / ')}</p>}
-      <p>{dateLabel}</p>
-    </div>
-    <h1 class="reading-title">{post.data.title}</h1>
-    <div class="reading-content">
-      <Content />
-    </div>
-    {shouldRenderCTA && (
-      <CTAEngine
-        class="reading-cta"
-        intent={intent}
-        funnel={funnelStage}
-        allowedCta={allowedCTA}
-      />
+  <div class="reading-layout">
+    {hasToc && (
+      <nav class="reading-toc" aria-label="Mục lục bài viết" data-reading-toc>
+        <button class="reading-toc__toggle" type="button" data-reading-toc-toggle>
+          <span>Mục lục</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+        <div class="reading-toc__panel" data-reading-toc-panel>
+          <p class="reading-toc__title">Mục lục</p>
+          <ol>
+            {tocEntries.map((heading) => (
+              <li class:list={[heading.depth === 3 && 'reading-toc__item--nested']}>
+                <a href={`#${heading.slug}`} data-heading-id={heading.slug}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </nav>
     )}
-  </article>
+    <article class="reading-shell">
+      <div class="reading-meta">
+        {tags.length > 0 && <p class="tag">{tags.join(' / ')}</p>}
+        <p>{dateLabel}</p>
+      </div>
+      <h1 class="reading-title">{post.data.title}</h1>
+      <div class="reading-content">
+        <Content />
+      </div>
+      {shouldRenderCTA && (
+        <CTAEngine
+          class="reading-cta"
+          intent={intent}
+          funnel={funnelStage}
+          allowedCta={allowedCTA}
+        />
+      )}
+    </article>
+  </div>
 </Layout>
 
 <style>
+  .reading-layout {
+    margin: clamp(1.5rem, 5vw, 4rem) auto;
+    max-width: 1100px;
+    padding: 0 clamp(1rem, 4vw, 2rem);
+  }
+
+  .reading-toc {
+    display: none;
+    --reading-toc-top: clamp(6rem, calc(50vh - 200px), 12rem);
+  }
+
+  .reading-toc__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(15, 23, 42, 0.08);
+    border: none;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #0f172a;
+    font-size: var(--font-small);
+    transition: background 150ms ease;
+  }
+
+  .reading-toc__toggle svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reading-toc__toggle:hover {
+    background: rgba(15, 23, 42, 0.16);
+  }
+
+  .reading-toc__panel {
+    position: fixed;
+    left: clamp(1rem, 3vw, 2rem);
+    top: calc(var(--reading-toc-top, clamp(6rem, calc(50vh - 200px), 12rem)) + 3.5rem);
+    width: min(320px, 85vw);
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 35px 80px rgba(15, 23, 42, 0.25);
+    padding: 1.2rem 1.4rem;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: min(70vh, calc(100vh - 8rem));
+    overflow-y: auto;
+    z-index: 45;
+  }
+
+  .reading-toc[data-open="true"] .reading-toc__panel {
+    display: flex;
+  }
+
+  .reading-toc__title {
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--font-label);
+    color: var(--muted);
+  }
+
+  .reading-toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .reading-toc li {
+    font-size: var(--font-small);
+    line-height: 1.4;
+  }
+
+  .reading-toc__item--nested {
+    margin-left: 1rem;
+  }
+
+  .reading-toc a {
+    color: inherit;
+    position: relative;
+    padding: 0.1rem 0.25rem;
+    border-radius: 0.45rem;
+    background-image: linear-gradient(120deg, rgba(249, 115, 22, 0.12), rgba(249, 115, 22, 0.18));
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    transition: color 150ms ease, background-size 200ms ease;
+  }
+
+  .reading-toc a:hover,
+  .reading-toc a:focus-visible,
+  .reading-toc a.is-active {
+    color: var(--accent-dark);
+    background-size: 100% 100%;
+  }
+
+  @media (min-width: 768px) {
+    .reading-toc {
+      display: block;
+      position: fixed;
+      left: clamp(1rem, 3vw, 2rem);
+      top: var(--reading-toc-top, clamp(6rem, calc(50vh - 200px), 12rem));
+      z-index: 45;
+    }
+  }
+
   .reading-cta {
     margin-top: 4rem;
   }
 </style>
+
+<script type="module">
+  const toc = document.querySelector('[data-reading-toc]');
+  if (toc) {
+    const toggle = toc.querySelector('[data-reading-toc-toggle]');
+    const panel = toc.querySelector('[data-reading-toc-panel]');
+    const closePanel = () => toc?.setAttribute('data-open', 'false');
+    toggle?.addEventListener('click', () => {
+      const nextState = toc.getAttribute('data-open') === 'true' ? 'false' : 'true';
+      toc.setAttribute('data-open', nextState);
+    });
+
+    const links = Array.from(toc.querySelectorAll('a[data-heading-id]'));
+    const headingItems = links
+      .map((link) => {
+        const id = link.dataset.headingId;
+        if (!id) return null;
+        const heading = document.getElementById(id);
+        if (!heading) return null;
+        return { id, heading, link };
+      })
+      .filter(Boolean);
+
+    const setActiveLink = (id) => {
+      links.forEach((anchor) => {
+        if (anchor.dataset.headingId === id) {
+          anchor.classList.add('is-active');
+        } else {
+          anchor.classList.remove('is-active');
+        }
+      });
+    };
+
+    if (headingItems.length > 0) {
+      const computeActiveHeading = () => {
+        const offset = 140;
+        let currentId = headingItems[0]?.id;
+        for (const item of headingItems) {
+          const { top } = item.heading.getBoundingClientRect();
+          if (top - offset <= 0) {
+            currentId = item.id;
+          } else {
+            break;
+          }
+        }
+        if (currentId) {
+          setActiveLink(currentId);
+        }
+      };
+
+      let ticking = false;
+      const handleScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          computeActiveHeading();
+          ticking = false;
+        });
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', handleScroll);
+      computeActiveHeading();
+      panel?.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.tagName === 'A') {
+          closePanel();
+        }
+      });
+    }
+  }
+</script>

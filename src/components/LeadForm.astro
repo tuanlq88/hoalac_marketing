@@ -222,7 +222,7 @@ const legalOptions = [
     gap: 0.35rem;
     padding: 0.35rem 0.9rem;
     border-radius: 999px;
-    font-size: 0.85rem;
+    font-size: var(--font-label);
     background: rgba(15, 23, 42, 0.08);
     color: #0f172a;
     text-transform: uppercase;
@@ -297,7 +297,7 @@ const legalOptions = [
     font-weight: 600;
   }
   .option-text small {
-    font-size: 0.85rem;
+    font-size: var(--font-small);
     color: var(--muted);
   }
   .option:has(input:checked) {
@@ -306,7 +306,7 @@ const legalOptions = [
   }
   .hint {
     margin: 0 0 0.35rem;
-    font-size: 0.9rem;
+    font-size: var(--font-small);
     color: var(--muted);
   }
   .field-error {
@@ -334,8 +334,12 @@ const legalOptions = [
     border-radius: 0.9rem;
     border: 1px solid rgba(15, 23, 42, 0.16);
     padding: 0.9rem 1rem;
-    font-size: 1rem;
+    font-size: var(--font-small);
     font-family: inherit;
+  }
+  .lead-form input::placeholder,
+  .lead-form textarea::placeholder {
+    font-size: var(--font-small);
   }
   .lead-form .hp {
     display: none;
@@ -410,7 +414,7 @@ const legalOptions = [
     animation: floatPulse 6s ease-in-out infinite;
   }
   .floating-cta small {
-    font-size: 0.8rem;
+    font-size: var(--font-small);
     font-weight: 400;
   }
   [data-lead-shell].cta-visible .floating-cta {

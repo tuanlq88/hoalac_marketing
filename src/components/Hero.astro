@@ -69,6 +69,13 @@ const blogHref = `${basePath}/blog`;
     padding-top: clamp(2rem, 5vw, 4rem);
     padding-left: clamp(1.5rem, 5vw, 4rem);
     padding-right: clamp(1.5rem, 5vw, 4rem);
+    --hero-title: clamp(2.6rem, 2.1rem + 1.6vw, 4.15rem);
+    --hero-lead: clamp(1.05rem, 0.95rem + 0.35vw, 1.4rem);
+    --hero-badge: clamp(0.85rem, 0.78rem + 0.25vw, 1.05rem);
+    --hero-panel-headline: clamp(2.2rem, 1.95rem + 1.2vw, 3.6rem);
+    --hero-panel-metric: clamp(1.75rem, 1.35rem + 0.9vw, 2.6rem);
+    --hero-panel-label: clamp(1rem, 0.88rem + 0.4vw, 1.35rem);
+    --hero-panel-footer: clamp(0.9rem, 0.82rem + 0.25vw, 1.1rem);
   }
   .hero__grid {
     display: grid;
@@ -82,17 +89,18 @@ const blogHref = `${basePath}/blog`;
     gap: 1rem;
   }
   .hero__title {
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-size: var(--hero-title);
     line-height: 1.1;
     margin: 0;
   }
   .hero__lead {
-    font-size: 1.12rem;
+    font-size: var(--hero-lead);
     color: var(--muted);
     max-width: 560px;
   }
   .hero__persona {
     margin-top: 0.25rem;
+    font-size: var(--font-small);
     font-weight: 600;
     color: var(--accent-dark);
     background: rgba(212, 72, 9, 0.08);
@@ -111,7 +119,7 @@ const blogHref = `${basePath}/blog`;
     background: rgba(15, 23, 42, 0.07);
     border-radius: 999px;
     padding: 0.35rem 0.9rem;
-    font-size: 0.9rem;
+    font-size: var(--hero-badge);
     font-weight: 600;
     color: #0f172a;
   }
@@ -143,12 +151,13 @@ const blogHref = `${basePath}/blog`;
     font-weight: 600;
   }
   .hero-panel__header strong {
-    font-size: 3rem;
+    font-size: var(--hero-panel-headline);
     line-height: 1;
   }
   .hero-panel__header small {
     color: rgba(255, 255, 255, 0.75);
     font-weight: 600;
+    font-size: var(--font-small);
   }
   .hero-panel__sparkline {
     position: relative;
@@ -169,6 +178,7 @@ const blogHref = `${basePath}/blog`;
   .hero-panel__label {
     margin: 0;
     font-weight: 600;
+    font-size: var(--hero-panel-label);
     color: #ffd7bd;
   }
   .hero-panel__grid {
@@ -187,16 +197,17 @@ const blogHref = `${basePath}/blog`;
   }
   .hero-panel__grid strong {
     display: block;
-    font-size: 2rem;
+    font-size: var(--hero-panel-metric);
     margin: 0.2rem 0;
   }
   .hero-panel__grid small {
     color: rgba(255, 255, 255, 0.7);
+    font-size: var(--font-small);
   }
   .hero-panel footer {
     margin-top: auto;
     color: rgba(255, 255, 255, 0.65);
-    font-size: 0.9rem;
+    font-size: var(--hero-panel-footer);
   }
   @media (max-width: 768px) {
     .hero {

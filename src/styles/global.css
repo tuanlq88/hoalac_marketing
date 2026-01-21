@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap");
+
 :root {
   color-scheme: light;
   --bg: #f6f5f2;
@@ -7,6 +9,23 @@
   --muted: #5f5f5f;
   --body-font: "Manrope", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --display-font: "Playfair Display", "Times New Roman", serif;
+  --font-body: clamp(1.5rem, 1.4rem + 0.2vw, 1.8rem);
+  --font-small: clamp(1.3rem, 1.2rem + 0.2vw, 1.5rem);
+  --line-body: 1.65;
+  --font-brand: clamp(1rem, 0.75rem + 0.8vw, 1.35rem);
+  --font-brand-subtitle: clamp(0.85rem, 0.68rem + 0.45vw, 1.15rem);
+  --font-nav: clamp(0.85rem, 0.68rem + 0.55vw, 1.15rem);
+  --font-footer-heading: clamp(0.95rem, 0.78rem + 0.5vw, 1.25rem);
+  --font-footer-body: clamp(0.95rem, 0.78rem + 0.45vw, 1.3rem);
+  --font-footer-cta: clamp(0.88rem, 0.62rem + 0.45vw, 0.95rem);
+  --font-label: clamp(0.7rem, 0.6rem + 0.35vw, 0.9rem);
+  --font-hint: clamp(0.95rem, 0.82rem + 0.4vw, 1.18rem);
+  --font-table: clamp(0.95rem, 0.82rem + 0.35vw, 1.18rem);
+  --font-button: clamp(1.2rem, 1.04rem + 0.35vw, 1.6rem);
+}
+
+html {
+  font-size: 62.5%;
 }
 
 .pillar-content {
@@ -44,6 +63,8 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--body-font);
+  font-size: var(--font-body);
+  line-height: var(--line-body);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -55,6 +76,34 @@ h3,
 .display {
   font-family: var(--display-font);
   letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2.4rem, 2.4rem + 1vw, 4.2rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(2rem, 2rem + 0.8vw, 3.4rem);
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: clamp(1.8rem, 1.8rem + 0.5vw, 2.6rem);
+  line-height: 1.3;
+}
+
+p,
+li {
+  font-size: var(--font-body);
+  line-height: var(--line-body);
+}
+
+small,
+.meta,
+.site-meta__item,
+.tag {
+  font-size: var(--font-small);
 }
 
 a {
@@ -92,16 +141,33 @@ main {
   text-decoration: none;
   color: inherit;
   gap: 0.15rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.95rem;
+  background-image: linear-gradient(120deg, rgba(249, 115, 22, 0.16), rgba(249, 115, 22, 0.32));
+  background-size: 0% 100%;
+  background-repeat: no-repeat;
+  transition: color 160ms ease, background-size 220ms ease, box-shadow 220ms ease;
+}
+
+.site-brand:hover,
+.site-brand:focus-visible {
+  color: var(--accent-dark);
+  background-size: 100% 100%;
+  box-shadow: 0 12px 26px rgba(249, 115, 22, 0.18);
+}
+
+.site-brand:focus-visible {
+  outline: none;
 }
 
 .site-brand__title {
-  font-size: 1.35rem;
+  font-size: var(--font-brand);
   font-weight: 700;
   letter-spacing: 0.02em;
 }
 
 .site-brand__subtitle {
-  font-size: 0.9rem;
+  font-size: var(--font-brand-subtitle);
   color: var(--muted);
 }
 
@@ -116,13 +182,13 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 1.1rem;
+  padding: clamp(0.4rem, 0.32rem + 0.4vw, 0.55rem) clamp(0.85rem, 0.6rem + 1vw, 1.3rem);
   border-radius: 999px;
   border: 1px solid rgba(212, 72, 9, 0.2);
   background: rgba(212, 72, 9, 0.1);
   color: var(--accent-dark);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--font-nav);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   transition: transform 150ms ease, background 150ms ease, color 150ms ease;
@@ -194,6 +260,8 @@ main {
   background: #0f172a;
   color: #fff;
   padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 3rem;
+  font-size: var(--font-footer-body);
+  line-height: 1.5;
   margin-top: auto;
 }
 
@@ -209,12 +277,13 @@ main {
 .site-footer__brand {
   margin: 0;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: var(--font-footer-heading);
 }
 
 .site-footer__copy {
   margin: 0.35rem 0 0;
   color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-footer-body);
 }
 
 .site-footer__links,
@@ -224,15 +293,22 @@ main {
   gap: 0.35rem;
 }
 
+.site-footer__links a,
+.site-footer__contact a {
+  font-size: var(--font-footer-body);
+}
+
 .site-footer__cta {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  padding: 0.65rem 1.6rem;
+  padding: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem)
+    clamp(1rem, 0.85rem + 1.2vw, 1.6rem);
   border-radius: 999px;
   font-weight: 700;
   color: #fff;
+  font-size: var(--font-footer-cta);
   background: linear-gradient(135deg, #f97316, #ea580c);
   box-shadow: 0 18px 38px rgba(249, 115, 22, 0.35), 0 0 30px rgba(255, 255, 255, 0.2);
   position: relative;
@@ -313,9 +389,10 @@ main {
   justify-content: center;
   gap: 0.35rem;
   border-radius: 999px;
-  padding: 0.9rem 1.8rem;
+  padding: clamp(0.8rem, 0.7rem + 0.2vw, 1rem)
+    clamp(1.2rem, 1rem + 1vw, 2.2rem);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: var(--font-button);
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   border: none;
@@ -337,7 +414,7 @@ main {
 .tag {
   padding: 0.2rem 0.85rem;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: var(--font-label);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -361,7 +438,7 @@ main {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.75rem;
-  font-size: 0.95rem;
+  font-size: var(--font-small);
   color: var(--muted);
 }
 
@@ -377,8 +454,8 @@ main {
 }
 
 .reading-content {
-  font-size: 1.08rem;
-  line-height: 1.85;
+  font-size: var(--font-body);
+  line-height: calc(var(--line-body) + 0.15);
   color: #232323;
 }
 
@@ -408,7 +485,7 @@ main {
 
 .fact-note__label {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: clamp(0.82rem, 0.7rem + 0.35vw, 1rem);
   text-transform: uppercase;
   letter-spacing: 0.14em;
   font-weight: 700;
@@ -466,7 +543,7 @@ main {
   border-collapse: separate;
   border-spacing: 0;
   margin: 1.5rem 0;
-  font-size: 0.98rem;
+  font-size: var(--font-table);
   border: 1px solid rgba(27, 27, 27, 0.12);
   border-radius: 1rem;
   overflow: hidden;
@@ -556,7 +633,7 @@ main {
 }
 
 .table-scroll-hint {
-  font-size: 0.85rem;
+  font-size: var(--font-hint);
   color: var(--muted);
   display: inline-flex;
   align-items: center;
@@ -568,7 +645,7 @@ main {
 
 .table-scroll-hint::before {
   content: "↔";
-  font-size: 1rem;
+  font-size: calc(var(--font-hint) + 0.15rem);
 }
 
 .table-responsive[data-overflow="true"] .table-scroll-hint {
@@ -656,10 +733,6 @@ main {
     justify-content: space-between;
   }
 
-  .site-brand__title {
-    font-size: 1.1rem;
-  }
-
   .site-brand__subtitle {
     display: none;
   }
@@ -682,7 +755,6 @@ main {
     width: auto;
     flex: 0 0 auto;
     padding: 0.45rem 0.9rem;
-    font-size: 0.78rem;
     letter-spacing: 0.05em;
   }
 
@@ -713,13 +785,8 @@ main {
     padding: 0.75rem 0.85rem 0.4rem;
   }
 
-  .site-brand__title {
-    font-size: 1rem;
-  }
-
   .site-nav__pill {
     padding: 0.4rem 0.75rem;
-    font-size: 0.72rem;
   }
 
   .site-main {

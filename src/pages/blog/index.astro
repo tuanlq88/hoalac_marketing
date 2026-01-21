@@ -54,7 +54,7 @@ const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 ---
 <Layout title="Bài viết Hòa Lạc" description="Thư viện bài phân tích thị trường đất Hòa Lạc">
-  <section style="max-width: 900px; margin: 3rem auto;">
+  <section class="blog-index" style="max-width: 900px; margin: 3rem auto;">
     <h1 style="margin-top: 0;">Bản tin thị trường Hòa Lạc</h1>
     <p style="color: var(--muted);">
       Tổng hợp phân tích thực địa, dữ liệu quy hoạch và báo cáo giao dịch mới nhất dành cho nhà đầu tư và gia đình đang săn đất Hòa Lạc.
@@ -75,3 +75,22 @@ const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
     </div>
   </section>
 </Layout>
+
+<style>
+  .blog-index article a {
+    color: inherit;
+    position: relative;
+    padding: 0 0.12em;
+    border-radius: 0.4rem;
+    background-image: linear-gradient(120deg, rgba(249, 115, 22, 0.18), rgba(249, 115, 22, 0.32));
+    background-size: 0% 100%;
+    background-repeat: no-repeat;
+    transition: color 160ms ease, background-size 220ms ease;
+  }
+
+  .blog-index article a:hover,
+  .blog-index article a:focus-visible {
+    color: var(--accent-dark);
+    background-size: 100% 100%;
+  }
+</style>
