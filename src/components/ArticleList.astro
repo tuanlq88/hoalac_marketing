@@ -127,6 +127,24 @@ const blogHref = `${basePath}/blog`;
 </style>
 
 <script type="module">
+  const PREFERENCE_STORAGE_KEY = 'hoaLacLeadPrefs';
+
+  const loadLeadPreferences = () => {
+    try {
+      if (typeof window === 'undefined' || !window.sessionStorage) return null;
+      const raw = window.sessionStorage.getItem(PREFERENCE_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return {
+        intent: typeof parsed?.intent === 'string' ? parsed.intent : '',
+        areas: Array.isArray(parsed?.areas) ? parsed.areas : []
+      };
+    } catch (error) {
+      console.warn('Không đọc được tùy chọn lead đã lưu.', error);
+      return null;
+    }
+  };
+
   const shelf = document.querySelector('[data-article-shelf]');
   if (!shelf) {
     console.warn('Article shelf not found.');
@@ -214,5 +232,14 @@ const blogHref = `${basePath}/blog`;
       currentAreas = event?.detail?.areas ?? [];
       highlightArticles({ intent: currentIntent, areas: currentAreas });
     });
+
+    const storedPrefs = loadLeadPreferences();
+    if (storedPrefs) {
+      currentIntent = storedPrefs.intent ?? '';
+      currentAreas = storedPrefs.areas ?? [];
+      if (currentIntent || currentAreas.length > 0) {
+        highlightArticles({ intent: currentIntent, areas: currentAreas });
+      }
+    }
   }
 </script>

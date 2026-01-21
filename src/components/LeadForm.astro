@@ -372,9 +372,10 @@ const legalOptions = [
     height: 1.1rem;
   }
   .status {
-    min-height: 1.2rem;
+    min-height: 1.4rem;
     color: #475569;
-    font-size: 0.9rem;
+    font-size: clamp(0.95rem, 0.88rem + 0.2vw, 1.15rem);
+    line-height: 1.4;
     transition: color 150ms ease;
   }
   .status[data-state="error"] {
@@ -543,6 +544,7 @@ const legalOptions = [
       contact: 'Vui lòng nhập số liên hệ hợp lệ.'
     };
     const PHONE_PATTERN = /^(03|05|07|08|09|01[2689])[0-9]{8}$/;
+    const PREFERENCE_STORAGE_KEY = 'hoaLacLeadPrefs';
 
     const initKey = '__hoaLacLeadFormInit__';
     if (window[initKey]) {
@@ -864,6 +866,28 @@ const legalOptions = [
       }));
     }
 
+    function saveLeadPreferences(preferences) {
+      try {
+        if (typeof window === 'undefined') return;
+        const storage = window.sessionStorage;
+        if (!storage) return;
+        const intent = preferences?.intent ?? '';
+        const areas = Array.isArray(preferences?.areas) ? preferences.areas : [];
+        if (!intent && areas.length === 0) {
+          storage.removeItem(PREFERENCE_STORAGE_KEY);
+          return;
+        }
+        const payload = {
+          intent,
+          areas,
+          storedAt: new Date().toISOString()
+        };
+        storage.setItem(PREFERENCE_STORAGE_KEY, JSON.stringify(payload));
+      } catch (error) {
+        console.warn('Không thể lưu tùy chọn lead vào sessionStorage.', error);
+      }
+    }
+
     function setupValidationListeners(form, fieldErrors, setStatus) {
       if (!form) return;
       SECTION_FLOW.forEach((key) => {
@@ -933,6 +957,7 @@ const legalOptions = [
       }
 
       const selectedAreaValues = Array.from(form.querySelectorAll('input[name="areas"]:checked')).map((input) => input.value);
+      const selectedAreaLabels = getSelectedAreaLabels(form);
 
       const now = new Date();
       const vnDateTime = now.toLocaleString('vi-VN', {
@@ -993,6 +1018,7 @@ const legalOptions = [
             console.warn('Không parse được payload, dùng message mặc định.', parseErr);
           }
           setStatus?.(payloadMessage, 'success');
+          saveLeadPreferences({ intent: data.intent ?? '', areas: selectedAreaLabels });
           form.reset();
           sectionFlow?.reset?.();
           fieldErrors?.clearAll();
@@ -1010,6 +1036,7 @@ const legalOptions = [
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
+          saveLeadPreferences({ intent: data.intent ?? '', areas: selectedAreaLabels });
           form.reset();
           sectionFlow?.reset?.();
           fieldErrors?.clearAll();
