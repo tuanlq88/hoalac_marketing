@@ -55,6 +55,7 @@ Pillar page:
 - Không cam kết lợi nhuận
 - Không viết như landing page
 - Không sửa hoặc giả định nội dung blog chưa tồn tại
+- Không viết tắt, không dùng từ ngữ địa phương, không dùng tiếng lóng, không dùng từ nước ngoài (dịch hoàn toàn sang tiếng Việt chuẩn)
 
 ────────────────────────────────
 📤 OUTPUT

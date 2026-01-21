@@ -9,6 +9,7 @@ BẮT BUỘC TUÂN THỦ:
 NGUỒN DỮ LIỆU (READ ONLY):
 - content-system/content_strategy.md
 - content-system/plans/content_plan_2026w04.yaml
+- content-system/internal-link-registry.yaml
 - src/content/posts/*.md
 - src/content/pillars/*.md
 

@@ -80,7 +80,7 @@ Mỗi động lực có thời gian phát huy khác nhau; ví dụ hạ tầng g
 2. **Chọn kịch bản phù hợp** (tích cực/trung tính/thận trọng) dựa trên đánh giá cá nhân về hạ tầng và room tín dụng.
 3. **Lập kế hoạch thanh khoản**: xác định ngưỡng chốt lời hoặc cắt lỗ.
 4. **Ủy quyền cho đội pháp lý** xử lý hồ sơ song song để sẵn sàng chốt khi điều kiện đúng.
-5. **Theo dõi số liệu hàng quý** bằng cách lưu lại báo cáo giá và cập nhật trong hub [`Gia & cơ hội đầu tư`](/pillars/gia-va-co-hoi-dau-tu).
+5. **Theo dõi số liệu hàng quý** bằng cách lưu lại báo cáo giá và cập nhật trong trang chuyên đề [`Giá & cơ hội đầu tư`](/pillars/gia-va-co-hoi-dau-tu).
 
 ## Kết luận
 

@@ -26,6 +26,7 @@ pillars:
     supports:
       - bao-cao-gia-hoa-lac-q1-2026
       - cac-moc-gia-khu-cong-nghe-cao-mo-rong
+      - case-study-chot-lo-hanh-lang-cnc
       - case-study-mua-dat-dinh-cu-duong-lang
       - chien-luoc-giu-room-dau-tu-hoa-lac
       - du-bao-dong-luc-gia-hoa-lac-2026
@@ -39,12 +40,7 @@ handoff_rules:
     can_link_to: [TOFU, MOFU, BOFU]
 
   BOFU:
-    can_link_to: []
+    can_link_to: [BOFU]
+    forbidden: [TOFU, MOFU]
 
-violations:
-  - post: case-study-mua-dat-dinh-cu-duong-lang
-    issue: Missing required link back to pillar hub gia-va-co-hoi-dau-tu.
-  - post: chien-luoc-giu-room-dau-tu-hoa-lac
-    issue: Missing required link back to pillar hub gia-va-co-hoi-dau-tu.
-  - post: tong-quan-quy-hoach
-    issue: TOFU pillar only links to TOFU articles and lacks a MOFU handoff.
+violations: []

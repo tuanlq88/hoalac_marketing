@@ -42,7 +42,16 @@ BƯỚC 4 — INTERNAL LINK REGISTRY
   - content-system/internal-link-registry.yaml
 
 ────────────────────
-BƯỚC 5 — QA
+BƯỚC 5 — FACT CHECK
+────────────────────
+- Tuân theo:
+  - agents/rules/fact_boundary.md
+- Thực thi theo:
+  - agents/fact_check/fact_check.prompt.md
+- Đưa ra report đối với bài vừa tạo.
+
+────────────────────
+BƯỚC 6 — QA
 ────────────────────
 - Thực thi theo:
   - agents/qa/qa.prompt.md

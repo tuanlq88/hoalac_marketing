@@ -94,7 +94,7 @@ Khi năm bước trên đã rõ ràng, người mua mới tiến hành đặt c�
 
 Việc chuẩn bị kỹ giúp người mua thương lượng mức đặt cọc hợp lý, tránh bị ép tiến độ khi vẫn còn điểm chưa rõ.
 
-Ngay sau bước này, hãy tham khảo bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để duy trì hạn mức tín dụng và pháp lý trong suốt giai đoạn BOFU.
+Ngay sau bước này, hãy tham khảo bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để duy trì hạn mức tín dụng và pháp lý trong suốt giai đoạn ra quyết định cuối.
 
 ## 9. Ví dụ thực tế: Thửa đất 250 m² tại Tiến Xuân giáp Hòa Lạc
 
@@ -124,7 +124,7 @@ Sắp xếp các tài liệu này trong một thư mục số hóa giúp quá tr
 3. **Lời hứa “chuyển mục đích chắc chắn”**: việc chuyển đổi còn phụ thuộc chỉ tiêu sử dụng đất hàng năm của huyện; nên yêu cầu văn bản xác nhận chỉ tiêu chứ không tin vào cam kết miệng.
 4. **Tài sản chung của hộ gia đình**: nếu có thành viên đang ở nước ngoài hoặc mất liên lạc, giao dịch có thể bị tuyên vô hiệu sau này.
 
-Phần “Bài học & rủi ro” nên được hoàn thiện cùng cố vấn pháp lý để đảm bảo mọi bên thống nhất phương án xử lý, đặc biệt khi giao dịch đã bước vào giai đoạn ra quyết định cuối (Bottom of Funnel) và sai sót nhỏ có thể khiến thương vụ đổ vỡ hoặc phát sinh tranh chấp kéo dài.
+Phần “Bài học & rủi ro” nên được hoàn thiện cùng cố vấn pháp lý để đảm bảo mọi bên thống nhất phương án xử lý, đặc biệt khi giao dịch đã bước vào giai đoạn ra quyết định cuối và sai sót nhỏ có thể khiến thương vụ đổ vỡ hoặc phát sinh tranh chấp kéo dài.
 
 ## 12. Gợi ý phối hợp và theo dõi tiến độ
 
@@ -135,7 +135,7 @@ Phần “Bài học & rủi ro” nên được hoàn thiện cùng cố vấn 
 
 ## 13. Kết luận mở
 
-Kiểm tra sổ đỏ ở Hòa Lạc không chỉ là xem giấy tờ mà là một quy trình đánh giá tổng hợp giữa pháp lý, quy hoạch và nghĩa vụ tài chính. Khi tuân thủ 6 bước trên, người mua có thể tự tin chuyển từ giai đoạn khảo sát sang giai đoạn thương lượng hợp đồng. Để đào sâu hơn về các tình huống pháp lý đặc thù, bạn có thể tham khảo hub [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro) và đối chiếu với bài [`Checklist pháp lý đất vườn thổ cư`](/blog/checklist-phap-ly-dat-vuon-tho-cu) trước khi hoàn thiện bộ hồ sơ riêng.
+Kiểm tra sổ đỏ ở Hòa Lạc không chỉ là xem giấy tờ mà là một quy trình đánh giá tổng hợp giữa pháp lý, quy hoạch và nghĩa vụ tài chính. Khi tuân thủ 6 bước trên, người mua có thể tự tin chuyển từ giai đoạn khảo sát sang giai đoạn thương lượng hợp đồng. Để đào sâu hơn về các tình huống pháp lý đặc thù, bạn có thể tham khảo trang chuyên đề [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro) và đối chiếu với bài [`Checklist pháp lý đất vườn thổ cư`](/blog/checklist-phap-ly-dat-vuon-tho-cu) trước khi hoàn thiện bộ hồ sơ riêng.
 
 Việc ghi chép chi tiết từng lần làm việc với cơ quan nhà nước, cũng như lưu trữ đầy đủ tài liệu số hóa, sẽ giúp bạn bảo vệ quyết định đầu tư ngay cả khi thị trường biến động hoặc kế hoạch quy hoạch thay đổi đột ngột.
 

@@ -71,7 +71,7 @@ Nhìn tổng thể, 2026 là năm bản lề để các dự án thoát khỏi g
 3. **Lập checklist hạ tầng**: ghi lại tiến độ từng dự án liên quan tới thửa đất (đường, cấp nước, hầm chui, bãi đỗ xe). Cập nhật hàng quý để biết lúc nào nên xuống tiền hoặc chờ thêm.
 4. **So sánh với các khu vực khác cùng giai đoạn phát triển**, ví dụ Bình Yên hay Thạch Thất, nhằm đánh giá mức giá hiện tại của Thạch Hòa có đang vượt quá lợi thế hạ tầng hay không.
 
-Nếu cần xem một ví dụ MOFU về cách lựa chọn cụm đầu tư giữa các xã phía tây, hãy tham khảo bài [`Điểm nóng đầu tư Tiến Xuân 2026`](/blog/diem-nong-dau-tu-tien-xuan) để đối chiếu kịch bản ngân sách và độ rủi ro trước khi chuyển pha.
+Nếu cần xem một ví dụ ở giai đoạn chọn lọc cuối về cách lựa chọn cụm đầu tư giữa các xã phía tây, hãy tham khảo bài [`Điểm nóng đầu tư Tiến Xuân 2026`](/blog/diem-nong-dau-tu-tien-xuan) để đối chiếu kịch bản ngân sách và độ rủi ro trước khi chuyển pha.
 
 ## 7. Kết luận mở
 

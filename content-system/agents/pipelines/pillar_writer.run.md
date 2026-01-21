@@ -21,3 +21,11 @@ QUY TẮC:
 - Không CTA
 - Không bán hàng
 - Không suy đoán nội dung tương lai
+- Không chỉnh sửa bài đã tồn tại (trong trường hợp viết bài mới)
+- Được phép chỉnh sửa bài đã tồn tại (trong trường hợp yêu cầu từ fact_check reports)
+
+NGUỒN FACT CHECK REPORT:
+- content-system/agents/fact_check/reports/{slug}/latest.md
+
+KHI ĐỌC REPORT:
+- Chỉ đọc report có `content_type: pillar`

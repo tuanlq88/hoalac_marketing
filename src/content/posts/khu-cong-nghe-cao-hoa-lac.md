@@ -69,13 +69,13 @@ Nhà đầu tư nên lập checklist tiến độ riêng cho từng dự án, sa
 3. **Ẩn số về thuế đất phi nông nghiệp**: thành phố đang rà soát, khả năng tăng thuế với đất bỏ hoang trong vùng phát triển đô thị. Nên dự trù chi phí vận hành và kế hoạch khai thác nhanh.
 4. **Thông tin chưa thống nhất**: nhiều bảng giá chỉ mang tính quảng cáo. Hãy dựa trên dữ liệu công chứng trong báo cáo giá để thương lượng.
 
-## 6. Checklist hành động cho nhà đầu tư MOFU
+## 6. Checklist hành động cho nhà đầu tư đang ở bước chọn lọc
 
 - **Bước 1:** Rà lại quy hoạch KCNC và hành lang bảo vệ bằng dữ liệu chính thức.
 - **Bước 2:** Khoanh vùng mục tiêu (ở thật, cho thuê chuyên gia, dịch vụ hậu cần) và xác định thông số diện tích, mặt tiền, ngân sách.
 - **Bước 3:** Chạy quy trình kiểm tra sổ đỏ theo [`Quy trình kiểm tra sổ đỏ Hòa Lạc`](/blog/quy-trinh-kiem-tra-so-do-hoa-lac) để tránh rủi ro pháp lý.
 - **Bước 4:** Đồng bộ room tín dụng và tiến độ dự án (đặc biệt với đường gom và hầm chui) để chủ động thanh toán.
-- **Bước 5:** Sau khi shortlist, ghi chú vào hub [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) để cập nhật dữ liệu mỗi quý.
+- **Bước 5:** Sau khi shortlist, ghi chú vào trang chuyên đề [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) để cập nhật dữ liệu mỗi quý.
 
 ## Kết luận
 

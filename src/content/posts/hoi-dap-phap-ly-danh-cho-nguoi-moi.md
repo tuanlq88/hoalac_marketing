@@ -53,7 +53,7 @@ Một cách hiệu quả là lập checklist gồm tình trạng pháp lý, ti�
 
 ## 10. Tôi mới tìm hiểu, nên bắt đầu từ tài liệu nào?
 
-Pillar [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro) trên website là điểm xuất phát tốt nhất vì tập hợp toàn bộ quy trình pháp lý, cảnh báo rủi ro và tình huống thực tế theo từng giai đoạn mua bán. Ngoài ra, hãy đọc kỹ thông báo trên cổng thông tin của huyện Quốc Oai và Ban quản lý Khu Công nghệ cao để cập nhật văn bản điều chỉnh quy hoạch. Việc hiểu đúng bối cảnh giúp bạn phân biệt tin đồn với thông tin chính thống, từ đó giữ vững ngân sách và tiến độ mua bán.
+Trang chuyên đề [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro) trên website là điểm xuất phát tốt nhất vì tập hợp toàn bộ quy trình pháp lý, cảnh báo rủi ro và tình huống thực tế theo từng giai đoạn mua bán. Ngoài ra, hãy đọc kỹ thông báo trên cổng thông tin của huyện Quốc Oai và Ban quản lý Khu Công nghệ cao để cập nhật văn bản điều chỉnh quy hoạch. Việc hiểu đúng bối cảnh giúp bạn phân biệt tin đồn với thông tin chính thống, từ đó giữ vững ngân sách và tiến độ mua bán.
 
 ## 11. Một số kinh nghiệm nên ghi nhớ
 

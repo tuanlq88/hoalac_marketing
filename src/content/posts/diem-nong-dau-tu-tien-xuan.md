@@ -81,7 +81,7 @@ Các kịch bản trên đòi hỏi người mua kiểm tra kỹ điều kiện 
 - **Giấy tờ chuyển đổi mục đích**: Nhiều thửa vẫn đang trong diện rà soát nghĩa vụ tài chính sau dồn điền. Cần yêu cầu bên bán cung cấp biên lai mới nhất để tránh tranh chấp.
 - **Thị trường thứ cấp mỏng**: Dù nhu cầu tăng, thanh khoản vẫn phụ thuộc vào thông tin hạ tầng. Nhà đầu tư ngắn hạn nên chuẩn bị kế hoạch nắm giữ 18–24 tháng.
 
-## 6. Checklist cho nhà đầu tư MOFU
+## 6. Checklist cho nhà đầu tư đang ở bước chọn lọc
 
 1. **Khoanh vùng theo loại hình**: Farmstay và kho lạnh không thể dùng chung tiêu chí. Xác định rõ tỷ lệ thời gian sử dụng, khách hàng mục tiêu trước khi tìm đất.
 2. **So sánh với khu thay thế**: Luôn đặt câu hỏi “Tại sao không chọn Bình Yên hay Thạch Hòa?” để đảm bảo Tiến Xuân mang lại lợi thế thực sự.
@@ -89,11 +89,11 @@ Các kịch bản trên đòi hỏi người mua kiểm tra kỹ điều kiện 
 4. **Kiểm tra quy hoạch 1/500**: Một số khu đã có bản vẽ chi tiết, giúp xác định hành lang xanh và vị trí trường học. Đây là dữ liệu quan trọng cho dự án lưu trú.
 5. **Theo dõi lịch giải phóng mặt bằng**: UBND xã sẽ niêm yết đợt cắm mốc mới mỗi quý. Nếu thửa dính mốc, nên đàm phán lại giá hoặc chuyển hướng.
 
-Ngay khi checklist trên hoàn tất và danh mục sẵn sàng chuyển phễu, hãy đọc bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để khóa room tín dụng và pháp lý trước khi ký hợp đồng.
+Ngay khi checklist trên hoàn tất và danh mục sẵn sàng chuyển sang bước ra quyết định, hãy đọc bài [`Chiến lược giữ room đầu tư Hòa Lạc 2026`](/blog/chien-luoc-giu-room-dau-tu-hoa-lac) để khóa room tín dụng và pháp lý trước khi ký hợp đồng.
 
 ## 7. Góc nhìn 2026–2028
 
-Tiến Xuân có thể bước vào giai đoạn “tái định vị” khi tuyến bus nhanh hoàn thành và chuỗi dịch vụ sinh thái đi vào vận hành đồng loạt. Điều này giúp khu vực bớt phụ thuộc vào kỳ vọng quy hoạch và chuyển sang giá trị khai thác thực tế. Để nắm toàn bộ chuỗi bài phân tích khu vực Hòa Lạc, anh/chị có thể quay lại hub [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) và đối chiếu với các số liệu cập nhật hàng quý.
+Tiến Xuân có thể bước vào giai đoạn “tái định vị” khi tuyến bus nhanh hoàn thành và chuỗi dịch vụ sinh thái đi vào vận hành đồng loạt. Điều này giúp khu vực bớt phụ thuộc vào kỳ vọng quy hoạch và chuyển sang giá trị khai thác thực tế. Để nắm toàn bộ chuỗi bài phân tích khu vực Hòa Lạc, anh/chị có thể quay lại trang chuyên đề [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) và đối chiếu với các số liệu cập nhật hàng quý.
 
 Tóm lại, Tiến Xuân là lựa chọn phù hợp với nhà đầu tư trung hạn muốn nắm giữ sản phẩm “đệm” giữa vùng sinh thái và khu công nghệ. Tuy nhiên, lợi thế chỉ phát huy khi anh/chị kiểm soát tốt hành lang hạ tầng, chuẩn bị ngân sách nâng cấp tiện ích và đặt kế hoạch vận hành rõ ràng ngay từ ngày đầu khảo sát.
 

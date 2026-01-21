@@ -96,7 +96,7 @@ Chiến lược đàm phán:
 
 - Bình Yên phù hợp nhà đầu tư/định cư sẵn sàng chờ hạ tầng và muốn mua ở mức giá mềm hơn.
 - Thạch Hòa dành cho người muốn vào ở ngay, chấp nhận mức giá cao hơn để đổi lấy tiện ích và pháp lý ổn định.
-- Sau khi quyết định khu vực, hãy quay lại hub [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) để cập nhật tiến độ hàng quý và kết hợp với bài [`Điểm nóng đầu tư Tiến Xuân 2026`](/blog/diem-nong-dau-tu-tien-xuan) nhằm xây dựng danh mục đa điểm.
+- Sau khi quyết định khu vực, hãy quay lại trang chuyên đề [`Phân tích khu vực`](/pillars/phan-tich-khu-vuc) để cập nhật tiến độ hàng quý và kết hợp với bài [`Điểm nóng đầu tư Tiến Xuân 2026`](/blog/diem-nong-dau-tu-tien-xuan) nhằm xây dựng danh mục đa điểm.
 
 <script type="application/ld+json">
 {

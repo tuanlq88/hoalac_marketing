@@ -3,3 +3,4 @@ dist/
 .astro
 .DS_Store
 .env
+content-system/agents/fact_check/reports/

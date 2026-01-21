@@ -15,8 +15,10 @@ Quyết định **có được phép build hay không** dựa **DUY NHẤT** tr�
 ## SCOPE (READ ONLY – CHỈ ĐỌC)
 - content-system/internal-link-registry.yaml
 - content-system/plans/*.yaml (CHỈ THAM KHẢO)
-- src/content/blog/**
+- src/content/post/**
 - src/content/pillars/**
+- content-system/agents/fact_check/reports/** (nếu có)
+(BẮT BUỘC với mọi file markdown tồn tại)
 
 ## STRICT RULES (QUY TẮC NGHIÊM NGẶT)
 - KHÔNG chỉnh sửa nội dung.
@@ -26,6 +28,9 @@ Quyết định **có được phép build hay không** dựa **DUY NHẤT** tr�
 - internal-link-registry.yaml phản ánh kỳ vọng hiện tại,
   nhưng violation CHỈ áp dụng cho nội dung đã tồn tại.
 - TUYỆT ĐỐI không block build vì nội dung chưa viết.
+- Nếu bài viết tồn tại nhưng KHÔNG có fact_check report → QA FAIL BUILD
+- QA Agent KHÔNG tái đánh giá sự thật nội dung.
+- FACT CHECK REPORT là nguồn chân lý duy nhất về factual risk.
 
 ## CONTENT STATE LOGIC (LOGIC TRẠNG THÁI NỘI DUNG)
 - Nếu slug có trong plans hoặc registry NHƯNG KHÔNG có file markdown:
@@ -38,7 +43,7 @@ Quyết định **có được phép build hay không** dựa **DUY NHẤT** tr�
   → ĐỦ ĐIỀU KIỆN QA
 
 ## TASKS (NHIỆM VỤ)
-1. Quét toàn bộ file markdown trong `src/content/blog/**`
+1. Quét toàn bộ file markdown trong `src/content/post/**` và `src/content/pillars/**`
    để xác định danh sách bài viết thực tế tồn tại.
 
 2. Với mỗi bài viết tồn tại:
@@ -80,6 +85,27 @@ a) File markdown tồn tại
 b) Vi phạm funnel, pillar hoặc internal linking
 c) KHÔNG có strategy_override hợp lệ
 
+## FACT CHECK INTEGRATION
+
+- QA Agent PHẢI đọc FACT CHECK REPORT nếu tồn tại
+- QA KHÔNG tự đánh giá FACT / CLAIM
+
+### Xử lý dựa trên Fact Check Report:
+
+- Nếu Overall status = FAIL
+  → QA BLOCK BUILD
+
+- Nếu Overall status = WARNING
+  → QA ghi WARNING
+  → Chỉ BLOCK nếu warning liên quan:
+    - giá
+    - pháp lý
+    - dự án cụ thể
+    - mốc thời gian cụ thể
+
+- Nếu Overall status = PASS
+  → QA coi nội dung là FACT-SAFE
+
 ## OUTPUT (KẾT QUẢ)
 Trả về báo cáo QA dạng Markdown gồm các phần:
 
@@ -89,6 +115,7 @@ Trả về báo cáo QA dạng Markdown gồm các phần:
 - Số WARNING
 - Số mục planned bị skip
 - Ready to build: YES / NO
+- Fact Check Status: PASS | WARNING | FAIL
 
 ### Blocking Issues
 - slug

@@ -91,7 +91,7 @@ Cập nhật bảng này hàng tuần để không bỏ lỡ deadline hành chí
 
 ## Kết nối nội dung
 
-Checklist này thuộc hub [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro). Sau khi hoàn tất từng bước, anh/chị nên:
+Checklist này thuộc chuyên mục [`Pháp lý & rủi ro`](/pillars/phap-ly-va-rui-ro). Sau khi hoàn tất từng bước, anh/chị nên:
 - Quay lại bài [`Quy trình kiểm tra sổ đỏ Hòa Lạc`](/blog/quy-trinh-kiem-tra-so-do-hoa-lac) để đối chiếu quy trình 6 bước.
 - Kết hợp với dữ liệu giá trong [`Báo cáo giá Hòa Lạc Q1/2026`](/blog/bao-cao-gia-hoa-lac-q1-2026) để thương lượng hợp lý.
 - Ứng dụng checklist vào các thương vụ cụ thể, đặc biệt khi làm việc với đất vườn trong vùng đệm Tiến Xuân hoặc hành lang logistic Yên Bình.

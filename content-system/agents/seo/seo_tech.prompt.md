@@ -13,6 +13,9 @@ Tối ưu **SEO kỹ thuật** cho các bài viết Markdown đã tồn tại, t
 
 **KHÔNG can thiệp chiến lược nội dung, giọng văn hay CTA.**
 
+## BẮT BUỘC TUÂN THỦ:
+- Nội dung trong `content-system/agents/seo/seo_rules.md`
+
 ---
 
 ## NGUỒN DỮ LIỆU (READ ONLY – BẮT BUỘC)

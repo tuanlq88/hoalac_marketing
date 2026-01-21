@@ -41,6 +41,7 @@ SEO trong hệ thống này là:
 - Thêm internal link:
   - về pillar
   - sang bài liên quan (nếu đã tồn tại)
+  - link phải đặt trước section `FACT_DECLARATION`
 
 KHÔNG ĐƯỢC:
 - Viết thêm đoạn mới
@@ -68,6 +69,17 @@ KHÔNG ĐƯỢC:
 - Thêm CTA
 - Thêm link ngoài
 - Thay đổi intent / funnel / allowed_cta
+
+---
+
+### NGOẠI NGỮ CHUYÊN NGÀNH
+- Chỉ dùng khi:
+  - Không có từ tiếng Việt tương đương phổ biến
+- Nếu dùng:
+  - BẮT BUỘC giải thích ngắn gọn ngay lần xuất hiện đầu tiên
+  - Sau đó ưu tiên dùng tiếng Việt
+
+---
 
 ────────────────────────────────
 🔗 INTERNAL LINK & FUNNEL

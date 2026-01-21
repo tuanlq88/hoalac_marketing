@@ -11,6 +11,9 @@ Tối ưu **SEO on-page** cho các bài viết **đã tồn tại**, đảm bả
 
 **KHÔNG thay đổi bản chất nội dung bài viết.**
 
+## BẮT BUỘC TUÂN THỦ:
+- Nội dung trong `content-system/agents/seo/seo_rules.md`
+
 ---
 
 ## NGUỒN DỮ LIỆU (READ ONLY – BẮT BUỘC)
@@ -79,4 +82,7 @@ Tối ưu **SEO on-page** cho các bài viết **đã tồn tại**, đảm bả
 - KHÔNG tạo file mới
 - KHÔNG đổi đường dẫn file
 - KHÔNG in lại toàn bộ nội dung bài trong chat nếu chỉnh sửa thành công
-- Nếu không có gì cần tối ưu, ghi rõ:
+- Nếu không có gì cần tối ưu, ghi rõ "No changes needed" ở cuối file bằng HTML comment:
+  ```
+  <!-- SEO-CONTENT: No changes needed -->
+  ```

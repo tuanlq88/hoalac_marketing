@@ -33,7 +33,8 @@ Không agent nào được suy luận ngoài file này.
 ## FUNNEL HANDOFF
 - TOFU → TOFU, MOFU (CẤM BOFU)
 - MOFU → TOFU, MOFU, BOFU
-- BOFU → không link đi đâu
+- BOFU → BOFU (CẤM TOFU, MOFU)
+- BOFU chỉ được cross-link giữa các trang chuyển đổi cùng tầng để tránh thất thoát intent.
 
 ---
 

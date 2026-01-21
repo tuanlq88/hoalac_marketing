@@ -1,8 +1,22 @@
 # QA RULES
 
+## 0. FACT CHECK HANDOFF (BẮT BUỘC)
+
+- Với mỗi file markdown tồn tại:
+  - QA PHẢI kiểm tra file:
+    fact_check/reports/{slug}/latest.md
+
+- Nếu KHÔNG tồn tại latest.md:
+  - QA coi như CHƯA fact check
+  - → BLOCKING (chưa đủ điều kiện QA)
+
+- QA KHÔNG đọc file versioned
+- QA KHÔNG so sánh nhiều report
+- latest.md là nguồn sự thật DUY NHẤT
+
 ## 1. NGUYÊN TẮC NGUỒN SỰ THẬT
 - CHỈ kiểm tra nội dung có file markdown thực sự tồn tại.
-- File markdown hiện có là nguồn sự thật cao nhất.
+- File markdown hiện có là nguồn sự thật cao nhất về mặt cấu trúc & linking.
 - plans/*.yaml chỉ là roadmap, KHÔNG dùng để block build.
 - Không block build vì nội dung chưa viết.
 
@@ -70,23 +84,49 @@ Nếu frontmatter có:
 - HẠ CẤP thành WARNING
 - KHÔNG block build
 
-## 9. PHÂN LOẠI MỨC ĐỘ
+## 9. FACT CHECK INTEGRATION (BẮT BUỘC)
+- Mỗi file markdown tồn tại PHẢI có FACT CHECK REPORT tương ứng.
+- FACT CHECK REPORT là nguồn sự thật DUY NHẤT về:
+  - tính xác thực
+  - rủi ro logic
+  - vi phạm fact boundary
+
+QA Agent:
+- KHÔNG tự đánh giá FACT / CLAIM
+- KHÔNG tranh luận lại kết luận của Fact Check Agent
+
+Nếu:
+- Không có fact_check report
+  → BLOCKING
+
+## 10. PHÂN LOẠI MỨC ĐỘ
 ### BLOCKING
 Chỉ khi TẤT CẢ đúng:
 1. File markdown tồn tại
 2. Vi phạm funnel / pillar / internal link
+   HOẶC fact_check overall status = FAIL
 3. KHÔNG có strategy_override hợp lệ
 
 ### WARNING
 - Có strategy_override
-- Hoặc CTA bị suppress
+- CTA bị suppress
+- fact_check overall status = WARNING
 - Không ảnh hưởng quyết định build
 
-## 10. QUYẾT ĐỊNH BUILD
+## 11. QUYẾT ĐỊNH BUILD
 - Có ≥ 1 BLOCKING → Ready to build: NO
 - Không có BLOCKING → Ready to build: YES
+- Nếu latest.md.status = FAIL
+  → Ready to build: NO (BLOCKING)
 
-## 11. NGUYÊN TẮC CUỐI
+- Nếu latest.md.status = WARNING
+  → Không block build
+  → QA vẫn tiếp tục kiểm tra funnel / linking
+
+- Nếu latest.md.status = PASS
+  → QA tiếp tục quy trình bình thường
+
+## 12. NGUYÊN TẮC CUỐI
 - Nghiêm với nội dung đã tồn tại
 - Khoan dung với kế hoạch
 - Không suy đoán tương lai
