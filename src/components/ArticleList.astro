@@ -45,7 +45,31 @@ const blogHref = `${basePath}/blog`;
       </div>
       <a class="button button--ghost" href={blogHref}>Xem tất cả bài</a>
     </div>
-    <div class="article-list__grid">
+    <div class="article-list__grid" id="article-grid">
+      <div class="skeleton-card" aria-hidden="true">
+        <div class="skeleton skeleton--tag" style="width: 5rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 80%; margin-top: 0.8rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 55%;"></div>
+        <div class="skeleton skeleton--text" style="width: 100%; margin-top: 0.5rem;"></div>
+        <div class="skeleton skeleton--text" style="width: 90%;"></div>
+        <div class="skeleton skeleton--text" style="width: 60%;"></div>
+      </div>
+      <div class="skeleton-card" aria-hidden="true">
+        <div class="skeleton skeleton--tag" style="width: 4.5rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 70%; margin-top: 0.8rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 50%;"></div>
+        <div class="skeleton skeleton--text" style="width: 95%; margin-top: 0.5rem;"></div>
+        <div class="skeleton skeleton--text" style="width: 85%;"></div>
+        <div class="skeleton skeleton--text" style="width: 45%;"></div>
+      </div>
+      <div class="skeleton-card" aria-hidden="true">
+        <div class="skeleton skeleton--tag" style="width: 5.5rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 75%; margin-top: 0.8rem;"></div>
+        <div class="skeleton skeleton--title" style="width: 60%;"></div>
+        <div class="skeleton skeleton--text" style="width: 100%; margin-top: 0.5rem;"></div>
+        <div class="skeleton skeleton--text" style="width: 80%;"></div>
+        <div class="skeleton skeleton--text" style="width: 50%;"></div>
+      </div>
     {posts.map((post) => {
       const rawTags = getTags(post);
       const publicTags = filterPublicTags(rawTags);
@@ -240,6 +264,16 @@ const blogHref = `${basePath}/blog`;
       if (currentIntent || currentAreas.length > 0) {
         highlightArticles({ intent: currentIntent, areas: currentAreas });
       }
+    }
+  }
+
+  // Hide skeleton cards once fonts are ready
+  const grid = document.getElementById('article-grid');
+  if (grid) {
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(() => grid.classList.add('is-loaded'));
+    } else {
+      grid.classList.add('is-loaded');
     }
   }
 </script>
