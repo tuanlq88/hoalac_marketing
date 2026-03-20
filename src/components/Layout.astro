@@ -124,15 +124,18 @@ const pillarsHref = `${basePath}/pillars`;
     </header>
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <div class="mobile-menu__backdrop"></div>
-      <div class="mobile-menu__panel" role="dialog" aria-label="Menu chinh">
-        <button class="mobile-menu__close" type="button" aria-label="Dong menu">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        </button>
+      <div class="mobile-menu__panel" role="dialog" aria-label="Menu chính">
+        <div class="mobile-menu__header">
+          <span class="mobile-menu__brand">Insight Hòa Lạc</span>
+          <button class="mobile-menu__close" type="button" aria-label="Đóng menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
         <ul class="mobile-menu__nav">
           <li><a class="mobile-menu__link" href="#lead-form">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -140,7 +143,7 @@ const pillarsHref = `${basePath}/pillars`;
               <path d="M8 6h8"/><path d="M8 12h8"/><path d="M8 18h5"/>
               <rect x="4" y="3" width="16" height="18" rx="2" ry="2"/>
             </svg>
-            <span>Can tu van</span>
+            <span>CẦN TƯ VẤN</span>
           </a></li>
           <li><a class="mobile-menu__link" href={blogHref}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -150,7 +153,7 @@ const pillarsHref = `${basePath}/pillars`;
               <path d="M6.5 7C5.12 7 4 5.88 4 4.5V19.5C4 18.12 5.12 17 6.5 17"/>
               <path d="M19.5 7C20.88 7 22 5.88 22 4.5V19.5C22 18.12 20.88 17 19.5 17"/>
             </svg>
-            <span>Bai ve tinh</span>
+            <span>BÀI VỆ TINH</span>
           </a></li>
           <li><a class="mobile-menu__link" href={pillarsHref}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -159,12 +162,13 @@ const pillarsHref = `${basePath}/pillars`;
               <path d="M12 2v3"/><path d="M12 19v3"/>
               <path d="M4 12h3"/><path d="M17 12h3"/>
             </svg>
-            <span>Bai trung tam</span>
+            <span>BÀI TRUNG TÂM</span>
           </a></li>
         </ul>
+        <a class="mobile-menu__cta" href="#lead-form">ĐĂNG KÝ TƯ VẤN</a>
         <div class="mobile-menu__meta">
           <a href="mailto:contact@example.com">contact@example.com</a>
-          <a href="https://t.me/" target="_blank" rel="noreferrer">Telegram cap nhat</a>
+          <a href="https://t.me/" target="_blank" rel="noreferrer">Telegram cập nhật</a>
         </div>
       </div>
     </div>
