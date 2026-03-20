@@ -100,6 +100,21 @@ const pillarsHref = `${basePath}/pillars`;
             <span>Bài trung tâm</span>
           </a>
         </nav>
+        <button
+          class="hamburger-btn"
+          type="button"
+          aria-label="Mo menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
       </div>
       <div class="site-header__meta">
         <a href="mailto:contact@example.com" class="site-meta__item">contact@example.com</a>
@@ -107,6 +122,52 @@ const pillarsHref = `${basePath}/pillars`;
         <a href="https://t.me/" class="site-meta__item" target="_blank" rel="noreferrer">Telegram cập nhật</a>
       </div>
     </header>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+      <div class="mobile-menu__backdrop"></div>
+      <div class="mobile-menu__panel" role="dialog" aria-label="Menu chinh">
+        <button class="mobile-menu__close" type="button" aria-label="Dong menu">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <ul class="mobile-menu__nav">
+          <li><a class="mobile-menu__link" href="#lead-form">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M8 6h8"/><path d="M8 12h8"/><path d="M8 18h5"/>
+              <rect x="4" y="3" width="16" height="18" rx="2" ry="2"/>
+            </svg>
+            <span>Can tu van</span>
+          </a></li>
+          <li><a class="mobile-menu__link" href={blogHref}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 19.5C4 18.12 5.12 17 6.5 17h13"/>
+              <path d="M4 4.5C4 5.88 5.12 7 6.5 7h13"/>
+              <path d="M6.5 7C5.12 7 4 5.88 4 4.5V19.5C4 18.12 5.12 17 6.5 17"/>
+              <path d="M19.5 7C20.88 7 22 5.88 22 4.5V19.5C22 18.12 20.88 17 19.5 17"/>
+            </svg>
+            <span>Bai ve tinh</span>
+          </a></li>
+          <li><a class="mobile-menu__link" href={pillarsHref}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3.5"/>
+              <path d="M12 2v3"/><path d="M12 19v3"/>
+              <path d="M4 12h3"/><path d="M17 12h3"/>
+            </svg>
+            <span>Bai trung tam</span>
+          </a></li>
+        </ul>
+        <div class="mobile-menu__meta">
+          <a href="mailto:contact@example.com">contact@example.com</a>
+          <a href="https://t.me/" target="_blank" rel="noreferrer">Telegram cap nhat</a>
+        </div>
+      </div>
+    </div>
     <main class="site-main">
       <slot />
     </main>
@@ -132,6 +193,58 @@ const pillarsHref = `${basePath}/pillars`;
       showFloatingCta={false}
       isGlobalFallback={true}
     />
+    <script type="module">
+      // Hamburger menu
+      const hamburgerBtn = document.querySelector('.hamburger-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const backdrop = mobileMenu?.querySelector('.mobile-menu__backdrop');
+      const panel = mobileMenu?.querySelector('.mobile-menu__panel');
+      const closeBtn = mobileMenu?.querySelector('.mobile-menu__close');
+
+      function openMenu() {
+        if (!mobileMenu || !panel || !backdrop) return;
+        mobileMenu.setAttribute('aria-hidden', 'false');
+        hamburgerBtn?.setAttribute('aria-expanded', 'true');
+        backdrop.classList.add('is-visible');
+        panel.classList.add('is-open');
+        document.body.classList.add('menu-open');
+        closeBtn?.focus();
+      }
+
+      function closeMenu() {
+        if (!mobileMenu || !panel || !backdrop) return;
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        hamburgerBtn?.setAttribute('aria-expanded', 'false');
+        backdrop.classList.remove('is-visible');
+        panel.classList.remove('is-open');
+        document.body.classList.remove('menu-open');
+        hamburgerBtn?.focus();
+      }
+
+      hamburgerBtn?.addEventListener('click', openMenu);
+      closeBtn?.addEventListener('click', closeMenu);
+      backdrop?.addEventListener('click', closeMenu);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && panel?.classList.contains('is-open')) {
+          closeMenu();
+        }
+      });
+
+      mobileMenu?.querySelectorAll('.mobile-menu__link').forEach((link) => {
+        link.addEventListener('click', closeMenu);
+      });
+
+      // Lazy load content images
+      document.querySelectorAll('.reading-content img, .pillar-content img').forEach((img) => {
+        if (!img.hasAttribute('loading')) {
+          img.setAttribute('loading', 'lazy');
+        }
+        if (!img.hasAttribute('decoding')) {
+          img.setAttribute('decoding', 'async');
+        }
+      });
+    </script>
     <script type="module">
       const anchors = Array.from(document.querySelectorAll('a[href="#lead-form"]'));
       const portalQueueKey = '__hoaLacLeadPortalQueue__';
