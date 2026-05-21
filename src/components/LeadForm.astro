@@ -398,13 +398,13 @@ const legalOptions = [
     position: fixed;
     bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     right: 1.5rem;
-    background: #0f172a;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #fff;
+    color: #0f172a;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 14px;
     padding: 12px 20px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
     display: none;
     align-items: center;
     gap: 10px;
@@ -412,13 +412,12 @@ const legalOptions = [
     font-size: 14px;
     cursor: pointer;
     z-index: 50;
-    backdrop-filter: blur(12px);
     transition: all 200ms ease;
   }
   .floating-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.5);
-    background: #1e293b;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    background: #f8fafc;
   }
   .floating-cta__icon {
     flex-shrink: 0;
