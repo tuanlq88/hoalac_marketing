@@ -305,10 +305,10 @@ main {
   padding: 0.6rem 1.4rem;
   border-radius: 999px;
   font-weight: 600;
-  color: #fff;
+  color: #0f172a;
   font-size: var(--font-footer-cta);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #fff;
+  border: none;
   transition: all 200ms ease;
 }
 
@@ -317,8 +317,8 @@ main {
 }
 
 .site-footer__cta:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #f1f5f9;
+  transform: translateY(-1px);
 }
 
 .site-footer a {
