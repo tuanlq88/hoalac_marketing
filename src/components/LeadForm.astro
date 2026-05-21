@@ -412,7 +412,7 @@ const legalOptions = [
     font-size: 14px;
     cursor: pointer;
     z-index: 50;
-    transition: all 200ms ease;
+    transition: all 250ms ease;
   }
   .floating-cta:hover {
     transform: translateY(-2px);
@@ -783,6 +783,26 @@ const legalOptions = [
       }
 
       handleScrollReveal();
+
+      function hideCtaNearFooter() {
+        if (!floatingCta) return;
+        const footer = document.querySelector('.site-footer');
+        if (!footer) return;
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              floatingCta.style.opacity = '0';
+              floatingCta.style.pointerEvents = 'none';
+            } else {
+              floatingCta.style.opacity = '';
+              floatingCta.style.pointerEvents = '';
+            }
+          });
+        }, { threshold: 0.1 });
+        observer.observe(footer);
+      }
+
+      hideCtaNearFooter();
 
       function attachAnchorReveal() {
         if (!shell.id) return;
