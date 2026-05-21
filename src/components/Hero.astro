@@ -66,7 +66,7 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
         <span class="hero__featured-tag">Bài mới nhất</span>
         <h3 class="hero__featured-title">Hạ tầng trọng điểm HL4: 5 yếu tố định hình trung tâm Hòa Lạc</h3>
         <p class="hero__featured-excerpt">Y tế vùng 120 ha, ga S18-S19, 3 trục giao thông quốc gia, quỹ NOXH 157 ha — phân tích từ QĐ 5105.</p>
-        <a href={`${basePath}/blog/ha-tang-trong-diem-hl4`} class="hero__featured-link">
+        <a href={`${basePath}/blog/ha-tang-trong-diem-hl4-trung-tam-do-thi-hoa-lac`} class="hero__featured-link">
           Đọc bài phân tích
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -74,25 +74,28 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
 
       <!-- Mini area cards -->
       <div class="hero__areas">
-        <div class="hero__area-card">
+        <div class="hero__area-card hero__area-card--disabled">
           <div class="hero__area-name">HL3</div>
           <div class="hero__area-detail">1.004 ha · 48K người</div>
           <div class="hero__area-highlight">Sinh thái + ĐHQG</div>
+          <div class="hero__area-soon">Sắp ra mắt</div>
         </div>
-        <div class="hero__area-card hero__area-card--active">
+        <a href={`${basePath}/blog/ha-tang-trong-diem-hl4-trung-tam-do-thi-hoa-lac`} class="hero__area-card hero__area-card--active">
           <div class="hero__area-name">HL4</div>
           <div class="hero__area-detail">1.880 ha · 145K người</div>
           <div class="hero__area-highlight">Trung tâm đô thị</div>
-        </div>
-        <div class="hero__area-card">
+        </a>
+        <div class="hero__area-card hero__area-card--disabled">
           <div class="hero__area-name">HL5</div>
           <div class="hero__area-detail">1.110 ha · 75K người</div>
           <div class="hero__area-highlight">Giải trí + nghỉ dưỡng</div>
+          <div class="hero__area-soon">Sắp ra mắt</div>
         </div>
-        <div class="hero__area-card">
+        <div class="hero__area-card hero__area-card--disabled">
           <div class="hero__area-name">HL6</div>
           <div class="hero__area-detail">700 ha · 77K người</div>
           <div class="hero__area-highlight">Cửa ngõ phía Nam</div>
+          <div class="hero__area-soon">Sắp ra mắt</div>
         </div>
       </div>
     </div>
@@ -371,8 +374,32 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
   }
 
   .hero__area-card--active {
-    border-color: rgba(212, 72, 9, 0.4);
-    background: rgba(212, 72, 9, 0.08);
+    border-color: rgba(251, 191, 36, 0.4);
+    background: rgba(251, 191, 36, 0.08);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .hero__area-card--active:hover {
+    border-color: rgba(251, 191, 36, 0.6);
+    background: rgba(251, 191, 36, 0.15);
+  }
+
+  .hero__area-card--disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .hero__area-card--disabled:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .hero__area-soon {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 4px;
+    font-style: italic;
   }
 
   .hero__area-name {
