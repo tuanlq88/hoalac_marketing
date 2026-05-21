@@ -41,64 +41,20 @@ const pillarsHref = `${basePath}/pillars`;
       <div class="site-header__inner">
         <a href={homeHref} class="site-brand">
           <span class="site-brand__title">Insight Hòa Lạc</span>
-          <span class="site-brand__subtitle">Bản tin dữ liệu &amp; funnel 2026</span>
+          <span class="site-brand__subtitle">Quy hoạch & phân tích đầu tư</span>
         </a>
         <nav class="site-nav" aria-label="Điều hướng chính">
-          <a href="#lead-form" class="site-nav__pill">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M8 6h8" />
-              <path d="M8 12h8" />
-              <path d="M8 18h5" />
-              <rect x="4" y="3" width="16" height="18" rx="2" ry="2" />
-            </svg>
-            <span>Cần tư vấn</span>
-          </a>
           <a href={blogHref} class="site-nav__pill site-nav__pill--accent">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M4 19.5C4 18.12 5.12 17 6.5 17h13" />
-              <path d="M4 4.5C4 5.88 5.12 7 6.5 7h13" />
-              <path d="M6.5 7C5.12 7 4 5.88 4 4.5V19.5C4 18.12 5.12 17 6.5 17" />
-              <path d="M19.5 7C20.88 7 22 5.88 22 4.5V19.5C22 18.12 20.88 17 19.5 17" />
-            </svg>
-            <span>Bài vệ tinh</span>
+            <span>Bài phân tích</span>
           </a>
+          <a href="#lead-form" class="site-nav__pill site-nav__pill--cta">
+            <span>Đánh giá nhanh →</span>
+          </a>
+          <!-- Pillars nav: uncomment when pillar content is published
           <a href={pillarsHref} class="site-nav__pill">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="3.5" />
-              <path d="M12 2v3" />
-              <path d="M12 19v3" />
-              <path d="M4 12h3" />
-              <path d="M17 12h3" />
-            </svg>
-            <span>Bài trung tâm</span>
+            <span>Bài tổng hợp</span>
           </a>
+          -->
         </nav>
         <button
           class="hamburger-btn"
@@ -116,11 +72,8 @@ const pillarsHref = `${basePath}/pillars`;
           </svg>
         </button>
       </div>
-      <div class="site-header__meta">
-        <a href="mailto:lienhe@insighthoalac.vn" class="site-meta__item">lienhe@insighthoalac.vn</a>
-        <span class="site-meta__divider" aria-hidden="true">•</span>
-        <a href="https://t.me/insighthoalac" class="site-meta__item" target="_blank" rel="noreferrer">Telegram cập nhật</a>
-      </div>
+      <!-- Contact links moved to footer only -->
+
     </header>
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <div class="mobile-menu__backdrop"></div>
@@ -137,32 +90,11 @@ const pillarsHref = `${basePath}/pillars`;
           </button>
         </div>
         <ul class="mobile-menu__nav">
-          <li><a class="mobile-menu__link" href="#lead-form">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M8 6h8"/><path d="M8 12h8"/><path d="M8 18h5"/>
-              <rect x="4" y="3" width="16" height="18" rx="2" ry="2"/>
-            </svg>
-            <span>CẦN TƯ VẤN</span>
-          </a></li>
           <li><a class="mobile-menu__link" href={blogHref}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 19.5C4 18.12 5.12 17 6.5 17h13"/>
-              <path d="M4 4.5C4 5.88 5.12 7 6.5 7h13"/>
-              <path d="M6.5 7C5.12 7 4 5.88 4 4.5V19.5C4 18.12 5.12 17 6.5 17"/>
-              <path d="M19.5 7C20.88 7 22 5.88 22 4.5V19.5C22 18.12 20.88 17 19.5 17"/>
-            </svg>
-            <span>BÀI VỆ TINH</span>
+            <span>Bài phân tích</span>
           </a></li>
-          <li><a class="mobile-menu__link" href={pillarsHref}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="3.5"/>
-              <path d="M12 2v3"/><path d="M12 19v3"/>
-              <path d="M4 12h3"/><path d="M17 12h3"/>
-            </svg>
-            <span>BÀI TRUNG TÂM</span>
+          <li><a class="mobile-menu__link" href="#lead-form">
+            <span>Đánh giá nhanh</span>
           </a></li>
         </ul>
         <div class="mobile-menu__meta">
