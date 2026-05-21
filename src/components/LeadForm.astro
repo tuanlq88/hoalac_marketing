@@ -398,13 +398,13 @@ const legalOptions = [
     position: fixed;
     bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     right: 1.5rem;
-    background: #fff;
-    color: #0f172a;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #d44809, #a43706);
+    color: #fff;
+    border: none;
     border-radius: 14px;
     padding: 12px 20px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 20px rgba(212, 72, 9, 0.3);
     display: none;
     align-items: center;
     gap: 10px;
@@ -416,8 +416,8 @@ const legalOptions = [
   }
   .floating-cta:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
-    background: #f8fafc;
+    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.4);
+    background: linear-gradient(135deg, #b83d07, #8a2e05);
   }
   .floating-cta__icon {
     flex-shrink: 0;
