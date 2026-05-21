@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4A5568"/>
+    </marker>
+    <linearGradient id="metroLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563EB"/>
+      <stop offset="100%" style="stop-color:#1D4ED8"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="520" fill="#F7FAFC" rx="8"/>
+
+  <!-- Title -->
+  <text x="500" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1A202C">Tuyến đường sắt đô thị số 5: Văn Cao — Hòa Lạc (39,6 km)</text>
+  <text x="500" y="50" text-anchor="middle" font-size="11" fill="#718096">Nguồn: QĐ 4602/QĐ-UBND | 20 ga | Khởi công 12/2025 | Dự kiến vận hành 2030</text>
+
+  <!-- Area labels background zones -->
+  <!-- Noi thanh Ha Noi zone -->
+  <rect x="30" y="65" width="340" height="390" rx="6" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="1" opacity="0.5"/>
+  <text x="200" y="85" text-anchor="middle" font-size="11" fill="#2B6CB0" font-weight="600">NỘI THÀNH HÀ NỘI</text>
+  <text x="200" y="98" text-anchor="middle" font-size="9" fill="#4A90D9">Đoạn ngầm (S1-S6)</text>
+
+  <!-- Vung dem zone -->
+  <rect x="375" y="65" width="200" height="390" rx="6" fill="#F0FFF4" stroke="#C6F6D5" stroke-width="1" opacity="0.5"/>
+  <text x="475" y="85" text-anchor="middle" font-size="11" fill="#276749" font-weight="600">VÙNG ĐỆM</text>
+  <text x="475" y="98" text-anchor="middle" font-size="9" fill="#48BB78">Đoạn mặt đất (S7-S15)</text>
+
+  <!-- Hoa Lac zone -->
+  <rect x="580" y="65" width="395" height="390" rx="6" fill="#FFFAF0" stroke="#FEEBC8" stroke-width="1" opacity="0.5"/>
+  <text x="777" y="85" text-anchor="middle" font-size="11" fill="#C05621" font-weight="600">ĐÔ THỊ VỆ TINH HÒA LẠC</text>
+  <text x="777" y="98" text-anchor="middle" font-size="9" fill="#DD6B20">5 ga tại Hòa Lạc (S16-S20)</text>
+
+  <!-- HL3 sub-zone -->
+  <rect x="590" y="110" width="155" height="280" rx="4" fill="#FFF5EB" stroke="#FBD38D" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="667" y="128" text-anchor="middle" font-size="10" fill="#C05621" font-weight="600">HL3</text>
+  <text x="667" y="140" text-anchor="middle" font-size="8" fill="#DD6B20">48.200 người</text>
+
+  <!-- HL4 sub-zone -->
+  <rect x="750" y="110" width="215" height="280" rx="4" fill="#FFF0E6" stroke="#F6AD55" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="857" y="128" text-anchor="middle" font-size="10" fill="#C05621" font-weight="600">HL4</text>
+  <text x="857" y="140" text-anchor="middle" font-size="8" fill="#DD6B20">145.000 người</text>
+
+  <!-- Metro line path -->
+  <path d="M 60 250 L 370 250 L 580 250 Q 620 250 660 270 L 750 310 L 850 350 L 950 380"
+        stroke="url(#metroLine)" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- === INNER CITY STATIONS (S1-S6) === -->
+  <!-- S1 Quan Ngua -->
+  <circle cx="60" cy="250" r="7" fill="#2563EB" stroke="white" stroke-width="2" filter="url(#shadow)"/>
+  <text x="60" y="232" text-anchor="middle" font-size="8" fill="#1A202C" font-weight="600">S1</text>
+  <text x="60" y="272" text-anchor="middle" font-size="7.5" fill="#4A5568">Quần Ngựa</text>
+  <rect x="32" y="278" width="56" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="60" y="288" text-anchor="middle" font-size="7" fill="#553C9A">↔ Tuyến số 2</text>
+
+  <!-- S2 Kim Ma -->
+  <circle cx="120" cy="250" r="7" fill="#2563EB" stroke="white" stroke-width="2" filter="url(#shadow)"/>
+  <text x="120" y="232" text-anchor="middle" font-size="8" fill="#1A202C" font-weight="600">S2</text>
+  <text x="120" y="272" text-anchor="middle" font-size="7.5" fill="#4A5568">Kim Mã</text>
+  <rect x="92" y="278" width="56" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="120" y="288" text-anchor="middle" font-size="7" fill="#553C9A">↔ Tuyến số 3</text>
+
+  <!-- S3 Vanh dai 1 -->
+  <circle cx="170" cy="250" r="5" fill="#2563EB" stroke="white" stroke-width="1.5"/>
+  <text x="170" y="237" text-anchor="middle" font-size="7" fill="#718096">S3</text>
+
+  <!-- S4 Vanh dai 2 -->
+  <circle cx="215" cy="250" r="5" fill="#2563EB" stroke="white" stroke-width="1.5"/>
+  <text x="215" y="237" text-anchor="middle" font-size="7" fill="#718096">S4</text>
+
+  <!-- S5 Hoang Dao Thuy -->
+  <circle cx="265" cy="250" r="7" fill="#2563EB" stroke="white" stroke-width="2" filter="url(#shadow)"/>
+  <text x="265" y="232" text-anchor="middle" font-size="8" fill="#1A202C" font-weight="600">S5</text>
+  <text x="265" y="272" text-anchor="middle" font-size="7.5" fill="#4A5568">H.Đ.Thúy</text>
+  <rect x="237" y="278" width="56" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="265" y="288" text-anchor="middle" font-size="7" fill="#553C9A">↔ Tuyến số 4</text>
+
+  <!-- S6 Vanh dai 3 -->
+  <circle cx="330" cy="250" r="7" fill="#2563EB" stroke="white" stroke-width="2" filter="url(#shadow)"/>
+  <text x="330" y="232" text-anchor="middle" font-size="8" fill="#1A202C" font-weight="600">S6</text>
+  <text x="330" y="272" text-anchor="middle" font-size="7.5" fill="#4A5568">Vành đai 3</text>
+  <rect x="302" y="278" width="56" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="330" y="288" text-anchor="middle" font-size="7" fill="#553C9A">↔ Tuyến số 8</text>
+
+  <!-- Ngam/mat dat transition marker -->
+  <line x1="370" y1="220" x2="370" y2="280" stroke="#A0AEC0" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="370" y="215" text-anchor="middle" font-size="7" fill="#A0AEC0">Chuyển</text>
+  <text x="370" y="305" text-anchor="middle" font-size="7" fill="#A0AEC0">mặt đất</text>
+
+  <!-- === BUFFER ZONE STATIONS (S7-S15) === -->
+  <!-- S7 -->
+  <circle cx="395" cy="250" r="6" fill="#38A169" stroke="white" stroke-width="1.5"/>
+  <text x="395" y="237" text-anchor="middle" font-size="7" fill="#276749">S7</text>
+  <rect x="372" y="258" width="46" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="395" y="268" text-anchor="middle" font-size="7" fill="#553C9A">↔ M2</text>
+
+  <!-- S8 -->
+  <circle cx="420" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+
+  <!-- S9 -->
+  <circle cx="445" cy="250" r="6" fill="#38A169" stroke="white" stroke-width="1.5"/>
+  <text x="445" y="237" text-anchor="middle" font-size="7" fill="#276749">S9</text>
+  <rect x="422" y="258" width="46" height="14" rx="3" fill="#E9D8FD"/>
+  <text x="445" y="268" text-anchor="middle" font-size="7" fill="#553C9A">↔ T.số 6</text>
+
+  <!-- S10-S15 compact -->
+  <circle cx="470" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+  <circle cx="490" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+  <circle cx="510" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+  <circle cx="530" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+  <circle cx="550" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+  <circle cx="570" cy="250" r="4" fill="#38A169" stroke="white" stroke-width="1"/>
+
+  <text x="520" y="240" text-anchor="middle" font-size="7" fill="#718096">S10—S15</text>
+
+  <!-- === HOA LAC STATIONS (S16-S20) - HIGHLIGHTED === -->
+
+  <!-- S16 Dong Truc -->
+  <circle cx="660" cy="270" r="9" fill="#DD6B20" stroke="white" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="660" y="273" text-anchor="middle" font-size="7" fill="white" font-weight="700">S16</text>
+  <text x="630" y="300" text-anchor="start" font-size="9" fill="#1A202C" font-weight="600">Ga Đồng Trúc</text>
+  <text x="630" y="312" text-anchor="start" font-size="7.5" fill="#718096">Mặt đất | Phân kỳ đầu tư</text>
+  <text x="630" y="323" text-anchor="start" font-size="7.5" fill="#718096">Cửa ngõ phía Đông HL</text>
+
+  <!-- S17 Dong Bai - SPECIAL (elevated, intersection) -->
+  <circle cx="750" cy="310" r="11" fill="#C05621" stroke="#FBD38D" stroke-width="3" filter="url(#shadow)"/>
+  <text x="750" y="313" text-anchor="middle" font-size="7" fill="white" font-weight="700">S17</text>
+  <!-- Highlight circle for intersection -->
+  <circle cx="750" cy="310" r="18" fill="none" stroke="#F6AD55" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>
+  <text x="712" y="345" text-anchor="start" font-size="9" fill="#1A202C" font-weight="700">Ga Đồng Bãi ★</text>
+  <text x="712" y="357" text-anchor="start" font-size="7.5" fill="#C05621">Trên cao 3 tầng | Nút giao ĐL Thăng Long × QL21A</text>
+  <text x="712" y="368" text-anchor="start" font-size="7.5" fill="#C05621">Tiềm năng trung chuyển đa phương tiện</text>
+
+  <!-- S18 Tien Xuan -->
+  <circle cx="850" cy="350" r="11" fill="#C05621" stroke="#FBD38D" stroke-width="3" filter="url(#shadow)"/>
+  <text x="850" y="353" text-anchor="middle" font-size="7" fill="white" font-weight="700">S18</text>
+  <text x="870" y="335" text-anchor="start" font-size="9" fill="#1A202C" font-weight="700">Ga Tiến Xuân ★</text>
+  <text x="870" y="347" text-anchor="start" font-size="7.5" fill="#C05621">Mặt đất | Gắn lõi HL4</text>
+  <text x="870" y="358" text-anchor="start" font-size="7.5" fill="#C05621">Cạnh TT Y tế vùng 120 ha</text>
+
+  <!-- S19 Trai Moi -->
+  <circle cx="900" cy="370" r="9" fill="#DD6B20" stroke="white" stroke-width="2.5" filter="url(#shadow)"/>
+  <text x="900" y="373" text-anchor="middle" font-size="7" fill="white" font-weight="700">S19</text>
+  <text x="890" y="395" text-anchor="start" font-size="9" fill="#1A202C" font-weight="600">Ga Trại Mới</text>
+  <text x="890" y="406" text-anchor="start" font-size="7.5" fill="#718096">Mặt đất | Khu dân cư mới</text>
+
+  <!-- S20 Thach Binh -->
+  <circle cx="950" cy="380" r="11" fill="#C05621" stroke="#FBD38D" stroke-width="3" filter="url(#shadow)"/>
+  <text x="950" y="383" text-anchor="middle" font-size="7" fill="white" font-weight="700">S20</text>
+  <text x="920" y="415" text-anchor="start" font-size="9" fill="#1A202C" font-weight="700">Ga Thạch Bình ★</text>
+  <text x="920" y="427" text-anchor="start" font-size="7.5" fill="#C05621">Ga cuối | Dự phòng mở rộng</text>
+  <text x="920" y="438" text-anchor="start" font-size="7.5" fill="#C05621">↔ ĐS liên vùng Phú Thọ-HN</text>
+
+  <!-- TOD radius indicators around S17, S18 -->
+  <!-- S18 TOD rings -->
+  <circle cx="850" cy="350" r="24" fill="none" stroke="#F6AD55" stroke-width="0.8" stroke-dasharray="2,2" opacity="0.5"/>
+  <circle cx="850" cy="350" r="35" fill="none" stroke="#F6AD55" stroke-width="0.5" stroke-dasharray="2,3" opacity="0.3"/>
+
+  <!-- Legend -->
+  <rect x="30" y="460" width="940" height="48" rx="4" fill="white" stroke="#E2E8F0" stroke-width="1"/>
+  <text x="50" y="477" font-size="9" font-weight="600" fill="#2D3748">Chú thích:</text>
+
+  <!-- Legend items -->
+  <circle cx="120" cy="484" r="5" fill="#2563EB"/>
+  <text x="130" y="488" font-size="8" fill="#4A5568">Ga ngầm (S1-S6)</text>
+
+  <circle cx="240" cy="484" r="4" fill="#38A169"/>
+  <text x="249" y="488" font-size="8" fill="#4A5568">Ga mặt đất (vùng đệm)</text>
+
+  <circle cx="380" cy="484" r="6" fill="#DD6B20" stroke="white" stroke-width="1.5"/>
+  <text x="390" y="488" font-size="8" fill="#4A5568">Ga tại Hòa Lạc</text>
+
+  <circle cx="490" cy="484" r="6" fill="#C05621" stroke="#FBD38D" stroke-width="2"/>
+  <text x="500" y="488" font-size="8" fill="#4A5568">Ga trọng điểm (★)</text>
+
+  <rect x="610" y="479" width="12" height="10" rx="2" fill="#E9D8FD"/>
+  <text x="627" y="488" font-size="8" fill="#4A5568">Kết nối tuyến khác</text>
+
+  <circle cx="740" cy="484" r="10" fill="none" stroke="#F6AD55" stroke-width="0.8" stroke-dasharray="2,2"/>
+  <text x="755" y="488" font-size="8" fill="#4A5568">Vùng ảnh hưởng (300-800m)</text>
+
+  <!-- Road labels -->
+  <text x="600" y="162" font-size="8" fill="#A0AEC0" transform="rotate(-5, 600, 162)">← Đại lộ Thăng Long →</text>
+  <text x="800" y="170" font-size="8" fill="#A0AEC0" transform="rotate(10, 800, 170)">← Cao tốc HL — Hòa Bình →</text>
+</svg>
