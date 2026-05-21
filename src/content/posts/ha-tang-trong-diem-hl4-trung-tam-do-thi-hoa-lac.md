@@ -21,6 +21,8 @@ Anh Tuấn, 38 tuổi, giám đốc công nghệ tại Cầu Giấy. Hai năm ng
 
 Câu hỏi này không chỉ của riêng anh Tuấn. Và câu trả lời nằm trong chính các quyết định quy hoạch đã được phê duyệt.
 
+![Bản đồ định hướng hạ tầng HL4 — vị trí các phân khu, trục giao thông và ga đường sắt đô thị](/images/maps/hl4-ha-tang-dinh-huong.svg)
+
 ---
 
 ## 1. HL4 không chỉ là trung tâm trên giấy
