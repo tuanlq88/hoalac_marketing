@@ -313,6 +313,23 @@ main {
   font-size: var(--font-footer-body);
 }
 
+.site-footer__highlight {
+  display: inline-block;
+  margin-top: 0.25rem;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid rgba(212, 72, 9, 0.4);
+  border-radius: 999px;
+  color: #fb923c !important;
+  font-weight: 600;
+  font-size: var(--font-footer-body);
+  transition: all 200ms ease;
+}
+
+.site-footer__highlight:hover {
+  background: rgba(212, 72, 9, 0.12);
+  border-color: rgba(212, 72, 9, 0.6);
+}
+
 .site-footer__response {
   margin: 0.25rem 0 0;
   color: rgba(255, 255, 255, 0.35);
