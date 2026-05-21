@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, -apple-system, sans-serif">
+  <title>Sơ đồ các vùng đất hạn chế chuyển đổi tại Hòa Lạc</title>
+  <defs>
+    <pattern id="forestPattern" patternUnits="userSpaceOnUse" width="12" height="12">
+      <rect width="12" height="12" fill="#2d6a2d" opacity="0.3"/>
+      <circle cx="6" cy="6" r="3" fill="#1a4d1a" opacity="0.4"/>
+    </pattern>
+    <pattern id="militaryPattern" patternUnits="userSpaceOnUse" width="10" height="10">
+      <rect width="10" height="10" fill="#8b1a1a" opacity="0.25"/>
+      <line x1="0" y1="10" x2="10" y2="0" stroke="#8b1a1a" stroke-width="1" opacity="0.3"/>
+    </pattern>
+    <pattern id="corridorPattern" patternUnits="userSpaceOnUse" width="8" height="8">
+      <rect width="8" height="8" fill="#1a5276" opacity="0.2"/>
+      <line x1="0" y1="4" x2="8" y2="4" stroke="#1a5276" stroke-width="1" opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f6f0"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1a1a">Vùng đất hạn chế chuyển đổi tại đô thị Hòa Lạc</text>
+  <text x="400" y="50" text-anchor="middle" font-size="11" fill="#666">Theo QĐ 705/QĐ-TTg và quy hoạch phân khu HL3, HL4, HL6</text>
+
+  <!-- Main map area -->
+  <g transform="translate(50, 70)">
+    <!-- Outer boundary of Hoa Lac -->
+    <rect x="0" y="0" width="500" height="440" rx="4" fill="#e8e4da" stroke="#999" stroke-width="1.5"/>
+    <text x="250" y="18" text-anchor="middle" font-size="10" fill="#888">Ranh giới đô thị Hòa Lạc ~17.274 ha</text>
+
+    <!-- NN1 - Military airport zone (top-left) -->
+    <rect x="10" y="25" width="160" height="120" rx="3" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="2"/>
+    <text x="90" y="70" text-anchor="middle" font-size="12" font-weight="600" fill="#8b1a1a">NN1</text>
+    <text x="90" y="85" text-anchor="middle" font-size="9" fill="#8b1a1a">Sân bay Hòa Lạc</text>
+    <text x="90" y="98" text-anchor="middle" font-size="9" fill="#8b1a1a">1.270 ha</text>
+    <text x="90" y="112" text-anchor="middle" font-size="8" fill="#8b1a1a" font-style="italic">Đất quân sự</text>
+
+    <!-- HL3 zone -->
+    <rect x="10" y="155" width="150" height="140" rx="3" fill="#f0ead6" stroke="#666" stroke-width="1"/>
+    <text x="85" y="175" text-anchor="middle" font-size="12" font-weight="600" fill="#333">HL3</text>
+    <text x="85" y="190" text-anchor="middle" font-size="9" fill="#555">1.003,75 ha</text>
+    <!-- Forest area inside HL3 -->
+    <rect x="18" y="200" width="80" height="55" rx="2" fill="url(#forestPattern)" stroke="#2d6a2d" stroke-width="1"/>
+    <text x="58" y="222" text-anchor="middle" font-size="8" fill="#1a4d1a">Lâm nghiệp</text>
+    <text x="58" y="234" text-anchor="middle" font-size="8" fill="#1a4d1a">259,86 ha</text>
+    <text x="58" y="248" text-anchor="middle" font-size="7" fill="#1a4d1a">(25,89%)</text>
+    <!-- Military inside HL3 -->
+    <rect x="108" y="200" width="42" height="30" rx="2" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="1"/>
+    <text x="129" y="218" text-anchor="middle" font-size="7" fill="#8b1a1a">QP 5,2ha</text>
+    <!-- Corridor inside HL3 -->
+    <rect x="18" y="265" width="130" height="18" rx="2" fill="url(#corridorPattern)" stroke="#1a5276" stroke-width="1"/>
+    <text x="83" y="278" text-anchor="middle" font-size="7" fill="#1a5276">Hành lang xanh 100m (S. Đồng Vải, S. Ngang)</text>
+
+    <!-- HL4 zone (center, largest) -->
+    <rect x="170" y="25" width="200" height="270" rx="3" fill="#f0ead6" stroke="#666" stroke-width="1"/>
+    <text x="270" y="45" text-anchor="middle" font-size="13" font-weight="600" fill="#333">HL4</text>
+    <text x="270" y="60" text-anchor="middle" font-size="9" fill="#555">1.879,83 ha — Trung tâm đô thị</text>
+    <!-- Forest area inside HL4 -->
+    <rect x="180" y="72" width="110" height="65" rx="2" fill="url(#forestPattern)" stroke="#2d6a2d" stroke-width="1"/>
+    <text x="235" y="98" text-anchor="middle" font-size="8" fill="#1a4d1a">Lâm nghiệp</text>
+    <text x="235" y="112" text-anchor="middle" font-size="8" fill="#1a4d1a">318,34 ha (19,63%)</text>
+    <!-- Military inside HL4 -->
+    <rect x="300" y="72" width="60" height="25" rx="2" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="1"/>
+    <text x="330" y="88" text-anchor="middle" font-size="7" fill="#8b1a1a">QP 1,55ha</text>
+    <!-- Water -->
+    <rect x="180" y="148" width="100" height="30" rx="2" fill="#b3d4e8" stroke="#1a5276" stroke-width="1" opacity="0.6"/>
+    <text x="230" y="167" text-anchor="middle" font-size="8" fill="#1a5276">Mặt nước 124,42 ha</text>
+    <!-- Corridor -->
+    <rect x="180" y="190" width="178" height="18" rx="2" fill="url(#corridorPattern)" stroke="#1a5276" stroke-width="1"/>
+    <text x="269" y="203" text-anchor="middle" font-size="7" fill="#1a5276">Hành lang xanh 100m (Nà Mương, Vai Cả)</text>
+    <!-- Y te vung label -->
+    <rect x="180" y="220" width="90" height="35" rx="2" fill="#fff3cd" stroke="#856404" stroke-width="1"/>
+    <text x="225" y="237" text-anchor="middle" font-size="8" fill="#856404">Y tế vùng</text>
+    <text x="225" y="248" text-anchor="middle" font-size="7" fill="#856404">120 ha (HL4-4)</text>
+
+    <!-- HL6 zone -->
+    <rect x="380" y="25" width="110" height="180" rx="3" fill="#f0ead6" stroke="#666" stroke-width="1"/>
+    <text x="435" y="45" text-anchor="middle" font-size="12" font-weight="600" fill="#333">HL6</text>
+    <text x="435" y="60" text-anchor="middle" font-size="9" fill="#555">699,50 ha</text>
+    <!-- Military inside HL6 - larger block -->
+    <rect x="390" y="70" width="90" height="50" rx="2" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="2"/>
+    <text x="435" y="92" text-anchor="middle" font-size="9" font-weight="600" fill="#8b1a1a">Quốc phòng</text>
+    <text x="435" y="106" text-anchor="middle" font-size="8" fill="#8b1a1a">20,78 ha (2,97%)</text>
+    <!-- Water HL6 -->
+    <rect x="390" y="130" width="90" height="25" rx="2" fill="#b3d4e8" stroke="#1a5276" stroke-width="1" opacity="0.6"/>
+    <text x="435" y="147" text-anchor="middle" font-size="7" fill="#1a5276">Mặt nước 35,27 ha</text>
+    <!-- Corridor HL6 -->
+    <rect x="390" y="165" width="90" height="16" rx="2" fill="url(#corridorPattern)" stroke="#1a5276" stroke-width="1"/>
+    <text x="435" y="176" text-anchor="middle" font-size="6" fill="#1a5276">HL suối Con Gái, Vai Réo</text>
+
+    <!-- Vien Nam zone (bottom) -->
+    <rect x="10" y="305" width="480" height="70" rx="3" fill="url(#forestPattern)" stroke="#2d6a2d" stroke-width="1.5"/>
+    <text x="250" y="330" text-anchor="middle" font-size="11" font-weight="600" fill="#1a4d1a">Khu sinh thái Viên Nam (ST) — 3.431,96 ha</text>
+    <text x="250" y="348" text-anchor="middle" font-size="9" fill="#1a4d1a">Ưu tiên bảo vệ rừng, chống lũ — hạn chế tối đa xây dựng</text>
+    <text x="250" y="362" text-anchor="middle" font-size="8" fill="#1a4d1a" font-style="italic">Mật độ cực thấp, không phá vỡ địa hình tự nhiên</text>
+
+    <!-- Major roads -->
+    <line x1="0" y1="155" x2="500" y2="155" stroke="#e67e22" stroke-width="3" stroke-dasharray="8,4" opacity="0.7"/>
+    <text x="415" y="152" font-size="7" fill="#e67e22" font-weight="600">Cao tốc HL-HB (120m)</text>
+
+    <line x1="170" y1="295" x2="500" y2="295" stroke="#e67e22" stroke-width="3" stroke-dasharray="8,4" opacity="0.7"/>
+    <text x="415" y="292" font-size="7" fill="#e67e22" font-weight="600">Đường Hồ Chí Minh (120m)</text>
+
+    <!-- NN5 label -->
+    <rect x="10" y="385" width="100" height="45" rx="3" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="1"/>
+    <text x="60" y="405" text-anchor="middle" font-size="9" fill="#8b1a1a">NN5 — 643 ha</text>
+    <text x="60" y="418" text-anchor="middle" font-size="7" fill="#8b1a1a">Đất quân đội, dự trữ</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(580, 80)">
+    <text x="0" y="0" font-size="12" font-weight="700" fill="#1a1a1a">Chú giải</text>
+
+    <rect x="0" y="15" width="20" height="14" fill="url(#militaryPattern)" stroke="#8b1a1a" stroke-width="1"/>
+    <text x="26" y="26" font-size="9" fill="#333">Đất quốc phòng</text>
+    <text x="26" y="37" font-size="8" fill="#888">Cấm giao dịch dân sự</text>
+
+    <rect x="0" y="50" width="20" height="14" fill="url(#forestPattern)" stroke="#2d6a2d" stroke-width="1"/>
+    <text x="26" y="61" font-size="9" fill="#333">Đất lâm nghiệp</text>
+    <text x="26" y="72" font-size="8" fill="#888">Không chuyển đổi sang ở</text>
+
+    <rect x="0" y="85" width="20" height="14" fill="url(#corridorPattern)" stroke="#1a5276" stroke-width="1"/>
+    <text x="26" y="96" font-size="9" fill="#333">Hành lang bảo vệ</text>
+    <text x="26" y="107" font-size="8" fill="#888">Tối thiểu 100m, cấm XD</text>
+
+    <rect x="0" y="120" width="20" height="14" fill="#b3d4e8" stroke="#1a5276" stroke-width="1" opacity="0.6"/>
+    <text x="26" y="131" font-size="9" fill="#333">Mặt nước</text>
+    <text x="26" y="142" font-size="8" fill="#888">Không được san lấp</text>
+
+    <rect x="0" y="155" width="20" height="14" fill="#fff3cd" stroke="#856404" stroke-width="1"/>
+    <text x="26" y="166" font-size="9" fill="#333">Trung tâm y tế vùng</text>
+    <text x="26" y="177" font-size="8" fill="#888">Rủi ro thu hồi đất</text>
+
+    <line x1="0" y1="195" x2="20" y2="195" stroke="#e67e22" stroke-width="3" stroke-dasharray="6,3"/>
+    <text x="26" y="199" font-size="9" fill="#333">Trục đường lớn</text>
+    <text x="26" y="210" font-size="8" fill="#888">Hành lang 120m</text>
+
+    <!-- Summary box -->
+    <rect x="-10" y="235" width="200" height="140" rx="4" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    <text x="90" y="255" text-anchor="middle" font-size="10" font-weight="600" fill="#333">Tỷ lệ đất hạn chế</text>
+
+    <rect x="5" y="265" width="12" height="12" fill="#e8d5c4" stroke="#666" stroke-width="0.5"/>
+    <text x="22" y="275" font-size="9" fill="#333">HL3: ~33% hạn chế</text>
+
+    <rect x="5" y="285" width="12" height="12" fill="#e8d5c4" stroke="#666" stroke-width="0.5"/>
+    <text x="22" y="295" font-size="9" fill="#333">HL4: ~24% hạn chế</text>
+
+    <rect x="5" y="305" width="12" height="12" fill="#e8d5c4" stroke="#666" stroke-width="0.5"/>
+    <text x="22" y="315" font-size="9" fill="#333">HL6: ~8% hạn chế</text>
+
+    <text x="90" y="340" text-anchor="middle" font-size="8" fill="#888" font-style="italic">Chưa tính hành lang</text>
+    <text x="90" y="352" text-anchor="middle" font-size="8" fill="#888" font-style="italic">bảo vệ và khoảng lùi</text>
+
+    <text x="90" y="375" text-anchor="middle" font-size="7" fill="#aaa">Nguồn: QĐ 705, 5103-5105</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="400" y="585" text-anchor="middle" font-size="8" fill="#aaa">Sơ đồ minh họa — không phải bản đồ chính xác. Kiểm tra quy hoạch tại UBND huyện trước khi giao dịch.</text>
+</svg>
