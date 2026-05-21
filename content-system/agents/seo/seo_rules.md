@@ -4,6 +4,7 @@ File này định nghĩa PHẠM VI, GIỚI HẠN và NGUYÊN TẮC bắt buộc
 cho toàn bộ các SEO Agent trong hệ thống.
 
 Áp dụng cho:
+
 - SEO Content Agent
 - SEO Tech Agent
 - QA Agent (đối chiếu)
@@ -11,6 +12,7 @@ cho toàn bộ các SEO Agent trong hệ thống.
 ────────────────────────────────
 🎯 MỤC TIÊU
 ────────────────────────────────
+
 - Tối ưu SEO cho NỘI DUNG ĐÃ TỒN TẠI
 - Giữ nguyên chiến lược nội dung & funnel
 - Không làm biến dạng ý đồ ban đầu của bài viết
@@ -22,6 +24,7 @@ SEO trong hệ thống này là:
 ────────────────────────────────
 📌 NGUYÊN TẮC CỐT LÕI
 ────────────────────────────────
+
 1. SEO KHÔNG quyết định chiến lược
 2. SEO KHÔNG thay đổi intent, funnel, goal
 3. SEO KHÔNG thêm CTA
@@ -32,8 +35,10 @@ SEO trong hệ thống này là:
 📐 PHẠM VI ĐƯỢC PHÉP (THEO LOẠI AGENT)
 ────────────────────────────────
 
-### 1️⃣ SEO CONTENT AGENT
+## 1️⃣ SEO CONTENT AGENT
+
 ĐƯỢC PHÉP:
+
 - Chỉnh nhẹ:
   - title (giữ nguyên ý nghĩa)
   - description (tạo mới nếu thiếu)
@@ -44,6 +49,7 @@ SEO trong hệ thống này là:
   - link phải đặt trước section `FACT_DECLARATION`
 
 KHÔNG ĐƯỢC:
+
 - Viết thêm đoạn mới
 - Thêm keyword không có trong bài
 - Nhồi keyword
@@ -53,7 +59,9 @@ KHÔNG ĐƯỢC:
 ---
 
 ### 2️⃣ SEO TECH AGENT
+
 ĐƯỢC PHÉP:
+
 - Bổ sung / chuẩn hoá internal link theo funnel rules
 - Thêm schema:
   - Article / BlogPosting
@@ -64,6 +72,7 @@ KHÔNG ĐƯỢC:
   - alt text hình ảnh
 
 KHÔNG ĐƯỢC:
+
 - Sửa heading (H1–H3)
 - Sửa title / meta
 - Thêm CTA
@@ -73,6 +82,7 @@ KHÔNG ĐƯỢC:
 ---
 
 ### NGOẠI NGỮ CHUYÊN NGÀNH
+
 - Chỉ dùng khi:
   - Không có từ tiếng Việt tương đương phổ biến
 - Nếu dùng:
@@ -85,10 +95,12 @@ KHÔNG ĐƯỢC:
 🔗 INTERNAL LINK & FUNNEL
 ────────────────────────────────
 SEO Agent PHẢI tuân thủ:
+
 - internal-link-registry.yaml
 - funnel handoff rules
 
 SEO Agent KHÔNG được:
+
 - Tạo link trái funnel
 - Link tới bài chưa tồn tại
 - Tự ý “gợi ý” BOFU khi chưa được phép
@@ -97,12 +109,14 @@ SEO Agent KHÔNG được:
 ⚠️ XỬ LÝ NGOẠI LỆ
 ────────────────────────────────
 Nếu phát hiện:
+
 - Sai intent
 - Sai funnel
 - Sai pillar
 - Cấu trúc bài không khớp kế hoạch
 
 → SEO Agent CHỈ ĐƯỢC:
+
 - Ghi chú cảnh báo
 - Để QA xử lý
 
@@ -111,6 +125,7 @@ Nếu phát hiện:
 ────────────────────────────────
 📎 QUY TẮC PHỐI HỢP
 ────────────────────────────────
+
 - Writer chịu trách nhiệm nội dung
 - SEO chịu trách nhiệm tối ưu
 - QA có quyền BLOCK nếu SEO vượt phạm vi
