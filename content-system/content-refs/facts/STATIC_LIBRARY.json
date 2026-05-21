@@ -1,0 +1,603 @@
+{
+  "version": "2026-02-06",
+  "description": "Static Fact Library for Hòa Lạc - Immutable facts valid 5-10 years",
+  "source_documents": [
+    "documents/QD_5103.md",
+    "documents/QD_5104.md",
+    "documents/QD_5106.md",
+    "documents/QD_4602.md",
+    "documents/QD_5105.md",
+    "documents/QD_705_TTg.md"
+  ],
+  "last_updated": "2026-02-06T22:00:56.446866",
+  "verified_by": "RAG Extraction",
+  "categories": {
+    "geography": {
+      "description": "Area boundaries, sizes, and coordinates (bất biến)",
+      "areas": [
+        {
+          "code": "HL1",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL1)",
+          "dien_tich_ha": 1136.96,
+          "dan_so_quy_hoach": 63000,
+          "chuc_nang": "Trung tâm đào tạo",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL2",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL2)",
+          "dien_tich_ha": 1350.31,
+          "dan_so_quy_hoach": 100000,
+          "chuc_nang": "Trung tâm KHCN, phát triển nhân lực chất lượng cao",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL3",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL3)",
+          "dien_tich_ha": 1003.75,
+          "dan_so_quy_hoach": 48200,
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL4",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL4)",
+          "dien_tich_ha": 1879.83,
+          "dan_so_quy_hoach": 145000,
+          "source": "[documents/QD_5105.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL5",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL5)",
+          "dien_tich_ha": 1110.1,
+          "dan_so_quy_hoach": 75000,
+          "source": "[documents/QD_5106.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL6",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL6)",
+          "dien_tich_ha": 699.5,
+          "dan_so_quy_hoach": 77000,
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "NN1",
+          "ten_day_du": "Khu NN1",
+          "dien_tich_ha": 1270.06,
+          "dan_so_quy_hoach": 6500,
+          "chuc_nang": "Đầu mối hạ tầng kỹ thuật, đất quân đội",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN2",
+          "ten_day_du": "Khu NN2",
+          "dien_tich_ha": 936.96,
+          "dan_so_quy_hoach": 10000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN3",
+          "ten_day_du": "Khu NN3",
+          "dien_tich_ha": 1465.64,
+          "dan_so_quy_hoach": 30000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN4",
+          "ten_day_du": "Khu NN4",
+          "dien_tich_ha": 1809.79,
+          "dan_so_quy_hoach": 25000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN5",
+          "ten_day_du": "Khu NN5",
+          "dien_tich_ha": 643.42,
+          "dan_so_quy_hoach": 3500,
+          "chuc_nang": "Đất quân đội, đất dự trữ",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL1",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL1)",
+          "dien_tich_ha": 1136.96,
+          "dan_so_quy_hoach": 63000,
+          "chuc_nang": "Trung tâm đào tạo",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL2",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL2)",
+          "dien_tich_ha": 1350.31,
+          "dan_so_quy_hoach": 100000,
+          "chuc_nang": "Trung tâm KHCN, phát triển nhân lực chất lượng cao",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL3",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL3)",
+          "dien_tich_ha": 1003.75,
+          "dan_so_quy_hoach": 48200,
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL4",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL4)",
+          "dien_tich_ha": 1879.83,
+          "dan_so_quy_hoach": 145000,
+          "source": "[documents/QD_5105.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL5",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL5)",
+          "dien_tich_ha": 1110.1,
+          "dan_so_quy_hoach": 75000,
+          "source": "[documents/QD_5106.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL6",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL6)",
+          "dien_tich_ha": 699.5,
+          "dan_so_quy_hoach": 77000,
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "NN1",
+          "ten_day_du": "Khu NN1",
+          "dien_tich_ha": 1270.06,
+          "dan_so_quy_hoach": 6500,
+          "chuc_nang": "Đầu mối hạ tầng kỹ thuật, đất quân đội",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN2",
+          "ten_day_du": "Khu NN2",
+          "dien_tich_ha": 936.96,
+          "dan_so_quy_hoach": 10000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN3",
+          "ten_day_du": "Khu NN3",
+          "dien_tich_ha": 1465.64,
+          "dan_so_quy_hoach": 30000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN4",
+          "ten_day_du": "Khu NN4",
+          "dien_tich_ha": 1809.79,
+          "dan_so_quy_hoach": 25000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN5",
+          "ten_day_du": "Khu NN5",
+          "dien_tich_ha": 643.42,
+          "dan_so_quy_hoach": 3500,
+          "chuc_nang": "Đất quân đội, đất dự trữ",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL1",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL1)",
+          "dien_tich_ha": 1136.96,
+          "dan_so_quy_hoach": 63000,
+          "chuc_nang": "Trung tâm đào tạo",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL2",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL2)",
+          "dien_tich_ha": 1350.31,
+          "dan_so_quy_hoach": 100000,
+          "chuc_nang": "Trung tâm KHCN, phát triển nhân lực chất lượng cao",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL3",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL3)",
+          "dien_tich_ha": 1003.75,
+          "dan_so_quy_hoach": 48200,
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL4",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL4)",
+          "dien_tich_ha": 1879.83,
+          "dan_so_quy_hoach": 145000,
+          "source": "[documents/QD_5105.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL5",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL5)",
+          "dien_tich_ha": 1110.1,
+          "dan_so_quy_hoach": 75000,
+          "source": "[documents/QD_5106.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL6",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL6)",
+          "dien_tich_ha": 699.5,
+          "dan_so_quy_hoach": 77000,
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "NN1",
+          "ten_day_du": "Khu NN1",
+          "dien_tich_ha": 1270.06,
+          "dan_so_quy_hoach": 6500,
+          "chuc_nang": "Đầu mối hạ tầng kỹ thuật, đất quân đội",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN2",
+          "ten_day_du": "Khu NN2",
+          "dien_tich_ha": 936.96,
+          "dan_so_quy_hoach": 10000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN3",
+          "ten_day_du": "Khu NN3",
+          "dien_tich_ha": 1465.64,
+          "dan_so_quy_hoach": 30000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN4",
+          "ten_day_du": "Khu NN4",
+          "dien_tich_ha": 1809.79,
+          "dan_so_quy_hoach": 25000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN5",
+          "ten_day_du": "Khu NN5",
+          "dien_tich_ha": 643.42,
+          "dan_so_quy_hoach": 3500,
+          "chuc_nang": "Đất quân đội, đất dự trữ",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL1",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL1)",
+          "dien_tich_ha": 1136.96,
+          "dan_so_quy_hoach": 63000,
+          "chuc_nang": "Trung tâm đào tạo",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL2",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL2)",
+          "dien_tich_ha": 1350.31,
+          "dan_so_quy_hoach": 100000,
+          "chuc_nang": "Trung tâm KHCN, phát triển nhân lực chất lượng cao",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "HL3",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL3)",
+          "dien_tich_ha": 1003.75,
+          "dan_so_quy_hoach": 48200,
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL4",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL4)",
+          "dien_tich_ha": 1879.83,
+          "dan_so_quy_hoach": 145000,
+          "source": "[documents/QD_5105.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL5",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL5)",
+          "dien_tich_ha": 1110.1,
+          "dan_so_quy_hoach": 75000,
+          "source": "[documents/QD_5106.md]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "HL6",
+          "ten_day_du": "Phân khu đô thị Hòa Lạc (HL6)",
+          "dien_tich_ha": 699.5,
+          "dan_so_quy_hoach": 77000,
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06",
+          "data_source": "detailed_planning"
+        },
+        {
+          "code": "NN1",
+          "ten_day_du": "Khu NN1",
+          "dien_tich_ha": 1270.06,
+          "dan_so_quy_hoach": 6500,
+          "chuc_nang": "Đầu mối hạ tầng kỹ thuật, đất quân đội",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN2",
+          "ten_day_du": "Khu NN2",
+          "dien_tich_ha": 936.96,
+          "dan_so_quy_hoach": 10000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN3",
+          "ten_day_du": "Khu NN3",
+          "dien_tich_ha": 1465.64,
+          "dan_so_quy_hoach": 30000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN4",
+          "ten_day_du": "Khu NN4",
+          "dien_tich_ha": 1809.79,
+          "dan_so_quy_hoach": 25000,
+          "chuc_nang": "Nông thôn mới, nông nghiệp phục vụ đô thị",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        },
+        {
+          "code": "NN5",
+          "ten_day_du": "Khu NN5",
+          "dien_tich_ha": 643.42,
+          "dan_so_quy_hoach": 3500,
+          "chuc_nang": "Đất quân đội, đất dự trữ",
+          "source": "[QĐ 705/QĐ-TTg]",
+          "extracted_date": "2026-02-06",
+          "data_source": "baseline"
+        }
+      ],
+      "natural_features": [
+        {
+          "name": "Sông Tích",
+          "type": "river",
+          "hanh_lang_xanh_m": 100,
+          "areas_affected": [
+            "HL3",
+            "HL4",
+            "HL5",
+            "HL6"
+          ],
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06"
+        },
+        {
+          "name": "Sông Vai Réo",
+          "type": "river",
+          "hanh_lang_xanh_m": 100,
+          "areas_affected": [
+            "HL3",
+            "HL4",
+            "HL5",
+            "HL6"
+          ],
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06"
+        },
+        {
+          "name": "Suối Vai Réo",
+          "type": "stream",
+          "hanh_lang_xanh_m": 100,
+          "areas_affected": [
+            "HL3",
+            "HL4",
+            "HL5",
+            "HL6"
+          ],
+          "source": "[QĐ 5103/QĐ-UBND]",
+          "extracted_date": "2026-02-06"
+        },
+        {
+          "name": "Sông Ngang",
+          "type": "river",
+          "hanh_lang_xanh_m": 100,
+          "areas_affected": [
+            "HL3",
+            "HL4"
+          ],
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06"
+        },
+        {
+          "name": "Sông Vai Cả",
+          "type": "river",
+          "hanh_lang_xanh_m": 100,
+          "areas_affected": [
+            "HL3",
+            "HL4"
+          ],
+          "source": "[documents/QD_5105.md]",
+          "extracted_date": "2026-02-06"
+        }
+      ]
+    },
+    "infrastructure_planned": {
+      "description": "Planned infrastructure from official decisions (bất biến)",
+      "metro_line_5": {
+        "tuyen": "Tuyến Metro số 5",
+        "ten_day_du": "Tuyến đường sắt đô thị số 5: Văn Cao - Hòa Lạc",
+        "chieu_dai_km": 38.5,
+        "so_ga": 22,
+        "loai_tuyen": "Đường sắt trên cao + ngầm",
+        "source": "[QĐ 4602/QĐ-UBND]",
+        "stations_in_hoa_lac": [
+          {
+            "code": "S20",
+            "name": "Ga Thạch Bình",
+            "type": "trên cao",
+            "vi_tri": "Cao tốc Hòa Lạc – Hòa Bình",
+            "areas_covered": [
+              "HL3"
+            ],
+            "source": "[QĐ 4602/QĐ-UBND]",
+            "extracted_date": "2026-02-06"
+          },
+          {
+            "code": "S16",
+            "name": "Ga Đồng Trúc",
+            "type": "trên mặt đất",
+            "vi_tri": "Đại lộ Thăng Long",
+            "areas_covered": [
+              "HL3"
+            ],
+            "source": "[QĐ 4602/QĐ-UBND]",
+            "extracted_date": "2026-02-06"
+          },
+          {
+            "code": "S18",
+            "name": "Ga Tiến Xuân",
+            "type": "trên mặt đất",
+            "vi_tri": "Cao tốc Hòa Lạc – Hòa Bình",
+            "areas_covered": [
+              "HL4"
+            ],
+            "source": "[QĐ 4602/QĐ-UBND]",
+            "extracted_date": "2026-02-06"
+          },
+          {
+            "code": "S19",
+            "name": "Ga Trại Mới",
+            "type": "trên mặt đất",
+            "vi_tri": "Cao tốc Hòa Lạc – Hòa Bình",
+            "areas_covered": [
+              "HL4"
+            ],
+            "source": "[QĐ 4602/QĐ-UBND]",
+            "extracted_date": "2026-02-06"
+          }
+        ]
+      },
+      "roads": [
+        {
+          "name": "Đại lộ Thăng Long",
+          "loai": "Đường chính khu vực",
+          "chieu_rong_m": 80,
+          "areas": [
+            "HL3",
+            "HL4",
+            "HL5"
+          ],
+          "source": "[QĐ 4602/QĐ-UBND]",
+          "extracted_date": "2026-02-06"
+        },
+        {
+          "name": "Quốc lộ 21A",
+          "loai": "Quốc lộ",
+          "chieu_rong_m": 80,
+          "areas": [
+            "HL6"
+          ],
+          "source": "[QĐ 4602/QĐ-UBND]",
+          "extracted_date": "2026-02-06"
+        }
+      ]
+    },
+    "legal_constraints": {
+      "description": "Legal restrictions and protected areas (bất biến 10+ năm)",
+      "quy_dat_han_che_extracted": [
+        {
+          "loai": "dat_lam_nghiep",
+          "ten": "Đất lâm nghiệp",
+          "area": "HL4",
+          "dien_tich_ha": 10.0,
+          "han_che": "Không được chuyển đổi mục đích sử dụng",
+          "source": "[documents/QD_5104.md]",
+          "extracted_date": "2026-02-06"
+        }
+      ]
+    }
+  }
+}

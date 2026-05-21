@@ -79,7 +79,10 @@ const pillarsHref = `${basePath}/pillars`;
       <div class="mobile-menu__backdrop"></div>
       <div class="mobile-menu__panel" role="dialog" aria-label="Menu chính">
         <div class="mobile-menu__header">
-          <span class="mobile-menu__brand">Insight Hòa Lạc</span>
+          <div class="mobile-menu__brand-group">
+            <span class="mobile-menu__brand">Insight Hòa Lạc</span>
+            <span class="mobile-menu__tagline">Quy hoạch & phân tích đầu tư</span>
+          </div>
           <button class="mobile-menu__close" type="button" aria-label="Đóng menu">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -90,16 +93,55 @@ const pillarsHref = `${basePath}/pillars`;
           </button>
         </div>
         <ul class="mobile-menu__nav">
-          <li><a class="mobile-menu__link" href={blogHref}>
-            <span>Bài phân tích</span>
+          <li><a class="mobile-menu__link" href={homeHref}>
+            <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <div class="mobile-menu__link-text">
+              <span>Trang chủ</span>
+              <span class="mobile-menu__link-desc">Tổng quan thị trường Hòa Lạc</span>
+            </div>
           </a></li>
-          <li><a class="mobile-menu__link" href="#lead-form">
-            <span>Đánh giá nhanh</span>
+          <li><a class="mobile-menu__link" href={blogHref}>
+            <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <div class="mobile-menu__link-text">
+              <span>Bài phân tích</span>
+              <span class="mobile-menu__link-desc">Pháp lý, quy hoạch, khu vực</span>
+            </div>
           </a></li>
         </ul>
+        <div class="mobile-menu__cta-section">
+          <a class="mobile-menu__cta" href="#lead-form">
+            <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="mobile-menu__link-text">
+              <span>Đánh giá nhanh</span>
+              <span class="mobile-menu__link-desc">Nhận phân tích miễn phí trong 24h</span>
+            </div>
+            <svg class="mobile-menu__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+        <div class="mobile-menu__trust">
+          <div class="mobile-menu__trust-item">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Dữ liệu từ 6 quyết định quy hoạch chính thức</span>
+          </div>
+          <div class="mobile-menu__trust-item">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Phân tích khách quan, không môi giới</span>
+          </div>
+          <div class="mobile-menu__trust-item">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Phản hồi trong 24 giờ làm việc</span>
+          </div>
+        </div>
         <div class="mobile-menu__meta">
-          <a href="mailto:lienhe@insighthoalac.vn">lienhe@insighthoalac.vn</a>
-          <a href="https://t.me/insighthoalac" target="_blank" rel="noreferrer">Telegram cập nhật</a>
+          <p class="mobile-menu__meta-label">Liên hệ tư vấn</p>
+          <a href="mailto:lienhe@insighthoalac.vn">
+            <svg class="mobile-menu__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            lienhe@insighthoalac.vn
+          </a>
+          <a href="https://t.me/insighthoalac" target="_blank" rel="noreferrer">
+            <svg class="mobile-menu__meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.2 4.4L2.4 10.8c-.6.2-.6 1.1 0 1.3l4.5 1.7 1.7 5.4c.1.4.6.6 1 .3l2.4-2 4.2 3.1c.5.3 1.1 0 1.2-.5L21.8 5.3c.2-.7-.4-1.2-.6-.9z"/></svg>
+            Telegram cập nhật
+          </a>
         </div>
       </div>
     </div>
