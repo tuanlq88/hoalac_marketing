@@ -274,24 +274,7 @@ const pillarsHref = `${basePath}/pillars`;
         });
       });
 
-      const footerCta = document.querySelector('.site-footer__cta');
-      const setFooterCtaHidden = (hidden) => {
-        if (!footerCta) return;
-        if (hidden) {
-          footerCta.classList.add('site-footer__cta--hidden');
-          footerCta.setAttribute('aria-hidden', 'true');
-        } else {
-          footerCta.classList.remove('site-footer__cta--hidden');
-          footerCta.removeAttribute('aria-hidden');
-        }
-      };
-
-      setFooterCtaHidden(false);
-
-      window.addEventListener('lead-floating-cta-toggle', (event) => {
-        const shouldHideFooterCta = Boolean(event.detail?.visible);
-        setFooterCtaHidden(shouldHideFooterCta);
-      });
+      // Footer CTA always visible — floating CTA auto-hides near footer via IntersectionObserver
     </script>
     <script type="module" src={tableScriptSrc}></script>
   </body>
