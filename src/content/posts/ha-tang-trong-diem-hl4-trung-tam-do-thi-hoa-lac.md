@@ -130,4 +130,6 @@ Trước khi quyết định, hãy tự đối chiếu:
 
 ---
 
+---
+
 *Dữ liệu trong bài dựa trên các quyết định quy hoạch đã được phê duyệt đến tháng 5/2026 (QĐ 5105/QĐ-UBND, QĐ 4602/QĐ-UBND). Các mốc triển khai có thể thay đổi theo quyết định của cơ quan quản lý — anh/chị nên kiểm tra lại trước khi áp dụng vào kế hoạch cá nhân.*
