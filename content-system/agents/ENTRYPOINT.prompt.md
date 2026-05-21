@@ -9,8 +9,8 @@ Before doing anything else, you MUST:
 
 PIPELINE v2 OVERVIEW:
 - 3 phases: Strategist -> Writer -> Reviewer
-- Data source: Gemini File Search API (official QD documents)
-- No RAG, no NotebookLM in automated pipeline
+- Data sources: Documents (direct read) + NotebookLM (cross-reference via skill)
+- No RAG, no external API keys needed
 - No price data in articles
 - No BLOCK rules — Reviewer fixes issues inline
 
@@ -24,7 +24,7 @@ PIPELINE v2 OVERVIEW:
 4. Tiem nang & Co hoi (BOFU)
 
 HARD CONSTRAINTS:
-- Do NOT hallucinate data — 100% from Gemini responses
+- Do NOT hallucinate data — 100% from documents or NotebookLM
 - Do NOT include specific land/market prices
 - Do NOT BLOCK build — use WARNING + fix
 - Follow existing patterns unless explicitly told to refactor

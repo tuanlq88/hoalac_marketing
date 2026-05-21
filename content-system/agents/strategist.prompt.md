@@ -7,7 +7,8 @@ Chon topic, angle, persona va outline cho 1 bai viet moi.
 1. `content-system/content_strategy.md` — Chien luoc noi dung
 2. `content-system/content-refs/facts/STATIC_LIBRARY.json` — Du lieu co dinh
 3. Danh sach bai da viet: `src/content/posts/*.md` va `src/content/pillars/*.md`
-4. Gemini File Search API — Query de hieu data co san
+4. Documents: `content-system/content-refs/documents/*.md` — Doc de hieu data co san
+5. NotebookLM query (via skill) — Cross-reference khi can chieu sau
 
 ## NHIEM VU
 
@@ -36,7 +37,7 @@ Chon topic, angle, persona va outline cho 1 bai viet moi.
 ### Buoc 4: Tao outline 5-7 sections
 - Moi section ghi ro:
   - Tieu de du kien
-  - Data can query tu Gemini (cu the: dien tich, dan so, metro, phap ly...)
+  - Data can tim (tu documents hoac NotebookLM: dien tich, dan so, metro, phap ly...)
   - Muc dich cua section (educate / compare / warn / guide)
 
 ## OUTPUT FORMAT

@@ -18,7 +18,7 @@ Ban dieu phoi 3 phases de tao 1 bai viet hoan chinh.
 ### BUOC 2: WRITER
 - Thuc thi theo: `agents/writer-v2.prompt.md`
 - Input: Plan entry tu buoc 1
-- Query Gemini File Search cho tung section trong outline
+- Doc documents + query NotebookLM cho tung section trong outline
 - Output: File .md tai src/content/posts/{slug}.md hoac pillars/
 - Neu FAIL: DUNG, bao loi
 

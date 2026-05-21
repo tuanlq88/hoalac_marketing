@@ -6,7 +6,7 @@
 - Content must be factual, neutral, and audit-friendly.
 - Avoid hype, exaggerated promises, or sales language unless BOFU.
 - **100% citations required** for all numbers/timelines/statistics [1][2][3]
-- **Gemini-first**: All data from Gemini File Search API responses
+- **Documents + NotebookLM**: All data from official documents or NotebookLM responses
 - **No price data**: Articles must NOT include specific land prices
 - Cite sources when mentioning:
   - regulations
@@ -45,7 +45,7 @@ These fields are used by:
 - **Actionable**: Provide checklist/tool/template người đọc có thể dùng ngay
 
 ## Data Quality Rules
-- **100% citations** from Gemini File Search responses
+- **100% citations** from documents or NotebookLM responses
 - Format: `HL4 có diện tích 1.879,83 ha [Source: QD_5105]`
 - NO hallucinated data
 - NO future facts presented as certainty
@@ -59,7 +59,7 @@ These fields are used by:
 - **Timeline Narrative**: 2025 → 2026 → 2030 với catalysts
 
 ## Modification Rules
-- Writer may create new markdown files based on Gemini query data.
+- Writer may create new markdown files based on documents + NotebookLM data.
 - SEO agents may modify headings, metadata, schema hints.
 - No agent may delete content unless explicitly instructed.
 - **NO agent may modify data/citations from insights**

@@ -19,21 +19,21 @@ Hoa Lac real estate (Vietnam).
 Pipeline runs in 3 phases, fully automated:
 
 1. **Strategist** — Chooses topic, angle, persona, outline
-2. **Writer** — Writes article with Gemini File Search data + citations
+2. **Writer** — Writes article with documents + NotebookLM data + citations
 3. **Reviewer** — Fact-checks, SEO optimizes, QA validates
 
-Data source: Gemini File Search API (documents pre-uploaded to Store).
-All data must come from Gemini query responses — no hallucination.
+Data sources: Official QD documents (read directly) + NotebookLM (cross-reference via skill).
+All data must come from documents or NotebookLM responses — no hallucination.
 
 ## Data Strategy
 - **Evergreen data only**: Quy hoach, phap ly, vi tri (from official QD documents)
 - **NO price data** in articles — prices go to lead form / direct consultation
-- **Gemini File Search** replaces RAG: documents uploaded once, queried per article
-- **NotebookLM Plus** is a manual research tool, NOT in the automated pipeline
+- **Documents direct read**: `content-refs/documents/*.md` loaded into context
+- **NotebookLM**: Cross-reference + deep queries via browser automation skill (50 queries/day free)
 
 ## Key Systems
 - **Strategist**: Creates plan with topic, angle, persona, outline
-- **Writer**: Generates content from plan + Gemini queries (100% data accuracy)
+- **Writer**: Generates content from plan + documents + NotebookLM (100% data accuracy)
 - **Reviewer**: SEO + QA + fact-check combined. Fixes issues inline, no BLOCK.
 - **CTA Engine**: Dynamic CTA rendering based on intent + funnel (runtime)
 - **Internal linking**: Governed by `content-system/internal-link-registry.yaml`
@@ -42,7 +42,7 @@ All data must come from Gemini query responses — no hallucination.
 - DO NOT invent slugs, URLs, pillars, or future content.
 - DO NOT assume unpublished articles exist.
 - Always inspect the repository before acting.
-- **DO NOT hallucinate data** — 100% from Gemini File Search responses
+- **DO NOT hallucinate data** — 100% from documents or NotebookLM responses
 - **DO NOT include specific price data** in articles
 - **NO BLOCK rules** — Reviewer uses WARNING + fix, never blocks
 

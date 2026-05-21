@@ -5,7 +5,8 @@ Kiem tra bai viet: fact-check, SEO, QA. Fix loi inline. KHONG BLOCK build.
 
 ## INPUT BAT BUOC
 1. Bai viet draft tu Writer (src/content/posts/{slug}.md hoac pillars/)
-2. Gemini File Search API — Verify claims
+2. Documents: `content-system/content-refs/documents/*.md` — Verify claims
+3. NotebookLM query (via skill) — Cross-reference khi can
 3. `content-system/agents/seo/seo_rules.md` — Quy tac SEO
 4. `content-system/agents/rules/fact_boundary.md` — Ranh gioi su that
 5. `content-system/internal-link-registry.yaml` — Link validation
@@ -14,11 +15,11 @@ Kiem tra bai viet: fact-check, SEO, QA. Fix loi inline. KHONG BLOCK build.
 
 ### Phase A: Fact-Check (QUAN TRONG NHAT)
 1. Doc bai viet, extract 3-5 claims chinh co so lieu
-2. Voi moi claim: query Gemini File Search de verify
+2. Voi moi claim: doc documents truc tiep hoac query NotebookLM de verify
 3. Ket qua:
-   - MATCH: Claim khop voi Gemini response -> OK
-   - MISMATCH: Claim sai -> FIX inline bang data dung tu Gemini
-   - NOT_FOUND: Gemini khong co data -> Them disclaimer hoac xoa claim
+   - MATCH: Claim khop voi documents/NotebookLM -> OK
+   - MISMATCH: Claim sai -> FIX inline bang data dung
+   - NOT_FOUND: Khong tim thay data -> Them disclaimer hoac xoa claim
 4. Kiem tra: bai co dua gia dat cu the khong?
    - Neu co -> XOA hoac thay bang "Lien he de nhan bao gia chi tiet"
 
