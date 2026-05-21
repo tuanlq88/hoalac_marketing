@@ -9,10 +9,36 @@ const { class: className } = Astro.props;
 const sectionClass = ['cta-module', className].filter(Boolean).join(' ');
 ---
 <section class={sectionClass} data-cta-key="mofu">
+  <div class="inline-cta-header">
+    <p class="inline-cta-header__title">Cần gợi ý khu vực phù hợp?</p>
+    <p class="inline-cta-header__desc">Trả lời 5 câu ngắn bên dưới — nhận đánh giá cá nhân trong 24 giờ.</p>
+  </div>
   <LeadForm
-    eyebrow="Gợi ý khu vực"
-    headline="Nhận gợi ý khu vực phù hợp nhu cầu"
-    description="Cho biết mục đích, ngân sách và mức chấp nhận pháp lý — nhận 2-3 khu vực phù hợp kèm lưu ý cần kiểm tra trước khi khảo sát thực địa."
+    eyebrow=""
+    headline=""
+    description=""
     deferDisplay={false}
+    showFloatingCta={false}
   />
 </section>
+
+<style>
+  .inline-cta-header {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 1.5rem;
+  }
+  .inline-cta-header__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 26px);
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.5rem;
+  }
+  .inline-cta-header__desc {
+    color: #64748b;
+    font-size: clamp(13px, 1.4vw, 15px);
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

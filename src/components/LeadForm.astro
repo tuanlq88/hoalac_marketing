@@ -93,11 +93,13 @@ const legalOptions = [
       </button>
     </div>
     <div class="lead-card" data-lead-card>
-      <div class="lead-copy">
-        <p class="tag">{eyebrow}</p>
-        <h2>{headline}</h2>
-        <p>{description}</p>
-      </div>
+      {headline && (
+        <div class="lead-copy">
+          <p class="tag">{eyebrow}</p>
+          <h2>{headline}</h2>
+          <p>{description}</p>
+        </div>
+      )}
       <form class="lead-form" data-lead-form novalidate>
         <button class="lead-form__close" type="button" data-lead-close aria-label="Đóng form">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
