@@ -166,8 +166,8 @@ const legalOptions = [
   </div>
   {showFloatingCta && (
     <button class="floating-cta" type="button" data-floating-cta aria-hidden="true">
-      <span>Đánh giá mức phù hợp</span>
-      <small>Trả lời 5 câu, nhận shortlist trong 24h</small>
+      <svg class="floating-cta__icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9 3H4a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 3l3 3-7 7H7v-3l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="floating-cta__text">Đánh giá nhanh</span>
     </button>
   )}
 </section>
@@ -398,26 +398,34 @@ const legalOptions = [
     position: fixed;
     bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     right: 1.5rem;
-    background: #f97316;
+    background: #0f172a;
     color: #fff;
-    border: none;
-    border-radius: 999px;
-    padding: 0.85rem 1.5rem;
-    padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 20px 35px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 12px 20px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.4);
     display: none;
-    flex-direction: column;
-    gap: 0.15rem;
+    align-items: center;
+    gap: 10px;
     font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
     z-index: 50;
-    max-width: 260px;
-    text-align: left;
-    animation: floatPulse 6s ease-in-out infinite;
+    backdrop-filter: blur(12px);
+    transition: all 200ms ease;
   }
-  .floating-cta small {
-    font-size: var(--font-small);
-    font-weight: 400;
+  .floating-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.5);
+    background: #1e293b;
+  }
+  .floating-cta__icon {
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .floating-cta__text {
+    white-space: nowrap;
   }
   [data-lead-shell].cta-visible .floating-cta {
     display: flex;
