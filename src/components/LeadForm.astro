@@ -10,10 +10,10 @@ interface Props {
 }
 
 const {
-  headline = "Đánh giá mức phù hợp Hòa Lạc",
-  description = "Trả lời 5 câu để đội ngũ gợi ý khu vực, pháp lý và room tài chính khớp với nhu cầu trong 24 giờ.",
+  headline = "Kiểm tra mức phù hợp Hòa Lạc",
+  description = "Trả lời 5 câu ngắn — nhận gợi ý khu vực và lưu ý pháp lý phù hợp nhu cầu trong 24 giờ.",
   deferDisplay = true,
-  eyebrow = "Lead Qualification",
+  eyebrow = "5 câu hỏi nhanh",
   formId = "lead-form",
   showFloatingCta = true,
   isGlobalFallback = false,
@@ -25,7 +25,7 @@ const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 const intentOptions = [
   { value: "o_thuc", label: "Ở thật" },
   { value: "dau_tu_trung_han", label: "Đầu tư trung hạn" },
-  { value: "luot_song", label: "Lướt sóng" }
+  { value: "kinh_doanh", label: "Kinh doanh / cho thuê" }
 ];
 
 const budgetOptions = [
@@ -36,12 +36,12 @@ const budgetOptions = [
 ];
 
 const areaOptions = [
-  { value: "gan_dhqg", label: "Gần ĐHQG" },
-  { value: "gan_cnc", label: "Gần khu CNC" },
-  { value: "binh_yen_thach_hoa", label: "Bình Yên – Thạch Hòa" },
-  { value: "tien_xuan_yen_binh", label: "Tiến Xuân – Yên Bình" },
-  { value: "hoa_lac_trung_tam", label: "Trung tâm Hòa Lạc" },
-  { value: "khu_tay_bac", label: "Cụm Tây Bắc" }
+  { value: "gan_dhqg", label: "Đại học Quốc gia (HL1)" },
+  { value: "gan_cnc", label: "Khu Công nghệ cao (HL2)" },
+  { value: "binh_yen_thach_hoa", label: "Bình Yên – Thạch Hòa (HL3)" },
+  { value: "tien_xuan_yen_binh", label: "Tiến Xuân – Yên Bình (HL4)" },
+  { value: "hoa_lac_trung_tam", label: "Trung tâm đô thị (HL4)" },
+  { value: "phu_cat_dong_xuan", label: "Phú Cát – Đông Xuân (HL5-HL6)" }
 ];
 
 const legalOptions = [
@@ -145,14 +145,14 @@ const legalOptions = [
         </fieldset>
         <p class="field-error" data-error-for="legalRisk" role="status" aria-live="polite"></p>
         <div class="field" data-field-group="contact">
-          <label>Để lại Zalo / SĐT</label>
+          <label>Số điện thoại (Zalo)</label>
           <input
             type="tel"
             name="contact"
             required
             inputmode="tel"
             pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
-            placeholder="Zalo hoặc số điện thoại"
+            placeholder="0912 345 678"
           />
           <p class="field-error" data-error-for="contact" role="status" aria-live="polite"></p>
         </div>
@@ -552,7 +552,7 @@ const legalOptions = [
     const intentWeights = {
       o_thuc: 3,
       dau_tu_trung_han: 2,
-      luot_song: 0
+      kinh_doanh: 1
     };
     const budgetWeights = {
       '<1.5': 0,
