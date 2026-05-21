@@ -35,6 +35,54 @@ const filterPublicTags = (tags: string[]) => tags.filter((tag) => !tag.startsWit
 const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
 const blogHref = `${basePath}/blog`;
+
+// Pillar → Gradient mapping
+const pillarGradients: Record<string, string> = {
+  'tong-quan-quy-hoach': 'linear-gradient(135deg, #0f172a, #1e3a5f)',
+  'phan-tich-khu-vuc': 'linear-gradient(135deg, #0c4a6e, #164e63)',
+  'phap-ly-va-rui-ro': 'linear-gradient(135deg, #7c2d12, #9a3412)',
+  'tiem-nang-va-co-hoi': 'linear-gradient(135deg, #14532d, #166534)',
+};
+
+// Pillar → Display name mapping
+const pillarNames: Record<string, string> = {
+  'tong-quan-quy-hoach': 'Tổng quan & Quy hoạch',
+  'phan-tich-khu-vuc': 'Phân tích khu vực',
+  'phap-ly-va-rui-ro': 'Pháp lý & Rủi ro',
+  'tiem-nang-va-co-hoi': 'Tiềm năng & Cơ hội',
+};
+
+// Persona → Display name mapping
+const personaNames: Record<string, string> = {
+  'mua-de-o': 'Mua để ở',
+  'mua-dau-tu-dai-han': 'Đầu tư dài hạn',
+  'kinh-doanh-dong-tien': 'Kinh doanh dòng tiền',
+};
+
+// Persona → Dot color mapping
+const personaDotColors: Record<string, string> = {
+  'mua-de-o': '#10b981',
+  'mua-dau-tu-dai-han': '#3b82f6',
+  'kinh-doanh-dong-tien': '#f59e0b',
+};
+
+const getPillarGradient = (pillar?: string) => {
+  return pillar && pillarGradients[pillar]
+    ? pillarGradients[pillar]
+    : 'linear-gradient(135deg, #0f172a, #334155)';
+};
+
+const getPillarName = (pillar?: string) => {
+  return pillar && pillarNames[pillar] ? pillarNames[pillar] : 'Bài viết';
+};
+
+const getPersonaName = (persona?: string) => {
+  return persona && personaNames[persona] ? personaNames[persona] : '';
+};
+
+const getPersonaDotColor = (persona?: string) => {
+  return persona && personaDotColors[persona] ? personaDotColors[persona] : '#64748b';
+};
 ---
 <section class="section-shell section-shell--alt article-list" data-article-shelf>
   <div class="shell-inner">
@@ -74,23 +122,39 @@ const blogHref = `${basePath}/blog`;
       const rawTags = getTags(post);
       const publicTags = filterPublicTags(rawTags);
       const articleHref = `${basePath}/blog/${post.slug}`;
+      const pillar = post.data.pillar;
+      const persona = post.data.target_persona;
+      const gradient = getPillarGradient(pillar);
+      const pillarDisplayName = getPillarName(pillar);
+      const personaDisplayName = getPersonaName(persona);
+      const personaDotColor = getPersonaDotColor(persona);
+
       return (
-        <article
+        <a
+          href={articleHref}
           class="article-card"
           data-article-tags={publicTags.join(',')}
         >
-          {publicTags.length > 0 && <p class="tag">{publicTags.join(' / ')}</p>}
-          <h3 style="margin: 0.8rem 0 0.5rem;">
-            <a href={articleHref}>{post.data.title}</a>
-          </h3>
-          <p style="margin: 0; color: var(--muted);">{resolveExcerpt(post)}</p>
-          <p class="article-card__status" style="margin: 0.75rem 0 0; color: var(--accent-dark); display: none;" data-personalized-badge>
-            Khớp với ưu tiên của bạn
-          </p>
-          <p style="margin-top: 1rem; font-weight: 600;">
-            {resolveDateLabel(post)}
-          </p>
-        </article>
+          <div class="article-card__thumb" style={`background: ${gradient};`}>
+            <span class="article-card__pillar-tag">{pillarDisplayName}</span>
+            <h3 class="article-card__thumb-title">{post.data.title}</h3>
+          </div>
+          <div class="article-card__body">
+            <p class="article-card__excerpt">{resolveExcerpt(post)}</p>
+            <p class="article-card__status" data-personalized-badge>
+              Khớp với ưu tiên của bạn
+            </p>
+            <div class="article-card__footer">
+              <span class="article-card__date">{resolveDateLabel(post)}</span>
+              {personaDisplayName && (
+                <span class="article-card__persona">
+                  <span class="article-card__persona-dot" style={`background: ${personaDotColor};`}></span>
+                  {personaDisplayName}
+                </span>
+              )}
+            </div>
+          </div>
+        </a>
       );
     })}
     </div>
@@ -118,19 +182,115 @@ const blogHref = `${basePath}/blog`;
   }
   .article-card {
     background: #fff;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
+    border-radius: 16px;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
     transition: transform 200ms ease, box-shadow 200ms ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    overflow: hidden;
+  }
+  .article-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
   }
   .article-card[data-highlight="true"] {
     box-shadow: 0 25px 60px rgba(212, 72, 9, 0.18);
     border: 1px solid rgba(212, 72, 9, 0.35);
     transform: translateY(-4px);
-    transition: transform 200ms ease, box-shadow 200ms ease;
   }
   .article-card[data-highlight="true"] [data-personalized-badge] {
-    display: block;
+    display: block !important;
+  }
+  .article-card__thumb {
+    height: 170px;
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .article-card__thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .article-card__pillar-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .article-card__thumb-title {
+    position: relative;
+    z-index: 1;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin: 0;
+  }
+  .article-card__body {
+    padding: 20px;
+  }
+  .article-card__excerpt {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.65;
+    margin: 0 0 16px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article-card__status {
+    margin: 0 0 12px 0;
+    color: var(--accent-dark);
+    display: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .article-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+  }
+  .article-card__date {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .article-card__persona {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #f8fafc;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    border: 1px solid #f1f5f9;
+  }
+  .article-card__persona-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
   }
   @media (max-width: 768px) {
     .article-list {
