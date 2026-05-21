@@ -88,10 +88,9 @@ const getPersonaDotColor = (persona?: string) => {
   <div class="shell-inner">
     <div class="article-list__head">
       <div>
-        <h2>Snapshot thị trường</h2>
-        <p data-article-context>Chưa chọn ưu tiên cụ thể.</p>
+        <h2>Bài phân tích mới nhất</h2>
       </div>
-      <a class="button button--ghost" href={blogHref}>Xem tất cả bài</a>
+      <a class="article-list__viewall" href={blogHref}>Xem tất cả →</a>
     </div>
     <div class="article-list__grid" id="article-grid">
       <div class="skeleton-card" aria-hidden="true">
@@ -169,10 +168,16 @@ const getPersonaDotColor = (persona?: string) => {
     flex-wrap: wrap;
     gap: 1rem;
   }
-  .article-list__head p {
-    margin: 0.25rem 0 0;
-    color: var(--muted);
+  .article-list__viewall {
+    font-size: 14px;
     font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    transition: all 200ms ease;
+  }
+  .article-list__viewall:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
   }
   .article-list__grid {
     display: grid;
@@ -189,6 +194,7 @@ const getPersonaDotColor = (persona?: string) => {
     color: inherit;
     display: block;
     overflow: hidden;
+    cursor: pointer;
   }
   .article-card:hover {
     transform: translateY(-4px);

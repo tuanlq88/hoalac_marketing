@@ -37,6 +37,9 @@ const posts = (await getCollection('posts'))
   <Hero />
   <!-- <GeoHighlight /> -->
   <ArticleList posts={posts} />
-  <AdvisorCTA />
-  <LeadForm />
+  <LeadForm
+    eyebrow="5 câu hỏi nhanh"
+    headline="Chưa biết bắt đầu từ đâu?"
+    description="Trả lời 5 câu ngắn về mục đích, ngân sách và khu vực quan tâm — nhận gợi ý phù hợp trong 24 giờ."
+  />
 </Layout>

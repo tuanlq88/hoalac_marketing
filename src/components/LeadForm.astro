@@ -74,7 +74,25 @@ const legalOptions = [
 >
   <div class="lead-modal-overlay" data-lead-overlay aria-hidden="true"></div>
   <div class="shell-inner lead-shell">
-    <div class="lead-card">
+    <div class="lead-intro" data-lead-intro>
+      <div class="lead-intro__content">
+        <p class="lead-intro__eyebrow">{eyebrow}</p>
+        <h2 class="lead-intro__title">{headline}</h2>
+        <p class="lead-intro__desc">{description}</p>
+        <div class="lead-intro__meta">
+          <span>5 câu hỏi</span>
+          <span>·</span>
+          <span>2 phút</span>
+          <span>·</span>
+          <span>phản hồi 24 giờ</span>
+        </div>
+      </div>
+      <button class="lead-intro__btn" type="button" data-lead-intro-btn>
+        Bắt đầu đánh giá
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="lead-card" data-lead-card>
       <div class="lead-copy">
         <p class="tag">{eyebrow}</p>
         <h2>{headline}</h2>
@@ -173,6 +191,92 @@ const legalOptions = [
 </section>
 
 <style>
+  .lead-intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: clamp(2rem, 4vw, 3rem);
+    background: #0f172a;
+    border-radius: 1.5rem;
+    color: #fff;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+  }
+  .lead-intro__eyebrow {
+    display: inline-block;
+    margin: 0 0 0.75rem;
+    padding: 4px 12px;
+    background: rgba(212, 72, 9, 0.15);
+    border: 1px solid rgba(212, 72, 9, 0.25);
+    border-radius: 100px;
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .lead-intro__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+  }
+  .lead-intro__desc {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: clamp(13px, 1.4vw, 15px);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    max-width: 480px;
+  }
+  .lead-intro__meta {
+    display: flex;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 12px;
+  }
+  .lead-intro__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #d44809, #a43706);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(212, 72, 9, 0.35);
+    transition: all 200ms ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lead-intro__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.5);
+  }
+  [data-lead-shell].is-expanded .lead-intro,
+  [data-lead-shell].is-modal-open .lead-intro {
+    display: none;
+  }
+  [data-lead-shell].is-collapsed .lead-card {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .lead-intro {
+      flex-direction: column;
+      text-align: center;
+    }
+    .lead-intro__desc {
+      max-width: none;
+    }
+    .lead-intro__meta {
+      justify-content: center;
+    }
+  }
+
   .section-shell--lead {
     padding-block: clamp(1.5rem, 4vw, 3rem);
     padding-inline: clamp(1.25rem, 5vw, 2.75rem);
@@ -783,6 +887,11 @@ const legalOptions = [
       }
 
       handleScrollReveal();
+
+      const introBtn = shell.querySelector('[data-lead-intro-btn]');
+      if (introBtn) {
+        introBtn.addEventListener('click', revealLeadCapture);
+      }
 
       function hideCtaNearFooter() {
         if (!floatingCta) return;
