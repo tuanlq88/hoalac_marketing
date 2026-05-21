@@ -22,6 +22,21 @@ Ban dieu phoi 3 phases de tao 1 bai viet hoan chinh.
 - Output: File .md tai src/content/posts/{slug}.md hoac pillars/
 - Neu FAIL: DUNG, bao loi
 
+### BUOC 2.5: VISUAL THINKING
+- Doc lai bai viet vua tao
+- Tu danh gia: bai nay CO CAN hinh minh hoa khong?
+- Tieu chi:
+  * Co so sanh nhieu khu vuc / phan khu? → Ban do dinh huong SVG
+  * Co dong thoi gian / cac moc? → Timeline SVG
+  * Co so lieu nhieu dong (bang dai)? → Bieu do so sanh SVG
+  * Bai ngan, don gian, chi 1 khia canh? → KHONG CAN hinh
+- Neu CAN:
+  * Tao file SVG tai `public/images/maps/{slug}.svg`
+  * SVG phai: tieng Viet, khong dung thu vien ngoai, responsive (viewBox)
+  * Them dong `![mo ta](/images/maps/{slug}.svg)` vao bai viet (sau phan mo bai, truoc section 1)
+  * Ghi chu: "So do minh hoa, khong theo ti le thuc"
+- Neu KHONG CAN: bo qua, sang buoc 3
+
 ### BUOC 3: REVIEWER
 - Thuc thi theo: `agents/reviewer.prompt.md`
 - Input: File .md tu buoc 2
