@@ -1,116 +1,142 @@
 ---
-const {
-  advisor = {
-    name: "Lê Quốc Tuấn",
-    title: "Lead Advisor • Hòa Lạc",
-    availability: "Online 9h00 - 21h00",
-    avatar: "/images/advisor-avatar.svg",
-    quote:
-      "Anh/chị mô tả nhu cầu càng cụ thể, em càng dễ shortlist sản phẩm đủ pháp lý và thanh khoản nhanh.",
-    highlight:
-      "Chuyên sâu các khu vực: ĐHQG, CNC, cụm Bình Yên - Thạch Hòa. Đã chốt 38 giao dịch trong 12 tháng." ,
-    zalo: "https://zalo.me/insighthoalac",
-    telegram: "https://t.me/insighthoalac"
-  }
-} = Astro.props;
+const base = import.meta.env.BASE_URL;
 ---
-<section class="section-shell section-shell--dark advisor">
-  <div class="shell-inner advisor__inner">
-    <div class="advisor__profile">
-      <img src={advisor.avatar} alt={`Advisor ${advisor.name}`} loading="lazy" width="96" height="96" />
-      <div>
-        <p class="tag" style="background: rgba(255,255,255,0.2); color: #fff;">Advisor on demand</p>
-        <h2>{advisor.name}</h2>
-        <p class="advisor__meta">{advisor.title} · {advisor.availability}</p>
-      </div>
+<section class="section-shell section-shell--dark service-cta">
+  <div class="shell-inner service-cta__inner">
+    <div class="service-cta__content">
+      <h2 class="service-cta__title">Cần phân tích riêng cho lô đất cụ thể?</h2>
+      <p class="service-cta__desc">
+        Mô tả vị trí, diện tích, mục đích sử dụng — nhận đánh giá pháp lý
+        và đối chiếu quy hoạch phân khu trong 24 giờ.
+      </p>
+      <ul class="service-cta__list">
+        <li>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Đối chiếu quy hoạch 1/2.000 chính thức
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Kiểm tra đất hạn chế: quốc phòng, lâm nghiệp, hành lang
+        </li>
+        <li>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Đánh giá vị trí so với ga đường sắt, trục giao thông
+        </li>
+      </ul>
     </div>
-    <blockquote>
-      <p>{advisor.quote}</p>
-      <footer>{advisor.highlight}</footer>
-    </blockquote>
-    <div class="advisor__cta">
-      <a class="button" href="#lead-form">Tùy chỉnh shortlist trong 24h</a>
-      <div class="advisor__quick">
-        <p>Hoặc chat nhanh:</p>
-        <div class="advisor__quick-links">
-          <a href={advisor.zalo} target="_blank" rel="noreferrer">Zalo</a>
-          <a href={advisor.telegram} target="_blank" rel="noreferrer">Telegram</a>
-        </div>
-      </div>
+    <div class="service-cta__action">
+      <a class="service-cta__btn" href="#lead-form">
+        Gửi yêu cầu phân tích
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="service-cta__note">Phản hồi trong 24 giờ làm việc</p>
     </div>
   </div>
 </section>
 
 <style>
-  .advisor__inner {
+  .service-cta__inner {
     display: grid;
-    gap: 1.5rem;
-  }
-  .advisor__profile {
-    display: flex;
-    gap: 1rem;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
     align-items: center;
   }
-  .advisor__profile img {
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.35);
-  }
-  .advisor__profile h2 {
-    margin: 0.2rem 0 0.15rem;
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
-  }
-  .advisor__meta {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 600;
-  }
-  blockquote {
-    margin: 0;
-    padding: 1.5rem;
-    border-radius: 1.25rem;
-    background: rgba(255, 255, 255, 0.08);
-    font-size: 1.15rem;
-    line-height: 1.6;
-  }
-  blockquote footer {
-    margin-top: 1rem;
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.8);
-  }
-  .advisor__cta {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    align-items: center;
-  }
-  .advisor__quick {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 1.25rem;
-    padding: 1rem 1.2rem;
-  }
-  .advisor__quick p {
-    margin: 0 0 0.5rem;
-    font-weight: 600;
-  }
-  .advisor__quick-links {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-  .advisor__quick-links a {
-    padding: 0.55rem 1rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+
+  .service-cta__title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700;
     color: #fff;
-    font-weight: 600;
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
   }
-  @media (max-width: 640px) {
-    .advisor__profile {
-      flex-direction: column;
+
+  .service-cta__desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    line-height: 1.65;
+    margin: 0 0 1.25rem;
+    max-width: 520px;
+  }
+
+  .service-cta__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .service-cta__list li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .service-cta__list svg {
+    flex-shrink: 0;
+  }
+
+  .service-cta__action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .service-cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #d44809, #a43706);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 4px 24px rgba(212, 72, 9, 0.35);
+    transition: all 200ms ease;
+    white-space: nowrap;
+  }
+
+  .service-cta__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.5);
+  }
+
+  .service-cta__note {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .service-cta__inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
       text-align: center;
     }
-    .advisor__profile img {
-      margin-bottom: 0.5rem;
+
+    .service-cta__desc {
+      max-width: none;
+    }
+
+    .service-cta__list {
+      align-items: center;
+    }
+
+    .service-cta__action {
+      width: 100%;
+    }
+
+    .service-cta__btn {
+      width: 100%;
+      justify-content: center;
     }
   }
 </style>

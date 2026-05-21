@@ -35,8 +35,8 @@ const posts = (await getCollection('posts'))
 ---
 <Layout>
   <Hero />
-  <GeoHighlight />
+  <!-- <GeoHighlight /> -->
   <ArticleList posts={posts} />
-  <!-- <AdvisorCTA /> -->
+  <AdvisorCTA />
   <LeadForm />
 </Layout>
