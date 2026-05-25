@@ -261,6 +261,9 @@ function doSendMessage(text) {
     Logger.log('Telegram not configured.');
     return;
   }
+  ScriptApp.requireScopes(ScriptApp.AuthMode.FULL, [
+    'https://www.googleapis.com/auth/script.external_request'
+  ]);
   try {
     const response = UrlFetchApp.fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'post',
