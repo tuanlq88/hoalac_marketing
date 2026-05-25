@@ -105,6 +105,18 @@ HL6 (700 ha, 77.000 dân) là cửa ngõ phía Nam — mật độ cao nhất to
 
 **"Thuận thế mà hành" — đi theo dòng sản phẩm chính thống.** Nhà ở xã hội quy mô lớn đang được bố trí tại HL3-3 (65 ha), HL4-4/7/8 (~157 ha), HL5 và HL6 [QĐ 5104, QĐ 5105, QĐ 5106, QĐ 5103]. Đây là dòng sản phẩm được nhà nước đẩy mạnh để giải bài toán an sinh cho công nhân, người lao động. Đi theo dòng chính thống giúp tránh rủi ro "dự án treo" — vì nhà nước không để dự án của chính mình treo.
 
+### Ướm thử một bài toán
+
+Giả sử bạn có 3 tỷ đồng. Hai kịch bản:
+
+Kịch bản A — "Tích cốc phòng cơ" tại HL1. Mua lô đất thổ cư gần cổng Đại học Quốc gia, xây nhà trọ 4 tầng 12 phòng. Mỗi phòng cho thuê sinh viên hoặc giảng viên, tỷ suất cho thuê ước tính 8–12%/năm trên tổng vốn. Dòng tiền bắt đầu chảy từ tháng thứ 6 sau hoàn công. Rủi ro thấp — nhu cầu thuê đã có sẵn trước cổng trường.
+
+Kịch bản B — "Viễn giao cận công" tại HL4. Cùng 3 tỷ, mua đất nền trong bán kính 500 m quanh ga S18 Tiến Xuân. Không có dòng tiền cho thuê — đất nằm chờ. Giá trị phụ thuộc hoàn toàn vào tiến độ metro và tốc độ đô thị hóa lõi HL4. Nếu metro vận hành đúng hạn 2030, giá trị có thể tăng đáng kể. Nếu chậm 3–5 năm, vốn đứng im và mất chi phí cơ hội.
+
+Cùng số vốn, hai cách chơi hoàn toàn khác: một bên tạo dòng tiền ngay, một bên đặt cược vào tương lai. Không có đáp án đúng — chỉ có đáp án phù hợp với khẩu vị rủi ro của từng người.
+
+*Lưu ý: Các con số trên là ví dụ minh họa nhằm so sánh tư duy chiến lược, không phải tư vấn đầu tư cụ thể. Tỷ suất thực tế phụ thuộc vào vị trí, thời điểm, chi phí xây dựng và nhiều yếu tố khác.*
+
 ---
 
 ## Ma trận cơ hội và rủi ro — đánh giá cục diện
