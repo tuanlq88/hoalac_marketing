@@ -152,7 +152,7 @@ const priorityOptions = [
           <p class="field-hint">Chúng tôi chỉ liên hệ khi có phân tích phù hợp với nhu cầu của anh/chị.</p>
           <p class="field-error" data-error-for="contact" role="status" aria-live="polite"></p>
         </div>
-        <input type="hidden" name="source" value={isGlobalFallback ? "lead-portal" : "lead-inline"} />
+        <input type="hidden" name="source" value="" data-lead-source />
         <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
         <button class="button" type="submit">Nhận phân tích chiến lược</button>
@@ -706,6 +706,8 @@ const priorityOptions = [
       const forceModal = shell.dataset.forceModal === 'true';
       const leadTagInput = form.querySelector('[data-lead-tag]');
       const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
+      const sourceInput = form.querySelector('[data-lead-source]');
+      if (sourceInput) { sourceInput.value = window.location.pathname; }
       let modalQuery;
       let preferModal = forceModal;
       let previousOverflow = '';
