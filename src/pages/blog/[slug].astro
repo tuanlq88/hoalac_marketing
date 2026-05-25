@@ -79,9 +79,6 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
         <p>{dateLabel}</p>
       </div>
       <h1 class="reading-title">{post.data.title}</h1>
-      {thumbnail && (
-        <img class="reading-hero" src={thumbnail} alt={post.data.title} loading="eager" />
-      )}
       <div class="reading-content">
         <Content />
       </div>
