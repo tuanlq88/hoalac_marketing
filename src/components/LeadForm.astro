@@ -707,7 +707,15 @@ const priorityOptions = [
       const leadTagInput = form.querySelector('[data-lead-tag]');
       const fallbackLeadTag = leadTagInput?.value ?? 'pending_classification';
       const sourceInput = form.querySelector('[data-lead-source]');
-      if (sourceInput) { sourceInput.value = window.location.pathname; }
+      if (sourceInput) {
+        const path = window.location.pathname;
+        const blogMatch = path.match(/\/blog\/([^/]+)/);
+        if (blogMatch) {
+          sourceInput.value = document.title || blogMatch[1];
+        } else {
+          sourceInput.value = 'Landing Page';
+        }
+      }
       let modalQuery;
       let preferModal = forceModal;
       let previousOverflow = '';
