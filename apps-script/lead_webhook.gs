@@ -3,7 +3,7 @@ const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
 const SHEET_ID = 'YOUR_SHEET_ID';
 
 // Admin Telegram user IDs — only these users can /reassign
-const ADMIN_IDS = []; // e.g. [123456789, 987654321]
+const ADMIN_IDS = [609104230]; // e.g. [123456789, 987654321]
 
 // Column index (1-based).
 // A=Lead ID, B=SubmittedAt, C=Mục Đích, D=Budget, E=Ưu tiên, F=Xưng hô, G=SĐT,
@@ -257,14 +257,19 @@ function clearOwner(phone) {
 // ── TELEGRAM HELPERS ──
 
 function doSendMessage(text) {
-  if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) return;
+  if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
+    Logger.log('Telegram not configured.');
+    return;
+  }
   try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
+    const response = UrlFetchApp.fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'post',
       contentType: 'application/json',
-      payload: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: text }),
+      payload: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }),
       muteHttpExceptions: true
     });
+    Logger.log('Telegram response code: %s', response.getResponseCode());
+    Logger.log('Telegram response body: %s', response.getContentText());
   } catch (error) {
     Logger.log('Telegram send failed: %s', error);
   }
@@ -272,12 +277,13 @@ function doSendMessage(text) {
 
 function sendTelegramReply(chatId, text) {
   try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
+    const response = UrlFetchApp.fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: 'post',
       contentType: 'application/json',
-      payload: JSON.stringify({ chat_id: chatId, text: text }),
+      payload: JSON.stringify({ chat_id: chatId, text }),
       muteHttpExceptions: true
     });
+    Logger.log('Telegram reply code: %s', response.getResponseCode());
   } catch (error) {
     Logger.log('Telegram reply failed: %s', error);
   }
