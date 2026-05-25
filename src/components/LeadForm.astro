@@ -1113,14 +1113,12 @@ const priorityOptions = [
       }
 
       const now = new Date();
-      const vnDateTime = now.toLocaleString('vi-VN', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const mi = String(now.getMinutes()).padStart(2, '0');
+      const vnDateTime = `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
 
       const raw = serializeForm(form);
       if (typeof raw.contact === 'string') {
