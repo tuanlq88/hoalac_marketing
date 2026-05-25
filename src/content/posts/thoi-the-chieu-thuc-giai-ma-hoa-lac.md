@@ -25,6 +25,8 @@ Thời Chiến Quốc, các mưu sĩ không bao giờ nhìn một trận đánh 
 
 Bất động sản Hòa Lạc, nếu chỉ nhìn qua lăng kính "giá tăng hay giảm," sẽ không bao giờ thấy được bản chất. Nhưng nếu đặt vào khung phân tích ba trụ — Thời, Thế, Chiêu Thức — cục diện hiện ra rõ ràng hơn nhiều.
 
+![Infographic Thời — Thế — Chiêu Thức: khung phân tích cục diện bất động sản Hòa Lạc](/images/thoi-the-chieu-thuc-infographic.jpg)
+
 ---
 
 ## I. Thời — dòng chảy không thể đảo ngược
