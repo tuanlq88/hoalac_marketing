@@ -1112,9 +1112,6 @@ const priorityOptions = [
         return;
       }
 
-      const selectedAreaValues = Array.from(form.querySelectorAll('input[name="areas"]:checked')).map((input) => input.value);
-      const selectedAreaLabels = getSelectedAreaLabels(form);
-
       const now = new Date();
       const vnDateTime = now.toLocaleString('vi-VN', {
         year: 'numeric',
@@ -1125,25 +1122,31 @@ const priorityOptions = [
         hour12: false
       });
 
-      const data = serializeForm(form);
-      data.areas = selectedAreaValues.join(', ');
-      const computedTag = computeLeadTag({
-        intent: data.intent,
-        budgetRange: data.budgetRange,
-        legalRisk: data.legalRisk,
-        areas: selectedAreaValues
-      }) ?? fallbackLeadTag;
-      data.leadTag = computedTag;
-      if (typeof data.contact === 'string') {
-        data.contact = data.contact.replace(/\s+/g, '').replace(/^0*/, (match) => (match ? '0' : ''));
+      const raw = serializeForm(form);
+      if (typeof raw.contact === 'string') {
+        raw.contact = raw.contact.replace(/\s+/g, '').replace(/^0*/, (match) => (match ? '0' : ''));
       }
+      const computedTag = computeLeadTag({
+        intent: raw.intent,
+        budgetRange: raw.budgetRange,
+        priority: raw.priority
+      }) ?? fallbackLeadTag;
       if (leadTagInput) {
         leadTagInput.value = computedTag;
       }
-      data.submittedAt = now.toISOString();
-      data.submittedAtLocal = vnDateTime;
 
-      if (data.company) {
+      const data = {
+        submittedAt: vnDateTime,
+        intent: raw.intent ?? '',
+        budgetRange: raw.budgetRange ?? '',
+        priority: raw.priority ?? '',
+        name: raw.name ?? '',
+        contact: raw.contact ?? '',
+        leadTag: computedTag,
+        source: raw.source ?? window.location.pathname
+      };
+
+      if (raw.company) {
         clearTimeout(loadingTimeout);
         if (submitBtn) { submitBtn.classList.remove('is-loading'); submitBtn.disabled = false; }
         setStatus?.('Đã chặn spam.', 'warning');
