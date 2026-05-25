@@ -1310,12 +1310,12 @@ const priorityOptions = [
 
     function isSectionComplete(key, form) {
       switch (key) {
+        case 'name':
+          return true;
         case 'intent':
         case 'budgetRange':
-        case 'legalRisk':
+        case 'priority':
           return Boolean(form.querySelector(`input[name="${key}"]:checked`));
-        case 'areas':
-          return form.querySelectorAll('input[name="areas"]:checked').length > 0;
         case 'contact': {
           const input = form.querySelector('input[name="contact"]');
           const value = input?.value?.trim() ?? '';
