@@ -2,11 +2,13 @@ const TELEGRAM_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
 const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
 const SHEET_ID = 'YOUR_SHEET_ID';
 
-// Column index for Status (1-based). Adjust if sheet structure changes.
-// Sheet columns: A=SubmittedAt, B=Mục Đích, C=Budget, D=Ưu tiên, E=Xưng hô, F=SĐT, G=Phân Loại, H=Nguồn, I=Status
-const COL_CONTACT = 6;  // F
-const COL_NAME = 5;     // E
-const COL_STATUS = 9;   // I
+// Column index (1-based). Adjust if sheet structure changes.
+// A=SubmittedAt, B=Mục Đích, C=Budget, D=Ưu tiên, E=Xưng hô, F=SĐT, G=Phân Loại, H=Nguồn, I=Status, J=Cập nhật bởi, K=Cập nhật lúc
+const COL_CONTACT = 6;     // F
+const COL_NAME = 5;        // E
+const COL_STATUS = 9;      // I
+const COL_UPDATED_BY = 10; // J
+const COL_UPDATED_AT = 11; // K
 
 const STATUS_MAP = {
   '/called':  { label: 'Đã gọi',         icon: '📞' },
@@ -129,10 +131,16 @@ function handleTelegramUpdate(e) {
     }
     var phone = phoneMatch[1];
 
+    // Who updated
+    var from = message.from || {};
+    var updatedBy = from.first_name || '';
+    if (from.last_name) updatedBy += ' ' + from.last_name;
+    if (from.username) updatedBy += ' (@' + from.username + ')';
+
     // Find and update in Sheet
-    var result = updateLeadStatus(phone, command.label);
+    var result = updateLeadStatus(phone, command.label, updatedBy);
     if (result.found) {
-      var reply = command.icon + ' Đã cập nhật: ' + result.name + ' (' + phone + ') → ' + command.label;
+      var reply = command.icon + ' Đã cập nhật: ' + result.name + ' (' + phone + ') → ' + command.label + '\nBởi: ' + updatedBy;
       sendTelegramReply(chatId, reply);
     } else {
       sendTelegramReply(chatId, '⚠️ Không tìm thấy lead với SĐT: ' + phone);
@@ -147,15 +155,25 @@ function handleTelegramUpdate(e) {
 
 // ── UPDATE STATUS IN SHEET ──
 
-function updateLeadStatus(phone, statusLabel) {
+function updateLeadStatus(phone, statusLabel, updatedBy) {
   var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
   var data = sheet.getDataRange().getValues();
+  var now = new Date();
+  var dd = String(now.getDate()).padStart(2, '0');
+  var mm = String(now.getMonth() + 1).padStart(2, '0');
+  var yyyy = now.getFullYear();
+  var hh = String(now.getHours()).padStart(2, '0');
+  var mi = String(now.getMinutes()).padStart(2, '0');
+  var timestamp = dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + mi;
 
   // Search from bottom up (most recent lead first)
   for (var i = data.length - 1; i >= 1; i--) {
     var cellValue = String(data[i][COL_CONTACT - 1]).replace(/^'/, '');
     if (cellValue === phone) {
-      sheet.getRange(i + 1, COL_STATUS).setValue(statusLabel);
+      var row = i + 1;
+      sheet.getRange(row, COL_STATUS).setValue(statusLabel);
+      sheet.getRange(row, COL_UPDATED_BY).setValue(updatedBy);
+      sheet.getRange(row, COL_UPDATED_AT).setValue(timestamp);
       var name = data[i][COL_NAME - 1] || '';
       return { found: true, name: name };
     }
