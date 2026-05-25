@@ -13,8 +13,9 @@ week_plan: "2026w21"
 draft: false
 publishedAt: "2026-05-21"
 internal_links:
-  - /pillars/tiem-nang-va-co-hoi
   - /blog/ha-tang-trong-diem-hl4-trung-tam-do-thi-hoa-lac
+  - /blog/giai-ma-6-phan-khu-hoa-lac
+  - /blog/thoi-the-chieu-thuc-giai-ma-hoa-lac
 allowed_cta: "mofu"
 ---
 
@@ -86,19 +87,26 @@ Không phải mọi vị trí gần ga đều hưởng lợi như nhau. Ba yếu
 
 ## 5. Dòng thời gian và kết nối đa tuyến
 
-Tuyến đã chính thức khởi công ngày 19/12/2025. Các mốc tiếp theo: năm 2026 tập trung thi công hạ tầng; năm 2029 dự kiến hoàn thành hạ tầng khung; năm 2030 đưa vào khai thác thương mại [Nguồn: metro_line5_timeline].
+## TIMELINE: Đường sắt đô thị số 5
+
+- **12/2025**: Khởi công chính thức
+- **2026**: Thi công hạ tầng khung, giải phóng mặt bằng
+- **2029**: Dự kiến hoàn thành hạ tầng khung
+- **2030**: Mục tiêu khai thác thương mại
 
 Cần đánh giá khách quan: đoạn ngầm nội thành (6 ga) là phân đoạn phức tạp nhất, phải xây hai ống hầm song song dưới lòng đường có mật độ công trình ngầm dày đặc [Nguồn: QĐ 4602]. Tuy nhiên, đoạn mặt đất từ S7 đến S20 — bao gồm toàn bộ 5 ga tại Hòa Lạc — ít vướng giải phóng mặt bằng hơn nhiều, khả năng hoàn thành sớm hơn là có cơ sở.
 
 Tuyến số 5 không hoạt động đơn lẻ. Nó kết nối trực tiếp với 6 tuyến đường sắt đô thị khác tại các ga S1 (tuyến số 2), S2 (tuyến số 3), S5 (tuyến số 4), S6 (tuyến số 8), S7 (Monorail M2) và S9 (tuyến số 6) [Nguồn: QĐ 4602]. Khi toàn bộ mạng lưới vận hành, cư dân Hòa Lạc kết nối đến Nhổn, Nam Thăng Long, Vành đai 3 — Hòa Lạc chuyển từ vùng xa thành một nút trong mạng lưới đô thị đa cực.
 
-Tại chính Hòa Lạc, quy hoạch chung còn dự kiến tuyến đường sắt nối đô thị vệ tinh Sơn Tây — Hòa Lạc — Xuân Mai (15,5 km, 6 ga) chạy dọc Quốc lộ 21 [Nguồn: QĐ 705]. Khi tuyến này triển khai, khu vực nút giao giữa hai hệ thống đường sắt sẽ hình thành cụm đô thị trung chuyển với mật độ hoạt động kinh tế cao nhất toàn đô thị.
+Tại chính Hòa Lạc, quy hoạch chung còn dự kiến tuyến đường sắt nối đô thị vệ tinh Sơn Tây — Hòa Lạc — Xuân Mai (15,5 km, 6 ga) chạy dọc Quốc lộ 21 [Nguồn: QĐ 705]. Khi tuyến này triển khai, khu vực nút giao giữa hai hệ thống đường sắt sẽ hình thành cụm đô thị trung chuyển — nơi mật độ hoạt động kinh tế cao nhất toàn đô thị. [Phân tích tổng thể cục diện Hòa Lạc](/blog/thoi-the-chieu-thuc-giai-ma-hoa-lac) đặt tuyến metro trong bối cảnh rộng hơn của xu thế đô thị hóa phía Tây.
 
 ---
 
-## Tổng kết cho nhà đầu tư dài hạn
+## Nhìn lại toàn tuyến
 
-Đường sắt đô thị số 5 thay đổi bản chất kết nối của Hòa Lạc — từ phụ thuộc đường bộ sang có vận tải khối lượng lớn kết nối trung tâm Hà Nội trong 20 — 30 phút [Nguồn: metro_line5_timeline]. Ba khu vực đáng theo dõi nhất:
+> **"Đường sắt đô thị số 5 thay đổi bản chất kết nối của Hòa Lạc — từ phụ thuộc đường bộ sang vận tải khối lượng lớn, kết nối trung tâm Hà Nội trong 20-30 phút."**
+
+Ba khu vực đáng theo dõi nhất:
 
 1. Quanh ga S17 (Đồng Bãi) — nút giao cắt hai trục giao thông lớn, tiềm năng trung chuyển đa phương tiện
 2. Quanh ga S18 (Tiến Xuân) — lõi HL4, cạnh trung tâm y tế vùng 120 ha
