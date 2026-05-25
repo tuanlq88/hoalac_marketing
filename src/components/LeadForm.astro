@@ -639,7 +639,6 @@ const priorityOptions = [
 
 <script type="module">
   (() => {
-    const AREA_LIMIT = 2;
     const SCROLL_THRESHOLD = 0.65;
     const intentWeights = {
       o_thuc: 3,
@@ -745,10 +744,6 @@ const priorityOptions = [
       const sectionFlow = setupSectionFlow(form, fieldErrors);
       form.addEventListener('reset', () => sectionFlow?.reset?.());
 
-      const areaCheckboxes = form.querySelectorAll('input[name="areas"]');
-      areaCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', (event) => handleAreaLimit(event, form, setStatus, fieldErrors));
-      });
 
       const intentInputs = form.querySelectorAll('input[name="intent"]');
       intentInputs.forEach((input) => {
@@ -758,10 +753,6 @@ const priorityOptions = [
         }
       });
 
-      const areaInputs = form.querySelectorAll('input[name="areas"]');
-      areaInputs.forEach((input) => {
-        input.addEventListener('change', () => broadcastAreasChange(getSelectedAreaLabels(form)));
-      });
 
       const setBodyScrollLock = (locked) => {
         if (typeof document === 'undefined') return;
@@ -991,38 +982,10 @@ const priorityOptions = [
       return setter;
     }
 
-    function handleAreaLimit(event, form, setStatus, fieldErrors) {
-      const checkedAreas = form.querySelectorAll('input[name="areas"]:checked');
-      if (checkedAreas.length > AREA_LIMIT) {
-        event.target.checked = false;
-        setStatus(`Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`, 'error');
-        fieldErrors?.set('areas', `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.`);
-        focusField(event.target);
-        return;
-      }
-      if (typeof setStatus === 'function' && setStatus.currentMessage?.includes('Chỉ chọn tối đa')) {
-        setStatus('');
-      }
-      fieldErrors?.clear('areas');
-    }
-
-    function getSelectedAreaLabels(form) {
-      return Array.from(form.querySelectorAll('input[name="areas"]:checked'))
-        .map((input) => input.nextElementSibling?.textContent?.trim())
-        .filter((label) => Boolean(label));
-    }
-
     function broadcastIntentChange(intentValue) {
       if (typeof window === 'undefined' || !intentValue) return;
       window.dispatchEvent(new CustomEvent('lead-intent-change', {
         detail: { intent: intentValue }
-      }));
-    }
-
-    function broadcastAreasChange(labels) {
-      if (typeof window === 'undefined') return;
-      window.dispatchEvent(new CustomEvent('lead-areas-change', {
-        detail: { areas: labels }
       }));
     }
 
@@ -1187,7 +1150,7 @@ const priorityOptions = [
             console.warn('Không parse được payload, dùng message mặc định.', parseErr);
           }
           setStatus?.(payloadMessage, 'success');
-          saveLeadPreferences({ intent: data.intent ?? '', areas: selectedAreaLabels });
+          saveLeadPreferences({ intent: data.intent ?? '', areas: [] });
           form.reset();
           sectionFlow?.reset?.();
           fieldErrors?.clearAll();
@@ -1207,7 +1170,7 @@ const priorityOptions = [
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
-          saveLeadPreferences({ intent: data.intent ?? '', areas: selectedAreaLabels });
+          saveLeadPreferences({ intent: data.intent ?? '', areas: [] });
           form.reset();
           sectionFlow?.reset?.();
           fieldErrors?.clearAll();
@@ -1365,6 +1328,9 @@ const priorityOptions = [
 
     function validateSection(key, form) {
       switch (key) {
+        case 'name': {
+          return { valid: true };
+        }
         case 'intent': {
           const checked = form.querySelector('input[name="intent"]:checked');
           return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.intent };
@@ -1373,19 +1339,9 @@ const priorityOptions = [
           const checked = form.querySelector('input[name="budgetRange"]:checked');
           return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.budgetRange };
         }
-        case 'areas': {
-          const checkedCount = form.querySelectorAll('input[name="areas"]:checked').length;
-          if (checkedCount === 0) {
-            return { valid: false, message: SECTION_MESSAGES.areas };
-          }
-          if (checkedCount > AREA_LIMIT) {
-            return { valid: false, message: `Chỉ chọn tối đa ${AREA_LIMIT} khu vực.` };
-          }
-          return { valid: true };
-        }
-        case 'legalRisk': {
-          const checked = form.querySelector('input[name="legalRisk"]:checked');
-          return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.legalRisk };
+        case 'priority': {
+          const checked = form.querySelector('input[name="priority"]:checked');
+          return checked ? { valid: true } : { valid: false, message: SECTION_MESSAGES.priority };
         }
         case 'contact': {
           const input = form.querySelector('input[name="contact"]');
