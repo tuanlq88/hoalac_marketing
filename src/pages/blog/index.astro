@@ -75,7 +75,7 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
     </div>
 
     {featured && (
-      <a href={`${basePath}/blog/${featured.slug}`} class="featured">
+      <a href={`${basePath}/blog/${featured.slug}`} class="featured" style={featured.data.thumbnail ? `--featured-bg: url(${basePath}${featured.data.thumbnail})` : ''}>
         <span class="featured__label">Bài nổi bật</span>
         <div class="featured__meta">
           <span class="featured__tag">{featuredPillar.label}</span>
@@ -153,6 +153,9 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
     overflow: hidden;
     margin-bottom: 3rem;
     background: linear-gradient(135deg, #1b1b1b 0%, #2d1a0e 40%, #3d1f08 70%, var(--accent-dark) 100%);
+    background-image: var(--featured-bg, none), linear-gradient(135deg, #1b1b1b 0%, #2d1a0e 40%, #3d1f08 70%, var(--accent-dark) 100%);
+    background-size: cover, cover;
+    background-position: center, center;
     min-height: 340px;
     display: flex;
     flex-direction: column;
@@ -167,9 +170,7 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse at 80% 20%, rgba(212,72,9,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 20% 80%, rgba(212,72,9,0.08) 0%, transparent 50%);
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
     pointer-events: none;
   }
   .featured::after {

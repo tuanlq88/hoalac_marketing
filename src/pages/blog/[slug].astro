@@ -48,6 +48,8 @@ const shouldRenderCTA = Boolean(intent && funnelStage && allowedCTA);
 const tags = resolveTags(post);
 const dateLabel = resolveDateLabel(post);
 const excerpt = resolveExcerpt(post);
+const basePath = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
+const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : null;
 ---
 <Layout title={post.data.title} description={excerpt}>
   <div class="reading-layout">
@@ -77,6 +79,9 @@ const excerpt = resolveExcerpt(post);
         <p>{dateLabel}</p>
       </div>
       <h1 class="reading-title">{post.data.title}</h1>
+      {thumbnail && (
+        <img class="reading-hero" src={thumbnail} alt={post.data.title} loading="eager" />
+      )}
       <div class="reading-content">
         <Content />
       </div>

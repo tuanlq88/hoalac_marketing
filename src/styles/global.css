@@ -490,6 +490,14 @@ main {
   line-height: 1.2;
 }
 
+.reading-hero {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+}
+
 .reading-content {
   font-size: var(--font-body);
   line-height: calc(var(--line-body) + 0.15);

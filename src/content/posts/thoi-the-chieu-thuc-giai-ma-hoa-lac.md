@@ -17,6 +17,7 @@ internal_links:
   - /blog/ha-tang-trong-diem-hl4-trung-tam-do-thi-hoa-lac
   - /blog/duong-sat-do-thi-so-5-va-mo-hinh-tod-hoa-lac
   - /blog/dat-han-che-chuyen-doi-hoa-lac-quoc-phong-lam-nghiep-hanh-lang
+thumbnail: "/images/chienquoc-thumbnail.jpg"
 allowed_cta: "tofu"
 ---
 
