@@ -10,10 +10,10 @@ interface Props {
 }
 
 const {
-  headline = "Kiểm tra mức phù hợp Hòa Lạc",
-  description = "Trả lời 5 câu ngắn — nhận gợi ý khu vực và lưu ý pháp lý phù hợp nhu cầu trong 24 giờ.",
+  headline = "Nhận phân tích phù hợp với chiến lược của anh/chị",
+  description = "3 câu ngắn — nhận góc nhìn chiến lược và gợi ý khu vực phù hợp trong 24 giờ.",
   deferDisplay = true,
-  eyebrow = "5 câu hỏi nhanh",
+  eyebrow = "Phân tích chiến lược",
   formId = "lead-form",
   showFloatingCta = true,
   isGlobalFallback = false,
@@ -23,43 +23,25 @@ const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_class
 const leadEndpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT ?? "";
 
 const intentOptions = [
-  { value: "o_thuc", label: "Ở thật" },
+  { value: "o_thuc", label: "Ở thực" },
+  { value: "dong_tien", label: "Tạo dòng tiền cho thuê" },
   { value: "dau_tu_trung_han", label: "Đầu tư trung hạn" },
-  { value: "kinh_doanh", label: "Kinh doanh / cho thuê" }
+  { value: "tich_luy_dai_han", label: "Tích lũy tài sản dài hạn" }
 ];
 
 const budgetOptions = [
-  { value: "<1.5", label: "< 1,5 tỷ" },
+  { value: "<1.5", label: "Dưới 1,5 tỷ" },
   { value: "1.5-3", label: "1,5 – 3 tỷ" },
   { value: "3-5", label: "3 – 5 tỷ" },
-  { value: ">5", label: "> 5 tỷ" }
+  { value: ">5", label: "Trên 5 tỷ" }
 ];
 
-const areaOptions = [
-  { value: "gan_dhqg", label: "Đại học Quốc gia (HL1)" },
-  { value: "gan_cnc", label: "Khu Công nghệ cao (HL2)" },
-  { value: "binh_yen_thach_hoa", label: "Bình Yên – Thạch Hòa (HL3)" },
-  { value: "tien_xuan_yen_binh", label: "Tiến Xuân – Yên Bình (HL4)" },
-  { value: "trung_tam_do_thi", label: "Trung tâm đô thị (HL4-TT)" },
-  { value: "phu_cat_dong_xuan", label: "Phú Cát – Đông Xuân (HL5-HL6)" }
-];
-
-const legalOptions = [
-  {
-    value: "so_do_san",
-    label: "Chỉ sổ đỏ",
-    hint: "Nhận đất ở ngay, pháp lý chuẩn"
-  },
-  {
-    value: "cho_len_tho_cu",
-    label: "Chờ lên thổ cư",
-    hint: "Chấp nhận 6–12 tháng làm thủ tục"
-  },
-  {
-    value: "san_quy_dat_lon",
-    label: "Săn quỹ đất lớn",
-    hint: "Chấp nhận thời gian chuyển đổi mục đích"
-  }
+const priorityOptions = [
+  { value: "phap_ly", label: "Pháp lý an toàn" },
+  { value: "tang_gia", label: "Khả năng tăng giá dài hạn" },
+  { value: "ha_tang", label: "Gần hạ tầng / metro" },
+  { value: "cho_thue", label: "Khai thác cho thuê sớm" },
+  { value: "quy_dat", label: "Quỹ đất rộng, tiềm năng dài hạn" }
 ];
 ---
 <section
@@ -80,15 +62,15 @@ const legalOptions = [
         <h2 class="lead-intro__title">{headline}</h2>
         <p class="lead-intro__desc">{description}</p>
         <div class="lead-intro__meta">
-          <span>5 câu hỏi</span>
+          <span>3 câu hỏi</span>
           <span>·</span>
-          <span>2 phút</span>
+          <span>1 phút</span>
           <span>·</span>
           <span>phản hồi 24 giờ</span>
         </div>
       </div>
       <button class="lead-intro__btn" type="button" data-lead-intro-btn>
-        Bắt đầu đánh giá
+        Nhận phân tích
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -106,8 +88,17 @@ const legalOptions = [
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
           </svg>
         </button>
+        <div class="field" data-field-group="name">
+          <label>Anh/chị xưng hô thế nào cho tiện?</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Ví dụ: Anh Nam / Chị Linh"
+            autocomplete="given-name"
+          />
+        </div>
         <fieldset class="field" data-field-group="intent">
-          <legend>Anh/chị quan tâm đất Hòa Lạc để:</legend>
+          <legend>Anh/chị quan tâm Hòa Lạc theo hướng nào?</legend>
           <div class="option-grid">
             {intentOptions.map((option) => (
               <label class="option">
@@ -121,7 +112,7 @@ const legalOptions = [
         </fieldset>
         <p class="field-error" data-error-for="intent" role="status" aria-live="polite"></p>
         <fieldset class="field" data-field-group="budgetRange">
-          <legend>Tầm tài chính:</legend>
+          <legend>Khoảng tài chính dự kiến:</legend>
           <div class="option-grid">
             {budgetOptions.map((option) => (
               <label class="option">
@@ -134,13 +125,12 @@ const legalOptions = [
           </div>
         </fieldset>
         <p class="field-error" data-error-for="budgetRange" role="status" aria-live="polite"></p>
-        <fieldset class="field" data-field-group="areas">
-          <legend>Khu vực ưu tiên:</legend>
-          <p class="hint">Chọn tối đa 2 khu vực (nếu cần).</p>
+        <fieldset class="field" data-field-group="priority">
+          <legend>Anh/chị ưu tiên điều gì nhất?</legend>
           <div class="option-grid">
-            {areaOptions.map((option) => (
+            {priorityOptions.map((option) => (
               <label class="option">
-                <input type="checkbox" name="areas" value={option.value} />
+                <input type="radio" name="priority" value={option.value} required />
                 <div class="option-text">
                   <span>{option.label}</span>
                 </div>
@@ -148,24 +138,9 @@ const legalOptions = [
             ))}
           </div>
         </fieldset>
-        <p class="field-error" data-error-for="areas" role="status" aria-live="polite"></p>
-        <fieldset class="field" data-field-group="legalRisk">
-          <legend>Mức chấp nhận pháp lý:</legend>
-          <div class="option-grid option-grid--legal">
-            {legalOptions.map((option) => (
-              <label class="option">
-                <input type="radio" name="legalRisk" value={option.value} required />
-                <div class="option-text">
-                  <span>{option.label}</span>
-                  <small>{option.hint}</small>
-                </div>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <p class="field-error" data-error-for="legalRisk" role="status" aria-live="polite"></p>
+        <p class="field-error" data-error-for="priority" role="status" aria-live="polite"></p>
         <div class="field" data-field-group="contact">
-          <label>Số điện thoại (Zalo)</label>
+          <label>Số điện thoại / Zalo</label>
           <input
             type="tel"
             name="contact"
@@ -174,12 +149,13 @@ const legalOptions = [
             pattern="^(03|05|07|08|09|01[2689])[0-9]{8}$"
             placeholder="0912 345 678"
           />
+          <p class="field-hint">Chúng tôi chỉ liên hệ khi có phân tích phù hợp với nhu cầu của anh/chị.</p>
           <p class="field-error" data-error-for="contact" role="status" aria-live="polite"></p>
         </div>
         <input type="hidden" name="source" value={isGlobalFallback ? "lead-portal" : "lead-inline"} />
         <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
-        <button class="button" type="submit">Nhận phân tích chiến lược đầu tư</button>
+        <button class="button" type="submit">Nhận phân tích chiến lược</button>
         <p class="status" data-status role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -415,6 +391,12 @@ const legalOptions = [
     margin: 0 0 0.35rem;
     font-size: var(--font-small);
     color: var(--muted);
+  }
+  .field-hint {
+    margin: 0.4rem 0 0;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.45;
   }
   .field-error {
     margin: 0.1rem 0 0.75rem;
