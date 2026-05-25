@@ -73,8 +73,7 @@ function handleLeadSubmission(e) {
     + 'Ưu tiên: ' + priority + '\n'
     + 'Liên hệ: ' + contactSendTele + '\n'
     + 'Nguồn: ' + source + '\n'
-    + '\n↩️ Reply /called để nhận lead này\n'
-    + 'Gõ /help để xem tất cả commands';
+    + '\n↩️ Reply tin nay voi command de cap nhat trang thai';
   doSendMessage(text);
 
   return ContentService
@@ -90,6 +89,8 @@ function handleTelegramUpdate(e) {
     var message = update.message;
     if (!message || !message.text) return ok();
 
+    if (message.from && message.from.is_bot) return ok();
+
     var text = message.text.trim().toLowerCase();
     var chatId = message.chat.id;
     var from = message.from || {};
@@ -101,21 +102,21 @@ function handleTelegramUpdate(e) {
 
     // /help or /start
     if (text === '/help' || text === '/start') {
-      var helpText = '📋 Commands cập nhật trạng thái lead:\n\n'
-        + '📞 /called — Nhận lead + đánh dấu đã gọi\n'
-        + '🌱 /nurture — Đang chăm sóc, tư vấn\n'
-        + '🚗 /visit — Dẫn khách xem đất\n'
-        + '💰 /deposit — Khách đặt cọc\n'
-        + '❌ /cancel — Hủy cọc\n'
-        + '✅ /won — Chốt giao dịch thành công\n'
-        + '💤 /lost — Không thành / mất liên lạc\n'
-        + '🔄 /reassign — Chuyển lead cho người khác (admin)\n'
-        + '\n📌 Cách dùng:\n'
+      var helpText = '📋 <b>Commands cập nhật trạng thái lead:</b>\n\n'
+        + '📞 <code>/called</code> — Nhận lead + đánh dấu đã gọi\n'
+        + '🌱 <code>/nurture</code> — Đang chăm sóc, tư vấn\n'
+        + '🚗 <code>/visit</code> — Dẫn khách xem đất\n'
+        + '💰 <code>/deposit</code> — Khách đặt cọc\n'
+        + '❌ <code>/cancel</code> — Hủy cọc\n'
+        + '✅ <code>/won</code> — Chốt giao dịch thành công\n'
+        + '💤 <code>/lost</code> — Không thành / mất liên lạc\n'
+        + '🔄 <code>/reassign</code> — Chuyển lead cho người khác (admin)\n'
+        + '\n📌 <b>Cách dùng:</b>\n'
         + '1. Reply vào tin nhắn lead\n'
         + '2. Gõ command\n'
-        + '\n⚠️ /called đầu tiên = nhận ownership\n'
+        + '\n⚠️ <code>/called</code> đầu tiên = nhận ownership\n'
         + 'Sau đó chỉ owner mới được cập nhật tiếp.';
-      sendTelegramReply(chatId, helpText);
+      sendTelegramHTML(chatId, helpText);
       return ok();
     }
 
@@ -275,6 +276,20 @@ function doSendMessage(text) {
     Logger.log('Telegram response body: %s', response.getContentText());
   } catch (error) {
     Logger.log('Telegram send failed: %s', error);
+  }
+}
+
+function sendTelegramHTML(chatId, html) {
+  try {
+    const response = UrlFetchApp.fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ chat_id: chatId, text: html, parse_mode: 'HTML' }),
+      muteHttpExceptions: true
+    });
+    Logger.log('Telegram HTML reply code: %s', response.getResponseCode());
+  } catch (error) {
+    Logger.log('Telegram HTML reply failed: %s', error);
   }
 }
 
