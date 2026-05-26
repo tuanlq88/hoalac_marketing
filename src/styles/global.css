@@ -630,8 +630,8 @@ main {
 
 .insight-box > :not(.insight-box__label) {
   margin-top: 0.5rem;
-  font-size: 0.94rem;
-  line-height: 1.65;
+  font-size: var(--font-body);
+  line-height: 1.7;
 }
 
 .insight-box p:last-child { margin-bottom: 0; }
