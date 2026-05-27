@@ -216,20 +216,13 @@ function handleCallbackQuery(query) {
   var action = parts[0];
   var leadId = parts[1] || '';
 
-  // Handle check stale leads (admin only, debounce 10s)
+  // Handle check stale leads (admin only)
   if (action === ACTION_CHECK) {
-    if (ADMIN_IDS.indexOf(userId) === -1) {
-      answerCallback(query.id, '🚫 Chỉ admin mới được kiểm tra.');
-      return ok();
-    }
+    if (ADMIN_IDS.indexOf(userId) === -1) return ok();
     var cache = CacheService.getScriptCache();
-    if (cache.get('check_running')) {
-      answerCallback(query.id, '⏳ Đang kiểm tra, vui lòng chờ...');
-      return ok();
-    }
-    cache.put('check_running', 'true', 10);
+    if (cache.get('check_running')) return ok();
+    cache.put('check_running', 'true', 15);
     checkStaleLeads();
-    answerCallback(query.id, '✅ Đã kiểm tra');
     return ok();
   }
 
