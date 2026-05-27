@@ -186,6 +186,14 @@ function handleTelegramUpdate(e) {
   try {
     var update = JSON.parse(e.postData.contents);
 
+    // Dedupe: skip if already processed
+    var updateId = String(update.update_id || '');
+    if (updateId) {
+      var cache = CacheService.getScriptCache();
+      if (cache.get('upd_' + updateId)) return ok();
+      cache.put('upd_' + updateId, '1', 60);
+    }
+
     if (update.callback_query) {
       return handleCallbackQuery(update.callback_query);
     }
