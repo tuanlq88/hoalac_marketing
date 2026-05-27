@@ -52,25 +52,25 @@ const LEAD_ICONS = {
 };
 
 const INTENT_LABELS = {
-  'o-thuc': 'Ở thực',
-  'cho-thue': 'Cho thuê',
-  'dau-tu-trung-han': 'Đầu tư trung hạn',
-  'tich-luy-dai-han': 'Tích lũy dài hạn'
+  'o_thuc': 'Ở thực',
+  'dong_tien': 'Tạo dòng tiền cho thuê',
+  'dau_tu_trung_han': 'Đầu tư trung hạn',
+  'tich_luy_dai_han': 'Tích lũy tài sản dài hạn'
 };
 
 const BUDGET_LABELS = {
-  'duoi-1.5-ty': 'Dưới 1,5 tỷ',
-  '1.5-3-ty': '1,5–3 tỷ',
-  '3-5-ty': '3–5 tỷ',
-  'tren-5-ty': 'Trên 5 tỷ'
+  '<1.5': 'Dưới 1,5 tỷ',
+  '1.5-3': '1,5–3 tỷ',
+  '3-5': '3–5 tỷ',
+  '>5': 'Trên 5 tỷ'
 };
 
 const PRIORITY_LABELS = {
-  'phap-ly': 'Pháp lý an toàn',
-  'tang-gia': 'Tăng giá dài hạn',
-  'gan-metro': 'Gần hạ tầng / metro',
-  'cho-thue-som': 'Cho thuê sớm',
-  'quy-dat-rong': 'Quỹ đất rộng'
+  'phap_ly': 'Pháp lý an toàn',
+  'tang_gia': 'Tăng giá dài hạn',
+  'ha_tang': 'Gần hạ tầng / metro',
+  'cho_thue': 'Cho thuê sớm',
+  'quy_dat': 'Quỹ đất rộng, tiềm năng dài hạn'
 };
 
 // ── MAIN ──
