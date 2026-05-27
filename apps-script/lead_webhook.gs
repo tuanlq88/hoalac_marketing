@@ -307,6 +307,9 @@ function handleCallbackQuery(query) {
     return ok();
   }
 
+  // Answer callback FIRST to stop loading spinner
+  answerCallback(query.id, command.icon + ' ' + command.label);
+
   updateLeadStatus(sheet, rowInfo.row, command.label, userLabel, userId, userName);
   logTimeline(leadId, rowInfo.phone, command.label, userLabel);
 
@@ -319,7 +322,6 @@ function handleCallbackQuery(query) {
     editMessage(chatId, messageId, cleanText + statusLine, newButtons);
   }
 
-  answerCallback(query.id, command.icon + ' ' + command.label);
   return ok();
 }
 
