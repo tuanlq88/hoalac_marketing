@@ -10,7 +10,7 @@ interface Props {
 }
 
 const {
-  headline = "Nhận phân tích phù hợp với chiến lược của anh/chị",
+  headline = "Tìm góc nhìn phù hợp để nhận góc nhìn phù hợp",
   description = "5 câu ngắn — nhận góc nhìn chiến lược và gợi ý khu vực phù hợp trong 24 giờ.",
   deferDisplay = true,
   eyebrow = "Phân tích chiến lược",
@@ -70,7 +70,7 @@ const priorityOptions = [
         </div>
       </div>
       <button class="lead-intro__btn" type="button" data-lead-intro-btn>
-        Nhận phân tích
+        Tìm góc nhìn phù hợp
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -155,7 +155,7 @@ const priorityOptions = [
         <input type="hidden" name="source" value="" data-lead-source />
         <input type="hidden" name="leadTag" value={defaultLeadTag} data-lead-tag />
         <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" />
-        <button class="button" type="submit">Nhận phân tích chiến lược</button>
+        <button class="button" type="submit">Nhận gợi ý phù hợp</button>
         <p class="status" data-status role="status" aria-live="polite"></p>
       </form>
     </div>
@@ -163,7 +163,7 @@ const priorityOptions = [
   {showFloatingCta && (
     <button class="floating-cta" type="button" data-floating-cta aria-hidden="true">
       <svg class="floating-cta__icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9 3H4a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14 3l3 3-7 7H7v-3l7-7z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span class="floating-cta__text">Đánh giá nhanh</span>
+      <span class="floating-cta__text">Tìm góc nhìn phù hợp</span>
     </button>
   )}
 </section>
@@ -226,14 +226,14 @@ const priorityOptions = [
     border: none;
     border-radius: 100px;
     cursor: pointer;
-    box-shadow: 0 4px 24px rgba(212, 72, 9, 0.35);
+    box-shadow: 0 2px 12px rgba(212, 72, 9, 0.15);
     transition: all 200ms ease;
     white-space: nowrap;
     flex-shrink: 0;
   }
   .lead-intro__btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(212, 72, 9, 0.2);
   }
   [data-lead-shell].is-expanded .lead-intro,
   [data-lead-shell].is-modal-open .lead-intro,
@@ -288,7 +288,7 @@ const priorityOptions = [
     right: -30%;
     width: 360px;
     height: 360px;
-    background: radial-gradient(circle, rgba(249, 115, 22, 0.18), transparent 60%);
+    background: radial-gradient(circle, rgba(249, 115, 22, 0.06), transparent 60%);
     pointer-events: none;
     z-index: 0;
   }
@@ -496,7 +496,7 @@ const priorityOptions = [
     border-radius: 14px;
     padding: 12px 20px;
     padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    box-shadow: 0 4px 20px rgba(212, 72, 9, 0.3);
+    box-shadow: 0 2px 10px rgba(212, 72, 9, 0.15);
     display: none;
     align-items: center;
     gap: 10px;
@@ -507,8 +507,8 @@ const priorityOptions = [
     transition: all 250ms ease;
   }
   .floating-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(212, 72, 9, 0.2);
     background: linear-gradient(135deg, #b83d07, #8a2e05);
   }
   .floating-cta__icon {

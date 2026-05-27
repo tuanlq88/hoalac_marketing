@@ -70,13 +70,13 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
 <Layout title="Bài viết Hòa Lạc" description="Thư viện bài phân tích thị trường đất Hòa Lạc">
   <section class="blog-page">
     <div class="blog-page__header">
-      <h1>Bản tin thị trường</h1>
+      <h1>Phân tích & Nhận định</h1>
       <p>Phân tích thực địa, dữ liệu quy hoạch và góc nhìn chiến lược dành cho nhà đầu tư và gia đình đang sàng đất Hòa Lạc.</p>
     </div>
 
     {featured && (
       <a href={`${basePath}/blog/${featured.slug}`} class="featured" style={featured.data.thumbnail ? `--featured-bg: url(${basePath}${featured.data.thumbnail})` : ''}>
-        <span class="featured__label">Bài nổi bật</span>
+        <span class="featured__label">Đáng đọc</span>
         <div class="featured__meta">
           <span class="featured__tag">{featuredPillar.label}</span>
           <span class="featured__date">{resolveDateLabel(featured)}</span>
@@ -91,7 +91,7 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
 
     {rest.length > 0 && (
       <>
-        <p class="section-label">Tất cả bài viết</p>
+        <p class="section-label">Tất cả phân tích</p>
         <div class="article-grid">
           {rest.map((post) => {
             const pillar = pillarMap[post.data.pillar] ?? { label: 'Bài viết', class: 'tag--tiem-nang' };

@@ -1,6 +1,6 @@
 ---
 const {
-  title = "Góc nhìn quy hoạch Hòa Lạc — tầm nhìn đa chiều",
+  title = "Hòa Lạc đang bước vào giai đoạn định hình mới.",
 } = Astro.props;
 
 const baseEnv = import.meta.env.BASE_URL ?? '/';
@@ -24,16 +24,15 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
       <h1 class="hero__title" set:html={title.replace(/Hòa Lạc/g, '<em>Hòa Lạc</em>')}></h1>
 
       <p class="hero__subtitle">
-        Dữ liệu từ các quyết định quy hoạch đã được phê duyệt, phân tích theo từng phân khu
-        — để anh/chị tự đánh giá trước khi gặp môi giới.
+        Theo dõi quy hoạch, hạ tầng và các tín hiệu đang định hình phía Tây Hà Nội.
       </p>
 
       <div class="hero__cta-group">
-        <a href="#lead-form" class="hero__cta hero__cta--primary" data-personalized-cta>
-          Nhận phân tích cá nhân
+        <a href={blogHref} class="hero__cta hero__cta--primary">
+          Đọc phân tích mới nhất
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href={blogHref} class="hero__cta hero__cta--ghost">Đọc bài phân tích</a>
+        <a href={`${basePath}/pillars`} class="hero__cta hero__cta--ghost">Khám phá phân khu</a>
       </div>
 
       <div class="hero__stats">
@@ -233,12 +232,12 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
   .hero__cta--primary {
     background: linear-gradient(135deg, #d44809, #a43706);
     color: #fff;
-    box-shadow: 0 4px 24px rgba(212, 72, 9, 0.4);
+    box-shadow: 0 2px 12px rgba(212, 72, 9, 0.15);
   }
 
   .hero__cta--primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(212, 72, 9, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(212, 72, 9, 0.2);
   }
 
   .hero__cta--ghost {

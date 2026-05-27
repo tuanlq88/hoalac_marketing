@@ -12,7 +12,7 @@ interface Props {
 }
 
 const {
-  title = "Insight Hòa Lạc",
+  title = "Tầm Nhìn Hòa Lạc",
   description = "Góc nhìn có hệ thống về quy hoạch, hạ tầng và thị trường Hòa Lạc — giúp nhà đầu tư tự đưa ra quyết định",
   image,
   publishedAt,
@@ -32,6 +32,20 @@ const pillarsHref = `${basePath}/pillars`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-88662KFZ9N"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-88662KFZ9N');
+    </script>
+    <script is:inline>
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "wxhnh70qb7");
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
@@ -41,7 +55,7 @@ const pillarsHref = `${basePath}/pillars`;
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:locale" content="vi_VN" />
-    <meta property="og:site_name" content="Insight Hòa Lạc" />
+    <meta property="og:site_name" content="Tầm Nhìn Hòa Lạc" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="robots" content="index, follow, noai, noimageai" />
     {publishedAt && (
@@ -55,7 +69,7 @@ const pillarsHref = `${basePath}/pillars`;
         "url": canonicalURL,
         "publisher": {
           "@type": "Organization",
-          "name": "Insight Hòa Lạc",
+          "name": "Tầm Nhìn Hòa Lạc",
           "url": "https://tamnhinhoalac.vn"
         },
         "mainEntityOfPage": {
@@ -75,15 +89,18 @@ const pillarsHref = `${basePath}/pillars`;
     <header class="site-header">
       <div class="site-header__inner">
         <a href={homeHref} class="site-brand">
-          <span class="site-brand__title">Insight Hòa Lạc</span>
+          <span class="site-brand__title">Tầm Nhìn Hòa Lạc</span>
           <span class="site-brand__subtitle">Quy hoạch & phân tích đầu tư</span>
         </a>
         <nav class="site-nav" aria-label="Điều hướng chính">
           <a href={blogHref} class="site-nav__pill site-nav__pill--accent">
-            <span>Bài phân tích</span>
+            <span>Phân tích</span>
+          </a>
+          <a href={pillarsHref} class="site-nav__pill">
+            <span>Phân khu</span>
           </a>
           <a href="#lead-form" class="site-nav__pill site-nav__pill--cta">
-            <span>Đánh giá nhanh →</span>
+            <span>Tìm góc nhìn</span>
           </a>
           <!-- Pillars nav: uncomment when pillar content is published
           <a href={pillarsHref} class="site-nav__pill">
@@ -115,7 +132,7 @@ const pillarsHref = `${basePath}/pillars`;
       <div class="mobile-menu__panel" role="dialog" aria-label="Menu chính">
         <div class="mobile-menu__header">
           <div class="mobile-menu__brand-group">
-            <span class="mobile-menu__brand">Insight Hòa Lạc</span>
+            <span class="mobile-menu__brand">Tầm Nhìn Hòa Lạc</span>
             <span class="mobile-menu__tagline">Quy hoạch & phân tích đầu tư</span>
           </div>
           <button class="mobile-menu__close" type="button" aria-label="Đóng menu">
@@ -138,7 +155,7 @@ const pillarsHref = `${basePath}/pillars`;
           <li><a class="mobile-menu__link" href={blogHref}>
             <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             <div class="mobile-menu__link-text">
-              <span>Bài phân tích</span>
+              <span>Phân tích</span>
               <span class="mobile-menu__link-desc">Pháp lý, quy hoạch, khu vực</span>
             </div>
           </a></li>
@@ -147,7 +164,7 @@ const pillarsHref = `${basePath}/pillars`;
           <a class="mobile-menu__cta" href="#lead-form">
             <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <div class="mobile-menu__link-text">
-              <span>Đánh giá nhanh</span>
+              <span>Tìm góc nhìn</span>
               <span class="mobile-menu__link-desc">Nhận phân tích miễn phí trong 24h</span>
             </div>
             <svg class="mobile-menu__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -186,7 +203,7 @@ const pillarsHref = `${basePath}/pillars`;
     <footer class="site-footer">
       <div class="site-footer__inner">
         <div class="site-footer__col">
-          <p class="site-footer__brand">Insight Hòa Lạc</p>
+          <p class="site-footer__brand">Tầm Nhìn Hòa Lạc</p>
           <p class="site-footer__copy">Dữ liệu quy hoạch & phân tích đầu tư bất động sản khu vực Hòa Lạc.</p>
           <p class="site-footer__trust">
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align: -2px; margin-right: 4px;"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Dữ liệu từ các quyết định quy hoạch chính thức
@@ -194,8 +211,8 @@ const pillarsHref = `${basePath}/pillars`;
         </div>
         <div class="site-footer__col">
           <p class="site-footer__col-title">Nội dung</p>
-          <a href={blogHref}>Bài phân tích</a>
-          <a href="#lead-form" class="site-footer__highlight">Đánh giá nhanh →</a>
+          <a href={blogHref}>Phân tích</a>
+          <a href={pillarsHref}>Phân khu Hòa Lạc</a>
         </div>
         <div class="site-footer__col">
           <p class="site-footer__col-title">Liên hệ</p>
@@ -205,7 +222,7 @@ const pillarsHref = `${basePath}/pillars`;
         </div>
       </div>
       <div class="site-footer__bottom">
-        <p>© {new Date().getFullYear()} Insight Hòa Lạc · Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chuyên nghiệp.</p>
+        <p>© {new Date().getFullYear()} Tầm Nhìn Hòa Lạc · Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chuyên nghiệp.</p>
       </div>
     </footer>
     <LeadForm
