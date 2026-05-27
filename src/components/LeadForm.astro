@@ -1122,6 +1122,12 @@ const priorityOptions = [
         ].filter(Boolean).join('\n');
       } catch {}
 
+      let submitCount = 1;
+      try {
+        const hist = JSON.parse(localStorage.getItem('submit_history') || '[]');
+        submitCount = hist.length + 1;
+      } catch {}
+
       const data = {
         submittedAt: vnDateTime,
         intent: raw.intent ?? '',
@@ -1131,7 +1137,8 @@ const priorityOptions = [
         contact: raw.contact ?? '',
         leadTag: computedTag,
         source: raw.source ?? window.location.pathname,
-        readingContext
+        readingContext,
+        submitCount: String(submitCount)
       };
 
       if (raw.company) {
