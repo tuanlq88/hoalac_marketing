@@ -507,7 +507,7 @@ function vnDateTime() {
 function setWebhook() {
   var url = 'https://script.google.com/macros/s/AKfycbxPzekYmBOapiPRakfwIQiS3AKUABvLUU1X3Xvf63rRLeqiavysbWYV5SocsYkFA4yVKA/exec';
   var response = UrlFetchApp.fetch(
-    'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/setWebhook?url=' + encodeURIComponent(url)
+    'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/setWebhook?url=' + encodeURIComponent(url) + '&drop_pending_updates=true'
   );
   Logger.log('setWebhook: %s', response.getContentText());
 }
