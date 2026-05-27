@@ -187,6 +187,10 @@ function handleTelegramUpdate(e) {
     if (!message || !message.text) return ok();
     if (message.from && message.from.is_bot) return ok();
 
+    // Ignore messages older than 30 seconds (Telegram retries)
+    var messageAge = Math.floor(Date.now() / 1000) - (message.date || 0);
+    if (messageAge > 30) return ok();
+
     var text = message.text.trim().toLowerCase();
     var chatId = message.chat.id;
     var from = message.from || {};
@@ -265,6 +269,9 @@ function handleTelegramUpdate(e) {
 // ── CALLBACK QUERY (inline buttons) ──
 
 function handleCallbackQuery(query) {
+  // Answer immediately to stop spinner
+  answerCallback(query.id, '⏳');
+
   var data = query.data || '';
   var from = query.from || {};
   var userId = from.id;
@@ -306,9 +313,6 @@ function handleCallbackQuery(query) {
     answerCallback(query.id, ownerCheck.message);
     return ok();
   }
-
-  // Answer callback FIRST to stop loading spinner
-  answerCallback(query.id, command.icon + ' ' + command.label);
 
   updateLeadStatus(sheet, rowInfo.row, command.label, userLabel, userId, userName);
   logTimeline(leadId, rowInfo.phone, command.label, userLabel);
