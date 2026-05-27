@@ -51,7 +51,7 @@ const excerpt = resolveExcerpt(post);
 const basePath = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
 const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : null;
 ---
-<Layout title={post.data.title} description={excerpt}>
+<Layout title={post.data.title} description={excerpt} image={thumbnail} publishedAt={post.data.publishedAt} slug={post.slug}>
   <div class="reading-layout">
     {hasToc && (
       <nav class="reading-toc" aria-label="Mục lục bài viết" data-reading-toc>

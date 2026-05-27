@@ -6,15 +6,23 @@ import tableScriptSrc from "../scripts/initTables.ts?url";
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  publishedAt?: string;
+  slug?: string;
 }
 
 const {
   title = "Insight Hòa Lạc",
   description = "Góc nhìn có hệ thống về quy hoạch, hạ tầng và thị trường Hòa Lạc — giúp nhà đầu tư tự đưa ra quyết định",
+  image,
+  publishedAt,
+  slug,
 } = Astro.props;
 
 const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ? new URL(image, Astro.site).href : new URL('/images/og-default.jpg', Astro.site).href;
 const homeHref = basePath || '/';
 const blogHref = `${basePath}/blog`;
 const pillarsHref = `${basePath}/pillars`;
@@ -26,9 +34,35 @@ const pillarsHref = `${basePath}/pillars`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={publishedAt ? "article" : "website"} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:site_name" content="Insight Hòa Lạc" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {publishedAt && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": title,
+        "description": description,
+        "image": ogImage,
+        "datePublished": publishedAt,
+        "url": canonicalURL,
+        "publisher": {
+          "@type": "Organization",
+          "name": "Insight Hòa Lạc",
+          "url": "https://tamnhinhoalac.vn"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": canonicalURL
+        }
+      })} />
+    )}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
