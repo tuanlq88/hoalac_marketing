@@ -200,7 +200,7 @@ function handleTelegramUpdate(e) {
     var userLabel = userName;
     if (from.username) userLabel += ' (@' + from.username + ')';
 
-    if (text === '/help' || text === '/start') {
+    if ((text === '/help' || text === '/start') && message.chat.type === 'private') {
       var helpText = '📋 <b>Hướng dẫn:</b>\n\n'
         + 'Bấm nút bên dưới mỗi lead để cập nhật trạng thái.\n\n'
         + 'Hoặc reply vào lead + gõ command:\n'
@@ -372,42 +372,39 @@ function generateLeadId(sheet) {
 }
 
 function findLeadById(sheet, leadId) {
-  var data = sheet.getDataRange().getValues();
-  for (var i = data.length - 1; i >= 1; i--) {
-    if (String(data[i][COL.LEAD_ID - 1]) === leadId) {
-      return {
-        found: true,
-        row: i + 1,
-        leadId: leadId,
-        leadName: data[i][COL.NAME - 1] || '',
-        phone: String(data[i][COL.CONTACT - 1]).replace(/^'/, ''),
-        status: data[i][COL.STATUS - 1] || '',
-        ownerId: String(data[i][COL.OWNER_ID - 1] || ''),
-        ownerName: data[i][COL.OWNER_NAME - 1] || ''
-      };
-    }
-  }
-  return { found: false };
+  var finder = sheet.getRange(1, COL.LEAD_ID, sheet.getLastRow()).createTextFinder(leadId).matchEntireCell(true);
+  var cell = finder.findNext();
+  if (!cell) return { found: false };
+  var row = cell.getRow();
+  var rowData = sheet.getRange(row, 1, 1, COL.READING_CONTEXT).getValues()[0];
+  return {
+    found: true,
+    row: row,
+    leadId: leadId,
+    leadName: rowData[COL.NAME - 1] || '',
+    phone: String(rowData[COL.CONTACT - 1]).replace(/^'/, ''),
+    status: rowData[COL.STATUS - 1] || '',
+    ownerId: String(rowData[COL.OWNER_ID - 1] || ''),
+    ownerName: rowData[COL.OWNER_NAME - 1] || ''
+  };
 }
 
 function findLeadByPhone(sheet, phone) {
-  var data = sheet.getDataRange().getValues();
-  for (var i = data.length - 1; i >= 1; i--) {
-    var cellValue = String(data[i][COL.CONTACT - 1]).replace(/^'/, '');
-    if (cellValue === phone) {
-      return {
-        found: true,
-        row: i + 1,
-        leadId: data[i][COL.LEAD_ID - 1] || '',
-        leadName: data[i][COL.NAME - 1] || '',
-        phone: cellValue,
-        status: data[i][COL.STATUS - 1] || '',
-        ownerId: String(data[i][COL.OWNER_ID - 1] || ''),
-        ownerName: data[i][COL.OWNER_NAME - 1] || ''
-      };
-    }
-  }
-  return { found: false };
+  var finder = sheet.getRange(1, COL.CONTACT, sheet.getLastRow()).createTextFinder(phone).matchEntireCell(true);
+  var cell = finder.findNext();
+  if (!cell) return { found: false };
+  var row = cell.getRow();
+  var rowData = sheet.getRange(row, 1, 1, COL.READING_CONTEXT).getValues()[0];
+  return {
+    found: true,
+    row: row,
+    leadId: rowData[COL.LEAD_ID - 1] || '',
+    leadName: rowData[COL.NAME - 1] || '',
+    phone: phone,
+    status: rowData[COL.STATUS - 1] || '',
+    ownerId: String(rowData[COL.OWNER_ID - 1] || ''),
+    ownerName: rowData[COL.OWNER_NAME - 1] || ''
+  };
 }
 
 function checkOwnership(rowInfo, userId, userLabel, action) {
