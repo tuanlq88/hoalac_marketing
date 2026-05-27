@@ -216,12 +216,18 @@ function handleCallbackQuery(query) {
   var action = parts[0];
   var leadId = parts[1] || '';
 
-  // Handle check stale leads (admin only)
+  // Handle check stale leads (admin only, debounce 10s)
   if (action === ACTION_CHECK) {
     if (ADMIN_IDS.indexOf(userId) === -1) {
       answerCallback(query.id, '🚫 Chỉ admin mới được kiểm tra.');
       return ok();
     }
+    var cache = CacheService.getScriptCache();
+    if (cache.get('check_running')) {
+      answerCallback(query.id, '⏳ Đang kiểm tra, vui lòng chờ...');
+      return ok();
+    }
+    cache.put('check_running', 'true', 10);
     checkStaleLeads();
     answerCallback(query.id, '✅ Đã kiểm tra');
     return ok();
