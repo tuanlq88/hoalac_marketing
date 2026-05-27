@@ -41,6 +41,9 @@ const ALLOWED_TRANSITIONS = {
   'Không thành':    ['status_called']
 };
 
+// Admin-only action
+const STATUS_REASSIGN = 'status_reassign';
+
 const LEAD_ICONS = {
   'lead_hot':  '🔥',
   'lead_warm': '🟡',
@@ -132,7 +135,8 @@ function handleLeadSubmission(e) {
       + '📄 ' + source + '\n'
       + '🔢 Lần thứ: ' + newCount + '\n'
       + (readingContext ? '\n📖 Hành vi đọc:\n' + readingContext + '\n' : '')
-      + '\n' + icon + ' ' + leadTag;
+      + '\n' + icon + ' ' + leadTag
+      + '\n\n↓ Bấm nút bên dưới để cập nhật trạng thái';
 
     var buttons = buildButtons(existing.leadId, currentStatus);
     sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
@@ -163,7 +167,8 @@ function handleLeadSubmission(e) {
     + '⭐ ' + priorityLabel + '\n'
     + '📄 ' + source + '\n'
     + (readingContext ? '\n📖 Hành vi đọc:\n' + readingContext + '\n' : '')
-    + '\n' + icon + ' ' + leadTag;
+    + '\n' + icon + ' ' + leadTag
+    + '\n\n↓ Bấm nút bên dưới để cập nhật trạng thái';
 
   var buttons = buildButtons(leadId, '');
   sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
@@ -183,82 +188,27 @@ function handleTelegramUpdate(e) {
       return handleCallbackQuery(update.callback_query);
     }
 
+    // Handle /check command — admin only
     var message = update.message;
-    if (!message || !message.text) return ok();
-    if (message.from && message.from.is_bot) return ok();
+    if (message && message.text) {
+      var text = message.text.trim().toLowerCase();
+      var chatId = message.chat.id;
+      var from = message.from || {};
+      var userId = from.id;
 
-    // Ignore messages older than 30 seconds (Telegram retries)
-    var messageAge = Math.floor(Date.now() / 1000) - (message.date || 0);
-    if (messageAge > 30) return ok();
+      // Ignore old messages
+      var messageAge = Math.floor(Date.now() / 1000) - (message.date || 0);
+      if (messageAge > 30) return ok();
 
-    var text = message.text.trim().toLowerCase();
-    var chatId = message.chat.id;
-    var from = message.from || {};
-    var userId = from.id;
-    var userName = from.first_name || '';
-    if (from.last_name) userName += ' ' + from.last_name;
-    var userLabel = userName;
-    if (from.username) userLabel += ' (@' + from.username + ')';
-
-    if ((text === '/help' || text === '/start') && message.chat.type === 'private') {
-      var helpText = '📋 <b>Hướng dẫn:</b>\n\n'
-        + 'Bấm nút bên dưới mỗi lead để cập nhật trạng thái.\n\n'
-        + 'Hoặc reply vào lead + gõ command:\n'
-        + '👀 <code>/called</code> — Nhận lead\n'
-        + '📞 <code>/nurture</code> — Đang liên hệ\n'
-        + '🚗 <code>/visit</code> — Dẫn khách\n'
-        + '💰 <code>/deposit</code> — Đặt cọc\n'
-        + '✅ <code>/won</code> — Thành công\n'
-        + '💤 <code>/lost</code> — Không thành\n'
-        + '🔄 <code>/reassign</code> — Chuyển lead (admin)';
-      sendTelegramHTML(chatId, helpText);
-      return ok();
-    }
-
-    // Reply-based commands (backward compatible)
-    if (!message.reply_to_message || !message.reply_to_message.text) return ok();
-
-    var originalText = message.reply_to_message.text;
-    var leadIdMatch = originalText.match(/\[HL-\d+\]/);
-    if (!leadIdMatch) {
-      sendTelegramReply(chatId, '⚠️ Không tìm thấy mã lead trong tin nhắn gốc.');
-      return ok();
-    }
-    var leadId = leadIdMatch[0].replace(/[\[\]]/g, '');
-
-    if (text.indexOf('/reassign') === 0) {
-      if (ADMIN_IDS.indexOf(userId) === -1) {
-        sendTelegramReply(chatId, '🚫 Chỉ admin mới được dùng /reassign.');
+      if (text === '/check') {
+        if (ADMIN_IDS.indexOf(userId) === -1) {
+          doSendMessage('🚫 Chỉ admin mới được dùng /check.');
+          return ok();
+        }
+        checkStaleLeads();
         return ok();
       }
-      var result = clearOwner(leadId);
-      if (result.found) {
-        sendTelegramReply(chatId, '🔄 Đã mở khóa lead ' + leadId + ' (' + result.name + ').');
-      } else {
-        sendTelegramReply(chatId, '⚠️ Không tìm thấy lead: ' + leadId);
-      }
-      return ok();
     }
-
-    var command = STATUS_MAP[text];
-    if (!command) return ok();
-
-    var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
-    var rowInfo = findLeadById(sheet, leadId);
-    if (!rowInfo.found) {
-      sendTelegramReply(chatId, '⚠️ Không tìm thấy lead: ' + leadId);
-      return ok();
-    }
-
-    var ownerCheck = checkOwnership(rowInfo, userId, userLabel, text);
-    if (ownerCheck.blocked) {
-      sendTelegramReply(chatId, ownerCheck.message);
-      return ok();
-    }
-
-    updateLeadStatus(sheet, rowInfo.row, command.label, userLabel, userId, userName);
-    logTimeline(leadId, rowInfo.phone, command.label, userLabel);
-    sendTelegramReply(chatId, command.icon + ' ' + leadId + ' → ' + command.label + '\n👤 ' + userLabel);
 
   } catch (err) {
     Logger.log('Telegram handler error: %s', err);
@@ -286,6 +236,27 @@ function handleCallbackQuery(query) {
   var parts = data.split(':');
   var action = parts[0];
   var leadId = parts[1] || '';
+
+  // Handle reassign (admin only)
+  if (action === STATUS_REASSIGN) {
+    if (ADMIN_IDS.indexOf(userId) === -1) {
+      answerCallback(query.id, '🚫 Chỉ admin mới được mở khóa.');
+      return ok();
+    }
+    var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+    var result = clearOwner(sheet, leadId);
+    if (result.found) {
+      if (messageId && chatId) {
+        var newText = '🔄 Đã mở khóa [' + leadId + '] — ' + result.name + '\n👤 ' + userLabel + ' (' + vnDateTime() + ')\n\n↓ Bấm nút bên dưới để nhận lead';
+        var newButtons = buildButtons(leadId, '');
+        editMessage(chatId, messageId, newText, newButtons);
+      }
+      answerCallback(query.id, '🔄 Đã mở khóa');
+    } else {
+      answerCallback(query.id, '⚠️ Không tìm thấy lead');
+    }
+    return ok();
+  }
 
   var command = STATUS_MAP[action];
   if (!command || !leadId) {
@@ -338,10 +309,8 @@ function handleCallbackQuery(query) {
 
 // ── BUTTON BUILDER (dynamic by state) ──
 
-function buildButtons(leadId, currentStatus) {
+function buildButtons(leadId, currentStatus, updatedAt) {
   var allowed = ALLOWED_TRANSITIONS[currentStatus] || ALLOWED_TRANSITIONS[''] || [];
-  if (allowed.length === 0) return [];
-
   var keyboard = [];
   for (var i = 0; i < allowed.length; i += 2) {
     var row = [];
@@ -355,6 +324,22 @@ function buildButtons(leadId, currentStatus) {
     }
     if (row.length > 0) keyboard.push(row);
   }
+
+  // Show reassign button if lead has owner and inactive > 48h
+  if (currentStatus && currentStatus !== 'Thành công') {
+    var stale = false;
+    if (updatedAt) {
+      var parts = String(updatedAt).match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+      if (parts) {
+        var lastUpdate = new Date(parts[3], parts[2] - 1, parts[1], parts[4], parts[5]);
+        stale = (Date.now() - lastUpdate.getTime()) > 48 * 60 * 60 * 1000;
+      }
+    }
+    if (stale) {
+      keyboard.push([{ text: '🔄 Mở khóa lead', callback_data: STATUS_REASSIGN + ':' + leadId }]);
+    }
+  }
+
   return keyboard;
 }
 
@@ -429,20 +414,13 @@ function checkOwnership(rowInfo, userId, userLabel, action) {
 
 function updateLeadStatus(sheet, row, statusLabel, updatedByLabel, userId, userName) {
   var ts = vnDateTime();
-  sheet.getRange(row, COL.STATUS).setValue(statusLabel);
-  sheet.getRange(row, COL.UPDATED_BY).setValue(updatedByLabel);
-  sheet.getRange(row, COL.UPDATED_AT).setValue(ts);
-  sheet.getRange(row, COL.OWNER_ID).setValue(String(userId));
-  sheet.getRange(row, COL.OWNER_NAME).setValue(userName);
+  sheet.getRange(row, COL.STATUS, 1, 5).setValues([[statusLabel, updatedByLabel, ts, String(userId), userName]]);
 }
 
-function clearOwner(leadId) {
-  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+function clearOwner(sheet, leadId) {
   var info = findLeadById(sheet, leadId);
   if (!info.found) return { found: false };
-  sheet.getRange(info.row, COL.OWNER_ID).setValue('');
-  sheet.getRange(info.row, COL.OWNER_NAME).setValue('');
-  sheet.getRange(info.row, COL.STATUS).setValue('');
+  sheet.getRange(info.row, COL.STATUS, 1, 5).setValues([['', '', vnDateTime(), '', '']]);
   logTimeline(leadId, info.phone, 'Mở khóa lead', 'Admin');
   return { found: true, name: info.leadName };
 }
@@ -521,32 +499,6 @@ function doSendMessage(text) {
   }
 }
 
-function sendTelegramHTML(chatId, html) {
-  try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({ chat_id: chatId, text: html, parse_mode: 'HTML' }),
-      muteHttpExceptions: true
-    });
-  } catch (err) {
-    Logger.log('sendTelegramHTML error: %s', err);
-  }
-}
-
-function sendTelegramReply(chatId, text) {
-  try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({ chat_id: chatId, text: text }),
-      muteHttpExceptions: true
-    });
-  } catch (err) {
-    Logger.log('sendTelegramReply error: %s', err);
-  }
-}
-
 function ok() {
   return ContentService.createTextOutput('ok');
 }
@@ -576,6 +528,51 @@ function removeWebhook() {
     'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/deleteWebhook'
   );
   Logger.log('deleteWebhook: %s', response.getContentText());
+}
+
+function checkStaleLeads() {
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+  var data = sheet.getDataRange().getValues();
+  var now = Date.now();
+  var staleLeads = [];
+
+  for (var i = 1; i < data.length; i++) {
+    var status = data[i][COL.STATUS - 1] || '';
+    var ownerId = String(data[i][COL.OWNER_ID - 1] || '');
+    var updatedAt = String(data[i][COL.UPDATED_AT - 1] || '');
+    if (!status || !ownerId || status === 'Thành công' || status === 'Không thành') continue;
+
+    var parts = updatedAt.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+    if (!parts) continue;
+    var lastUpdate = new Date(parts[3], parts[2] - 1, parts[1], parts[4], parts[5]);
+    var hoursAgo = Math.floor((now - lastUpdate.getTime()) / (1000 * 60 * 60));
+
+    if (hoursAgo >= 48) {
+      staleLeads.push({
+        leadId: data[i][COL.LEAD_ID - 1],
+        name: data[i][COL.NAME - 1],
+        status: status,
+        owner: data[i][COL.OWNER_NAME - 1],
+        hours: hoursAgo
+      });
+    }
+  }
+
+  if (staleLeads.length === 0) {
+    doSendMessage('✅ Không có lead nào quá hạn 48 giờ.');
+    return;
+  }
+
+  for (var j = 0; j < staleLeads.length; j++) {
+    var lead = staleLeads[j];
+    var text = '⏰ Lead quá hạn [' + lead.leadId + ']\n'
+      + '👤 ' + lead.name + '\n'
+      + '📌 Trạng thái: ' + lead.status + '\n'
+      + '👷 Owner: ' + lead.owner + '\n'
+      + '🕐 Không cập nhật: ' + lead.hours + ' giờ';
+    var keyboard = [[{ text: '🔄 Mở khóa lead', callback_data: STATUS_REASSIGN + ':' + lead.leadId }]];
+    sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
+  }
 }
 
 function testDoSendMessage() {
