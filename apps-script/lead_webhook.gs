@@ -41,8 +41,9 @@ const ALLOWED_TRANSITIONS = {
   'Không thành':    ['status_called']
 };
 
-// Admin-only action
+// Admin-only actions
 const STATUS_REASSIGN = 'status_reassign';
+const ACTION_CHECK = 'action_check';
 
 const LEAD_ICONS = {
   'lead_hot':  '🔥',
@@ -188,28 +189,6 @@ function handleTelegramUpdate(e) {
       return handleCallbackQuery(update.callback_query);
     }
 
-    // Handle /check command — admin only
-    var message = update.message;
-    if (message && message.text) {
-      var text = message.text.trim().toLowerCase();
-      var chatId = message.chat.id;
-      var from = message.from || {};
-      var userId = from.id;
-
-      // Ignore old messages
-      var messageAge = Math.floor(Date.now() / 1000) - (message.date || 0);
-      if (messageAge > 30) return ok();
-
-      if (text === '/check') {
-        if (ADMIN_IDS.indexOf(userId) === -1) {
-          doSendMessage('🚫 Chỉ admin mới được dùng /check.');
-          return ok();
-        }
-        checkStaleLeads();
-        return ok();
-      }
-    }
-
   } catch (err) {
     Logger.log('Telegram handler error: %s', err);
   }
@@ -236,6 +215,17 @@ function handleCallbackQuery(query) {
   var parts = data.split(':');
   var action = parts[0];
   var leadId = parts[1] || '';
+
+  // Handle check stale leads (admin only)
+  if (action === ACTION_CHECK) {
+    if (ADMIN_IDS.indexOf(userId) === -1) {
+      answerCallback(query.id, '🚫 Chỉ admin mới được kiểm tra.');
+      return ok();
+    }
+    checkStaleLeads();
+    answerCallback(query.id, '✅ Đã kiểm tra');
+    return ok();
+  }
 
   // Handle reassign (admin only)
   if (action === STATUS_REASSIGN) {
@@ -573,6 +563,12 @@ function checkStaleLeads() {
     var keyboard = [[{ text: '🔄 Mở khóa lead', callback_data: STATUS_REASSIGN + ':' + lead.leadId }]];
     sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
   }
+}
+
+function sendDashboard() {
+  var text = '📊 Bảng điều khiển Lead\n\nBấm nút bên dưới để kiểm tra lead quá hạn 48 giờ.\nChỉ admin mới bấm được.';
+  var keyboard = [[{ text: '🔍 Kiểm tra lead quá hạn', callback_data: ACTION_CHECK + ':check' }]];
+  sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
 }
 
 function testDoSendMessage() {
