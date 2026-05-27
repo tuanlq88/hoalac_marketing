@@ -1104,6 +1104,24 @@ const priorityOptions = [
         leadTagInput.value = computedTag;
       }
 
+      let readingContext = '';
+      try {
+        const history = JSON.parse(localStorage.getItem('reader_history') || '[]');
+        const interests = JSON.parse(localStorage.getItem('reader_interests') || '{}');
+        const topPillars = Object.entries(interests)
+          .filter(([k]) => !k.startsWith('_'))
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
+          .map(([k, v]) => `${k}(${v})`)
+          .join(', ');
+        const recentTitles = history.slice(0, 5).map(r => r.title).join(' | ');
+        readingContext = [
+          topPillars ? `Quan tâm: ${topPillars}` : '',
+          recentTitles ? `Đã đọc: ${recentTitles}` : '',
+          `Tổng bài đọc: ${history.length}`
+        ].filter(Boolean).join('\n');
+      } catch {}
+
       const data = {
         submittedAt: vnDateTime,
         intent: raw.intent ?? '',
@@ -1112,7 +1130,8 @@ const priorityOptions = [
         name: raw.name ?? '',
         contact: raw.contact ?? '',
         leadTag: computedTag,
-        source: raw.source ?? window.location.pathname
+        source: raw.source ?? window.location.pathname,
+        readingContext
       };
 
       if (raw.company) {
@@ -1151,6 +1170,24 @@ const priorityOptions = [
           }
           setStatus?.(payloadMessage, 'success');
           saveLeadPreferences({ intent: data.intent ?? '', areas: [] });
+          try {
+            const history = JSON.parse(localStorage.getItem('submit_history') || '[]');
+            history.unshift({
+              intent: data.intent,
+              budget: data.budgetRange,
+              priority: data.priority,
+              source: data.source,
+              tag: data.leadTag,
+              ts: Date.now()
+            });
+            if (history.length > 10) history.length = 10;
+            localStorage.setItem('submit_history', JSON.stringify(history));
+            const profile = JSON.parse(localStorage.getItem('reader_interests') || '{}');
+            profile._intent = data.intent;
+            profile._budget = data.budgetRange;
+            profile._priority = data.priority;
+            localStorage.setItem('reader_interests', JSON.stringify(profile));
+          } catch {}
           form.reset();
           sectionFlow?.reset?.();
           fieldErrors?.clearAll();

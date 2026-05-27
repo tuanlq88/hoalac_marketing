@@ -73,7 +73,7 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
         </div>
       </nav>
     )}
-    <article class="reading-shell">
+    <article class="reading-shell" data-article-slug={post.slug} data-article-pillar={post.data.pillar} data-article-title={post.data.title}>
       <div class="reading-meta">
         {tags.length > 0 && <p class="tag">{tags.join(' / ')}</p>}
         <p>{dateLabel}</p>
@@ -285,5 +285,46 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
         }
       });
     }
+  }
+
+  // Reading tracker — only save engaged reads
+  const article = document.querySelector('[data-article-slug]');
+  if (article) {
+    const slug = article.dataset.articleSlug;
+    const pillar = article.dataset.articlePillar;
+    const title = article.dataset.articleTitle;
+    let saved = false;
+    let maxScroll = 0;
+    const startTime = Date.now();
+
+    const saveReading = () => {
+      if (saved) return;
+      saved = true;
+      try {
+        const readings = JSON.parse(localStorage.getItem('reader_history') || '[]');
+        if (readings.some(r => r.slug === slug)) return;
+        readings.unshift({ slug, pillar, title, ts: Date.now() });
+        if (readings.length > 50) readings.length = 50;
+        localStorage.setItem('reader_history', JSON.stringify(readings));
+
+        const interests = JSON.parse(localStorage.getItem('reader_interests') || '{}');
+        interests[pillar] = (interests[pillar] || 0) + 1;
+        localStorage.setItem('reader_interests', JSON.stringify(interests));
+      } catch {}
+    };
+
+    const checkEngagement = () => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      if (maxScroll > 50 || elapsed > 20) saveReading();
+    };
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) maxScroll = Math.max(maxScroll, (scrollTop / docHeight) * 100);
+      checkEngagement();
+    }, { passive: true });
+
+    setInterval(checkEngagement, 5000);
   }
 </script>

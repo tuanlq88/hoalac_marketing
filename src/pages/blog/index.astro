@@ -74,8 +74,16 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
       <p>Phân tích thực địa, dữ liệu quy hoạch và góc nhìn chiến lược dành cho nhà đầu tư và gia đình đang sàng đất Hòa Lạc.</p>
     </div>
 
+    <div class="filter-chips" data-filter-chips>
+      <button class="filter-chip is-active" data-filter="all">Tất cả</button>
+      <button class="filter-chip" data-filter="tong-quan-quy-hoach">Tổng quan</button>
+      <button class="filter-chip" data-filter="phan-tich-khu-vuc">Phân tích khu vực</button>
+      <button class="filter-chip" data-filter="phap-ly-va-rui-ro">Pháp lý</button>
+      <button class="filter-chip" data-filter="tiem-nang-va-co-hoi">Tiềm năng</button>
+    </div>
+
     {featured && (
-      <a href={`${basePath}/blog/${featured.slug}`} class="featured" style={featured.data.thumbnail ? `--featured-bg: url(${basePath}${featured.data.thumbnail})` : ''}>
+      <a href={`${basePath}/blog/${featured.slug}`} class="featured" data-pillar={featured.data.pillar} style={featured.data.thumbnail ? `--featured-bg: url(${basePath}${featured.data.thumbnail})` : ''}>
         <span class="featured__label">Đáng đọc</span>
         <div class="featured__meta">
           <span class="featured__tag">{featuredPillar.label}</span>
@@ -97,7 +105,7 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
             const pillar = pillarMap[post.data.pillar] ?? { label: 'Bài viết', class: 'tag--tiem-nang' };
             const accent = accentMap[post.data.pillar] ?? 'var(--accent)';
             return (
-              <a href={`${basePath}/blog/${post.slug}`} class="article-card" style={`--card-accent: ${accent}`}>
+              <a href={`${basePath}/blog/${post.slug}`} class="article-card" data-pillar={post.data.pillar} style={`--card-accent: ${accent}`}>
                 <div class="article-card__meta">
                   <span class={`blog-tag ${pillar.class}`}>{pillar.label}</span>
                   <span class="article-card__date">{resolveDateLabel(post)}</span>
@@ -119,6 +127,44 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
     --tag-phan-tich: #059669;
     --tag-phap-ly: #d97706;
     --tag-tiem-nang: #d44809;
+  }
+
+  .filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .filter-chip {
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(27, 27, 27, 0.12);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms ease;
+  }
+
+  .filter-chip:hover {
+    border-color: rgba(27, 27, 27, 0.3);
+    color: var(--text);
+  }
+
+  .filter-chip.is-active {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  [data-pillar].is-hidden {
+    display: none;
+  }
+
+  .section-label.is-hidden {
+    display: none;
   }
 
   .blog-page {
@@ -429,3 +475,30 @@ const featuredPillar = pillarMap[featured?.data.pillar] ?? { label: 'Bài viết
     }
   }
 </style>
+
+<script type="module">
+  const chips = document.querySelectorAll('[data-filter]');
+  const cards = document.querySelectorAll('[data-pillar]');
+  const sectionLabel = document.querySelector('.section-label');
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter;
+      chips.forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.pillar === filter) {
+          card.classList.remove('is-hidden');
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
+
+      if (sectionLabel) {
+        const visibleRest = document.querySelectorAll('.article-card:not(.is-hidden)');
+        sectionLabel.classList.toggle('is-hidden', visibleRest.length === 0);
+      }
+    });
+  });
+</script>
