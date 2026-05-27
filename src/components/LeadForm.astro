@@ -903,6 +903,25 @@ const priorityOptions = [
       }
 
       hideCtaNearFooter();
+      hideCtaNearHero();
+
+      function hideCtaNearHero() {
+        if (!floatingCta) return;
+        var hero = document.querySelector('[data-hero]');
+        if (!hero) return;
+        var heroObserver = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              floatingCta.style.opacity = '0';
+              floatingCta.style.pointerEvents = 'none';
+            } else {
+              floatingCta.style.opacity = '';
+              floatingCta.style.pointerEvents = '';
+            }
+          });
+        }, { threshold: 0.1 });
+        heroObserver.observe(hero);
+      }
 
       function attachAnchorReveal() {
         if (!shell.id) return;
