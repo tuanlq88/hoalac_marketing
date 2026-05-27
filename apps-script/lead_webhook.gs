@@ -317,7 +317,14 @@ function handleCallbackQuery(query) {
   if (messageId && chatId) {
     var originalText = query.message.text || '';
     var statusLine = '\n\n' + command.icon + ' ' + command.label + ' — ' + userLabel + ' (' + vnDateTime() + ')';
-    var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '');
+    var statusIdx = originalText.lastIndexOf('\n\n👀');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n📞');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n🚗');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n💰');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n✅');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n💤');
+    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n❌');
+    var cleanText = statusIdx > -1 ? originalText.substring(0, statusIdx) : originalText;
     var newButtons = buildButtons(leadId, command.label);
     editMessage(chatId, messageId, cleanText + statusLine, newButtons);
   }
