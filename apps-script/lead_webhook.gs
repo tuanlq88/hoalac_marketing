@@ -221,7 +221,7 @@ function handleCallbackQuery(query) {
     if (ADMIN_IDS.indexOf(userId) === -1) return ok();
     var cache = CacheService.getScriptCache();
     if (cache.get('check_running')) return ok();
-    cache.put('check_running', 'true', 15);
+    cache.put('check_running', 'true', 30);
     checkStaleLeads();
     return ok();
   }
