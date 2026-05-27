@@ -16,22 +16,11 @@ const { Content, headings } = await pillar.render();
 const tocEntries = (headings ?? []).filter((heading) => heading.depth === 2 || heading.depth === 3);
 const hasToc = tocEntries.length > 0;
 
-const [articles, posts] = await Promise.all([
-  getCollection('articles'),
-  getCollection('posts')
-]);
+const posts = await getCollection('posts');
 
-const relatedTags = pillar.data.relatedTags ?? [];
 const pillarSlug = pillar.slug;
 const baseEnv = import.meta.env.BASE_URL ?? '/';
 const basePath = baseEnv.endsWith('/') ? baseEnv.slice(0, -1) : baseEnv;
-
-const relatedArticles = (relatedTags.length > 0
-  ? articles.filter((article) => article.data.tags.some((tag) => relatedTags.includes(tag)))
-  : articles
-).sort((a, b) => (
-  new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-));
 
 const relatedPosts = posts
   .filter((post) => post.data.pillar === pillarSlug && !post.data.draft)
@@ -104,22 +93,9 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
         </div>
       </article>
       <aside class="pillar-aside">
-        {relatedArticles.length > 0 && (
-          <div class="pillar-card">
-            <p class="pillar-card-eyebrow">Bài blog liên quan</p>
-            <ul>
-              {relatedArticles.slice(0, 4).map((article) => (
-                <li>
-                  <a href={`${basePath}/blog/${article.slug}`}>{article.data.title}</a>
-                  <span>{new Date(article.data.publishedAt).toLocaleDateString('vi-VN')}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
         {relatedPostGroups.length > 0 && (
           <div class="pillar-card">
-            <p class="pillar-card-eyebrow">Bài phân tích mới</p>
+            <p class="pillar-card-eyebrow">Nội dung liên quan</p>
             <ul class="pillar-related-week-list">
               {relatedPostGroups.map((group) => (
                 <li class="pillar-related-week">
@@ -140,7 +116,7 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
           </div>
         )}
         <div class="pillar-card pillar-card--leadform">
-          <p class="pillar-card-eyebrow">Cần tư vấn?</p>
+          <p class="pillar-card-eyebrow">Tìm góc nhìn phù hợp</p>
           <LeadForm
             headline="Điền 5 câu để đội ngũ phản hồi 24h"
             description="Checklist cá nhân hóa theo khu vực ưu tiên và tiến độ quy hoạch mới nhất."
