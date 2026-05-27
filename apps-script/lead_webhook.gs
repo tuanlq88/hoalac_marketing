@@ -77,7 +77,7 @@ const PRIORITY_LABELS = {
 
 function doPost(e) {
   var contentType = e.postData ? e.postData.type : '';
-  Logger.log('doPost | type: %s | body: %s', contentType, e.postData ? e.postData.contents.substring(0, 300) : 'none');
+  console.log('doPost | type: ' + contentType + ' | body: ' + (e.postData ? e.postData.contents.substring(0, 500) : 'none'));
   if (contentType === 'application/json') {
     return handleTelegramUpdate(e);
   }
