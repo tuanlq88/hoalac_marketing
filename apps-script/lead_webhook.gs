@@ -73,15 +73,50 @@ const PRIORITY_LABELS = {
   'quy_dat': 'Quỹ đất rộng, tiềm năng dài hạn'
 };
 
+// ── DEBUG TIMING ──
+// Set false for production, true to profile
+var DEBUG_ENABLED = false;
+
+var _debugBuffer = [];
+
+function debugLog(msg) {
+  if (!DEBUG_ENABLED) return;
+  _debugBuffer.push([new Date(), msg]);
+}
+
+function timer(label, start) {
+  if (!DEBUG_ENABLED) return;
+  _debugBuffer.push([new Date(), label + ': ' + (Date.now() - start) + 'ms']);
+}
+
+function flushDebugLog() {
+  if (!DEBUG_ENABLED || _debugBuffer.length === 0) return;
+  try {
+    var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Debug');
+    if (sheet) {
+      var rows = _debugBuffer;
+      sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, 2).setValues(rows);
+    }
+  } catch (e) {}
+  _debugBuffer = [];
+}
+
 // ── MAIN ──
 
 function doPost(e) {
+  var t0 = Date.now();
+  debugLog('START doPost');
   var contentType = e.postData ? e.postData.type : '';
   console.log('doPost | type: ' + contentType + ' | body: ' + (e.postData ? e.postData.contents.substring(0, 500) : 'none'));
-  if (contentType === 'application/json') {
-    return handleTelegramUpdate(e);
+  var result;
+  if (contentType && contentType.indexOf('application/json') > -1) {
+    result = handleTelegramUpdate(e);
+  } else {
+    result = handleLeadSubmission(e);
   }
-  return handleLeadSubmission(e);
+  timer('doPost total', t0);
+  flushDebugLog();
+  return result;
 }
 
 // ── LEAD SUBMISSION (with dedupe) ──
@@ -113,16 +148,14 @@ function handleLeadSubmission(e) {
 
   if (existing && existing.found) {
     var row = existing.row;
-    sheet.getRange(row, COL.LAST_SUBMIT).setValue(submittedAt);
-    sheet.getRange(row, COL.INTENT).setValue(intentLabel);
-    sheet.getRange(row, COL.BUDGET).setValue(budgetLabel);
-    sheet.getRange(row, COL.PRIORITY).setValue(priorityLabel);
-    sheet.getRange(row, COL.TAG).setValue(leadTag);
-    sheet.getRange(row, COL.SOURCE).setValue(source);
     var prevCount = parseInt(sheet.getRange(row, COL.SUBMIT_COUNT).getValue()) || 0;
     var newCount = prevCount + 1;
-    sheet.getRange(row, COL.SUBMIT_COUNT).setValue(newCount);
-    sheet.getRange(row, COL.READING_CONTEXT).setValue(readingContext);
+    // Batch: LAST_SUBMIT(3), INTENT(4), BUDGET(5), PRIORITY(6) — 4 cols
+    sheet.getRange(row, COL.LAST_SUBMIT, 1, 4).setValues([[submittedAt, intentLabel, budgetLabel, priorityLabel]]);
+    // Batch: TAG(9), SOURCE(10) — 2 cols
+    sheet.getRange(row, COL.TAG, 1, 2).setValues([[leadTag, source]]);
+    // Batch: SUBMIT_COUNT(16), READING_CONTEXT(17) — 2 cols
+    sheet.getRange(row, COL.SUBMIT_COUNT, 1, 2).setValues([[newCount, readingContext]]);
 
     if (timeline) {
       timeline.appendRow([existing.leadId, rawContact, submittedAt, 'Gửi lại form', intentLabel + ' | ' + budgetLabel + ' | ' + priorityLabel, source, readingContext]);
@@ -207,8 +240,8 @@ function handleTelegramUpdate(e) {
 // ── CALLBACK QUERY (inline buttons) ──
 
 function handleCallbackQuery(query) {
-  // Answer immediately to stop spinner
-  answerCallback(query.id, '⏳');
+  var t0 = Date.now();
+  var callbackId = query.id;
 
   var data = query.data || '';
   var from = query.from || {};
@@ -227,6 +260,7 @@ function handleCallbackQuery(query) {
 
   // Handle check stale leads (admin only)
   if (action === ACTION_CHECK) {
+    answerCallback(callbackId, '🔍 Đang kiểm tra...');
     if (ADMIN_IDS.indexOf(userId) === -1) return ok();
     var cache = CacheService.getScriptCache();
     if (cache.get('check_running')) return ok();
@@ -238,70 +272,68 @@ function handleCallbackQuery(query) {
   // Handle reassign (admin only)
   if (action === STATUS_REASSIGN) {
     if (ADMIN_IDS.indexOf(userId) === -1) {
-      answerCallback(query.id, '🚫 Chỉ admin mới được mở khóa.');
+      answerCallback(callbackId, '🚫 Chỉ admin mới được mở khóa.');
       return ok();
     }
+    answerCallback(callbackId, '🔄 Đang mở khóa...');
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
     var result = clearOwner(sheet, leadId);
-    if (result.found) {
-      if (messageId && chatId) {
-        var newText = '🔄 Đã mở khóa [' + leadId + '] — ' + result.name + '\n👤 ' + userLabel + ' (' + vnDateTime() + ')\n\n↓ Bấm nút bên dưới để nhận lead';
-        var newButtons = buildButtons(leadId, '');
-        editMessage(chatId, messageId, newText, newButtons);
-      }
-      answerCallback(query.id, '🔄 Đã mở khóa');
-    } else {
-      answerCallback(query.id, '⚠️ Không tìm thấy lead');
+    if (result.found && chatId) {
+      var newText = '🔄 Đã mở khóa [' + leadId + '] — ' + result.name + '\n👤 ' + userLabel + ' (' + vnDateTime() + ')\n\n↓ Bấm nút bên dưới để nhận lead';
+      var newButtons = buildButtons(leadId, '');
+      sendWithButtons(chatId, newText, newButtons);
     }
     return ok();
   }
 
   var command = STATUS_MAP[action];
   if (!command || !leadId) {
-    answerCallback(query.id, '⚠️ Dữ liệu không hợp lệ');
+    answerCallback(callbackId, '⚠️ Dữ liệu không hợp lệ');
     return ok();
   }
 
-  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+  // Answer once — all remaining paths are status updates
+  answerCallback(callbackId, command.icon + ' ' + command.label);
+  timer('answerCallback', t0);
+
+  var tSheet = Date.now();
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName('Leads');
+  timer('openSheet', tSheet);
+
+  var tFind = Date.now();
   var rowInfo = findLeadById(sheet, leadId);
-  if (!rowInfo.found) {
-    answerCallback(query.id, '⚠️ Không tìm thấy lead');
-    return ok();
-  }
+  timer('findLead', tFind);
+  if (!rowInfo.found) return ok();
 
   // Check state transition
   var currentStatus = rowInfo.status || '';
   var allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
-  if (allowed.length > 0 && allowed.indexOf(action) === -1) {
-    answerCallback(query.id, '⚠️ Không thể chuyển từ "' + (currentStatus || 'Mới') + '" sang "' + command.label + '"');
-    return ok();
-  }
+  if (allowed.length > 0 && allowed.indexOf(action) === -1) return ok();
 
   var ownerCheck = checkOwnership(rowInfo, userId, userLabel, action);
-  if (ownerCheck.blocked) {
-    answerCallback(query.id, ownerCheck.message);
-    return ok();
-  }
+  if (ownerCheck.blocked) return ok();
 
+  var tUpdate = Date.now();
   updateLeadStatus(sheet, rowInfo.row, command.label, userLabel, userId, userName);
-  logTimeline(leadId, rowInfo.phone, command.label, userLabel);
+  timer('updateLeadStatus', tUpdate);
 
-  // Edit original message to show updated status + new buttons
+  var tTimeline = Date.now();
+  logTimeline(leadId, rowInfo.phone, command.label, userLabel, ss);
+  timer('logTimeline', tTimeline);
+
+  // Edit original message with updated status + buttons
   if (messageId && chatId) {
+    var tEdit = Date.now();
     var originalText = query.message.text || '';
     var statusLine = '\n\n' + command.icon + ' ' + command.label + ' — ' + userLabel + ' (' + vnDateTime() + ')';
-    var statusIdx = originalText.lastIndexOf('\n\n👀');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n📞');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n🚗');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n💰');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n✅');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n💤');
-    if (statusIdx === -1) statusIdx = originalText.lastIndexOf('\n\n❌');
-    var cleanText = statusIdx > -1 ? originalText.substring(0, statusIdx) : originalText;
+    var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '');
     var newButtons = buildButtons(leadId, command.label);
     editMessage(chatId, messageId, cleanText + statusLine, newButtons);
+    timer('editMessage', tEdit);
   }
 
+  timer('total', t0);
   return ok();
 }
 
@@ -355,39 +387,41 @@ function generateLeadId(sheet) {
 }
 
 function findLeadById(sheet, leadId) {
-  var finder = sheet.getRange(1, COL.LEAD_ID, sheet.getLastRow()).createTextFinder(leadId).matchEntireCell(true);
-  var cell = finder.findNext();
-  if (!cell) return { found: false };
-  var row = cell.getRow();
-  var rowData = sheet.getRange(row, 1, 1, COL.READING_CONTEXT).getValues()[0];
-  return {
-    found: true,
-    row: row,
-    leadId: leadId,
-    leadName: rowData[COL.NAME - 1] || '',
-    phone: String(rowData[COL.CONTACT - 1]).replace(/^'/, ''),
-    status: rowData[COL.STATUS - 1] || '',
-    ownerId: String(rowData[COL.OWNER_ID - 1] || ''),
-    ownerName: rowData[COL.OWNER_NAME - 1] || ''
-  };
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][COL.LEAD_ID - 1]) === leadId) {
+      return {
+        found: true,
+        row: i + 1,
+        leadId: leadId,
+        leadName: data[i][COL.NAME - 1] || '',
+        phone: String(data[i][COL.CONTACT - 1]).replace(/^'/, ''),
+        status: data[i][COL.STATUS - 1] || '',
+        ownerId: String(data[i][COL.OWNER_ID - 1] || ''),
+        ownerName: data[i][COL.OWNER_NAME - 1] || ''
+      };
+    }
+  }
+  return { found: false };
 }
 
 function findLeadByPhone(sheet, phone) {
-  var finder = sheet.getRange(1, COL.CONTACT, sheet.getLastRow()).createTextFinder(phone).matchEntireCell(true);
-  var cell = finder.findNext();
-  if (!cell) return { found: false };
-  var row = cell.getRow();
-  var rowData = sheet.getRange(row, 1, 1, COL.READING_CONTEXT).getValues()[0];
-  return {
-    found: true,
-    row: row,
-    leadId: rowData[COL.LEAD_ID - 1] || '',
-    leadName: rowData[COL.NAME - 1] || '',
-    phone: phone,
-    status: rowData[COL.STATUS - 1] || '',
-    ownerId: String(rowData[COL.OWNER_ID - 1] || ''),
-    ownerName: rowData[COL.OWNER_NAME - 1] || ''
-  };
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][COL.CONTACT - 1]).replace(/^'/, '') === phone) {
+      return {
+        found: true,
+        row: i + 1,
+        leadId: data[i][COL.LEAD_ID - 1] || '',
+        leadName: data[i][COL.NAME - 1] || '',
+        phone: phone,
+        status: data[i][COL.STATUS - 1] || '',
+        ownerId: String(data[i][COL.OWNER_ID - 1] || ''),
+        ownerName: data[i][COL.OWNER_NAME - 1] || ''
+      };
+    }
+  }
+  return { found: false };
 }
 
 function checkOwnership(rowInfo, userId, userLabel, action) {
@@ -423,9 +457,9 @@ function clearOwner(sheet, leadId) {
   return { found: true, name: info.leadName };
 }
 
-function logTimeline(leadId, phone, event, actor) {
+function logTimeline(leadId, phone, event, actor, ss) {
   try {
-    var ss = SpreadsheetApp.openById(SHEET_ID);
+    if (!ss) ss = SpreadsheetApp.openById(SHEET_ID);
     var timeline = ss.getSheetByName('Timeline');
     if (timeline) {
       timeline.appendRow([leadId, phone, vnDateTime(), event, actor]);

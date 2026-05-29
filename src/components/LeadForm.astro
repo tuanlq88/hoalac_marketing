@@ -1347,6 +1347,8 @@ const priorityOptions = [
         }
         completedSections.add(key);
         fieldErrors?.clear(key);
+        // Don't auto-advance from free-text fields (name) — only from radio/select picks
+        if (key === 'name') return;
         const nextKey = getNextSectionKey(key);
         if (nextKey) {
           focusSection(nextKey, form);
