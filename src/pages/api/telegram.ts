@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { waitUntil } from '@vercel/functions';
 import { STATUS_MAP, ALLOWED_TRANSITIONS, STATUS_REASSIGN, ACTION_CHECK, buildButtons, checkOwnership, vnDateTime } from '../../lib/telegram/config';

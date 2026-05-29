@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { INTENT_LABELS, BUDGET_LABELS, PRIORITY_LABELS, LEAD_ICONS, buildButtons, vnDateTime } from '../../lib/telegram/config';
 import { findLeadByPhone, generateLeadId, appendLead, updateExistingLead, logTimeline } from '../../lib/telegram/sheets';

@@ -1,3 +1,4 @@
+export const prerender = false;
 import type { APIRoute } from 'astro';
 import { STATUS_REASSIGN, vnDateTime } from '../../../lib/telegram/config';
 import { editMessage, sendWithButtons } from '../../../lib/telegram/telegram';
