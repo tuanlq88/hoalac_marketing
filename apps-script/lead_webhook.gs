@@ -174,7 +174,8 @@ function handleLeadSubmission(e) {
       + '\n\n↓ Bấm nút bên dưới để cập nhật trạng thái';
 
     var buttons = buildButtons(existing.leadId, currentStatus);
-    sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
+    var msgId = sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
+    if (msgId) saveMessageId(existing.leadId, msgId);
 
     return ContentService
       .createTextOutput(JSON.stringify({ message: 'Cảm ơn Anh/chị, thông tin đã được cập nhật!' }))
@@ -206,7 +207,8 @@ function handleLeadSubmission(e) {
     + '\n\n↓ Bấm nút bên dưới để cập nhật trạng thái';
 
   var buttons = buildButtons(leadId, '');
-  sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
+  var msgId = sendWithButtons(TELEGRAM_CHAT_ID, text, buttons);
+  if (msgId) saveMessageId(leadId, msgId);
 
   return ContentService
     .createTextOutput(JSON.stringify({ message: 'Đã ghi nhận thông tin, cảm ơn Anh/chị!' }))
@@ -296,15 +298,20 @@ function handleCallbackQuery(query) {
   answerCallback(callbackId, command.icon + ' ' + command.label);
   timer('answerCallback', t0);
 
-  var tSheet = Date.now();
-  var ss = SpreadsheetApp.openById(SHEET_ID);
-  var sheet = ss.getSheetByName('Leads');
-  timer('openSheet', tSheet);
-
+  // Try cache first, fall back to sheet
   var tFind = Date.now();
-  var rowInfo = findLeadById(sheet, leadId);
+  var rowInfo = getCachedLead(leadId);
+  var ss = null;
+  var sheet = null;
+  if (!rowInfo) {
+    var tSheet = Date.now();
+    ss = SpreadsheetApp.openById(SHEET_ID);
+    sheet = ss.getSheetByName('Leads');
+    timer('openSheet', tSheet);
+    rowInfo = findLeadById(sheet, leadId);
+  }
   timer('findLead', tFind);
-  if (!rowInfo.found) return ok();
+  if (!rowInfo || !rowInfo.found) return ok();
 
   // Check state transition
   var currentStatus = rowInfo.status || '';
@@ -314,24 +321,35 @@ function handleCallbackQuery(query) {
   var ownerCheck = checkOwnership(rowInfo, userId, userLabel, action);
   if (ownerCheck.blocked) return ok();
 
-  var tUpdate = Date.now();
-  updateLeadStatus(sheet, rowInfo.row, command.label, userLabel, userId, userName);
-  timer('updateLeadStatus', tUpdate);
-
-  var tTimeline = Date.now();
-  logTimeline(leadId, rowInfo.phone, command.label, userLabel, ss);
-  timer('logTimeline', tTimeline);
-
-  // Edit original message with updated status + buttons
+  // Edit Telegram first (user sees result faster)
   if (messageId && chatId) {
     var tEdit = Date.now();
     var originalText = query.message.text || '';
     var statusLine = '\n\n' + command.icon + ' ' + command.label + ' — ' + userLabel + ' (' + vnDateTime() + ')';
-    var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '');
+    var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '').replace(/\n\n↓ Bấm nút bên dưới để cập nhật trạng thái/, '');
     var newButtons = buildButtons(leadId, command.label);
     editMessage(chatId, messageId, cleanText + statusLine, newButtons);
+    saveMessageId(leadId, messageId);
     timer('editMessage', tEdit);
   }
+
+  // Update cache immediately (next click reads from cache)
+  rowInfo.status = command.label;
+  rowInfo.ownerId = String(userId);
+  rowInfo.ownerName = userName;
+  setCachedLead(leadId, rowInfo);
+
+  // Queue sheet write for async processing
+  enqueueWrite({
+    type: 'updateStatus',
+    row: rowInfo.row,
+    leadId: leadId,
+    phone: rowInfo.phone,
+    statusLabel: command.label,
+    updatedBy: userLabel,
+    userId: String(userId),
+    userName: userName
+  });
 
   timer('total', t0);
   return ok();
@@ -373,6 +391,99 @@ function buildButtons(leadId, currentStatus, updatedAt) {
   return keyboard;
 }
 
+// ── MESSAGE ID STORE ──
+
+function saveMessageId(leadId, messageId) {
+  try {
+    PropertiesService.getScriptProperties().setProperty('msg_' + leadId, String(messageId));
+  } catch (e) {}
+}
+
+function getMessageId(leadId) {
+  try {
+    return PropertiesService.getScriptProperties().getProperty('msg_' + leadId);
+  } catch (e) {}
+  return null;
+}
+
+// ── LEAD CACHE ──
+
+var CACHE_TTL = 300; // 5 minutes
+
+function getCachedLead(leadId) {
+  try {
+    var raw = CacheService.getScriptCache().get('lead_' + leadId);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return null;
+}
+
+function setCachedLead(leadId, rowInfo) {
+  try {
+    CacheService.getScriptCache().put('lead_' + leadId, JSON.stringify(rowInfo), CACHE_TTL);
+  } catch (e) {}
+}
+
+function invalidateCachedLead(leadId) {
+  try {
+    CacheService.getScriptCache().remove('lead_' + leadId);
+  } catch (e) {}
+}
+
+// ── WRITE QUEUE ──
+
+function enqueueWrite(job) {
+  var cache = CacheService.getScriptCache();
+  var raw = cache.get('write_queue') || '[]';
+  var queue = JSON.parse(raw);
+  queue.push(job);
+  cache.put('write_queue', JSON.stringify(queue), 300);
+  // Schedule async processor (runs ~1 min later)
+  try {
+    if (!cache.get('queue_scheduled')) {
+      ScriptApp.newTrigger('processWriteQueue').timeBased().after(1000).create();
+      cache.put('queue_scheduled', '1', 90);
+    }
+  } catch (e) {}
+}
+
+function processWriteQueue() {
+  var cache = CacheService.getScriptCache();
+  var raw = cache.get('write_queue');
+  if (!raw) return;
+
+  var queue = JSON.parse(raw);
+  cache.remove('write_queue');
+  cache.remove('queue_scheduled');
+
+  if (queue.length === 0) return;
+
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  var sheet = ss.getSheetByName('Leads');
+
+  for (var i = 0; i < queue.length; i++) {
+    var job = queue[i];
+    try {
+      if (job.type === 'updateStatus') {
+        updateLeadStatus(sheet, job.row, job.statusLabel, job.updatedBy, job.userId, job.userName);
+        logTimeline(job.leadId, job.phone, job.statusLabel, job.updatedBy, ss);
+      } else if (job.type === 'clearOwner') {
+        clearOwner(sheet, job.leadId);
+      }
+    } catch (e) {
+      Logger.log('Queue job error: %s', e);
+    }
+  }
+
+  // Clean up one-time trigger
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var j = 0; j < triggers.length; j++) {
+    if (triggers[j].getHandlerFunction() === 'processWriteQueue') {
+      ScriptApp.deleteTrigger(triggers[j]);
+    }
+  }
+}
+
 // ── SHEET HELPERS ──
 
 function generateLeadId(sheet) {
@@ -390,7 +501,7 @@ function findLeadById(sheet, leadId) {
   var data = sheet.getDataRange().getValues();
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][COL.LEAD_ID - 1]) === leadId) {
-      return {
+      var info = {
         found: true,
         row: i + 1,
         leadId: leadId,
@@ -400,6 +511,8 @@ function findLeadById(sheet, leadId) {
         ownerId: String(data[i][COL.OWNER_ID - 1] || ''),
         ownerName: data[i][COL.OWNER_NAME - 1] || ''
       };
+      setCachedLead(leadId, info);
+      return info;
     }
   }
   return { found: false };
@@ -477,15 +590,18 @@ function sendWithButtons(chatId, text, keyboard) {
     payload.reply_markup = JSON.stringify({ inline_keyboard: keyboard });
   }
   try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
+    var resp = UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/sendMessage', {
       method: 'post',
       contentType: 'application/json',
       payload: JSON.stringify(payload),
       muteHttpExceptions: true
     });
+    var body = JSON.parse(resp.getContentText());
+    if (body.ok && body.result) return body.result.message_id;
   } catch (err) {
     Logger.log('sendWithButtons error: %s', err);
   }
+  return null;
 }
 
 function editMessage(chatId, messageId, text, keyboard) {
@@ -547,6 +663,22 @@ function vnDateTime() {
 
 // ── SETUP ──
 
+function setupStaleCheck() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'runStaleCheck') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger('runStaleCheck').timeBased().everyHours(12).create();
+  Logger.log('Stale check scheduled: every 12 hours');
+}
+
+function runStaleCheck() {
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+  checkStaleFromData(sheet);
+}
+
 function setWebhook() {
   var url = 'https://script.google.com/macros/s/AKfycbxPzekYmBOapiPRakfwIQiS3AKUABvLUU1X3Xvf63rRLeqiavysbWYV5SocsYkFA4yVKA/exec';
   var response = UrlFetchApp.fetch(
@@ -560,6 +692,50 @@ function removeWebhook() {
     'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/deleteWebhook'
   );
   Logger.log('deleteWebhook: %s', response.getContentText());
+}
+
+function checkStaleFromData(sheet) {
+  var cache = CacheService.getScriptCache();
+  var data = sheet.getDataRange().getValues();
+  var now = Date.now();
+
+  for (var i = 1; i < data.length; i++) {
+    var status = data[i][COL.STATUS - 1] || '';
+    var ownerId = String(data[i][COL.OWNER_ID - 1] || '');
+    var updatedAt = String(data[i][COL.UPDATED_AT - 1] || '');
+    if (!status || !ownerId || status === 'Thành công' || status === 'Không thành') continue;
+
+    var parts = updatedAt.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
+    if (!parts) continue;
+    var lastUpdate = new Date(parts[3], parts[2] - 1, parts[1], parts[4], parts[5]);
+    var hoursAgo = Math.floor((now - lastUpdate.getTime()) / (1000 * 60 * 60));
+    if (hoursAgo < 48) continue;
+
+    var leadId = data[i][COL.LEAD_ID - 1];
+    // Only notify once per 24h per lead
+    if (cache.get('stale_notified_' + leadId)) continue;
+    cache.put('stale_notified_' + leadId, '1', 86400);
+
+    var name = data[i][COL.NAME - 1];
+    var owner = data[i][COL.OWNER_NAME - 1];
+    var keyboard = [[{ text: '🔄 Mở khóa lead', callback_data: STATUS_REASSIGN + ':' + leadId }]];
+    var msgId = getMessageId(leadId);
+
+    if (msgId) {
+      var editText = '⏰ [' + leadId + '] Quá hạn ' + hoursAgo + ' giờ\n'
+        + '👤 ' + name + '\n'
+        + '📌 ' + status + ' — ' + owner + '\n'
+        + '🕐 Lần cuối: ' + updatedAt;
+      editMessage(TELEGRAM_CHAT_ID, msgId, editText, keyboard);
+    } else {
+      var text = '⏰ Lead quá hạn [' + leadId + ']\n'
+        + '👤 ' + name + '\n'
+        + '📌 Trạng thái: ' + status + '\n'
+        + '👷 Owner: ' + owner + '\n'
+        + '🕐 Không cập nhật: ' + hoursAgo + ' giờ';
+      sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
+    }
+  }
 }
 
 function checkStaleLeads() {
@@ -585,7 +761,8 @@ function checkStaleLeads() {
         name: data[i][COL.NAME - 1],
         status: status,
         owner: data[i][COL.OWNER_NAME - 1],
-        hours: hoursAgo
+        hours: hoursAgo,
+        updatedAt: updatedAt
       });
     }
   }
@@ -597,13 +774,26 @@ function checkStaleLeads() {
 
   for (var j = 0; j < staleLeads.length; j++) {
     var lead = staleLeads[j];
-    var text = '⏰ Lead quá hạn [' + lead.leadId + ']\n'
-      + '👤 ' + lead.name + '\n'
-      + '📌 Trạng thái: ' + lead.status + '\n'
-      + '👷 Owner: ' + lead.owner + '\n'
-      + '🕐 Không cập nhật: ' + lead.hours + ' giờ';
+    var staleLine = '\n\n⏰ Quá hạn ' + lead.hours + 'h — ' + lead.owner + ' (' + lead.updatedAt + ')';
     var keyboard = [[{ text: '🔄 Mở khóa lead', callback_data: STATUS_REASSIGN + ':' + lead.leadId }]];
-    sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
+    var msgId = getMessageId(lead.leadId);
+
+    if (msgId) {
+      var statusIcon = STATUS_MAP['status_' + lead.status.toLowerCase()] ? STATUS_MAP['status_' + lead.status.toLowerCase()].icon : '📌';
+      var editText = '⏰ [' + lead.leadId + '] Quá hạn ' + lead.hours + ' giờ\n'
+        + '👤 ' + lead.name + '\n'
+        + statusIcon + ' ' + lead.status + ' — ' + lead.owner + '\n'
+        + '🕐 Lần cuối: ' + lead.updatedAt;
+      editMessage(TELEGRAM_CHAT_ID, msgId, editText, keyboard);
+    } else {
+      // Fallback: send new message if no stored messageId
+      var text = '⏰ Lead quá hạn [' + lead.leadId + ']\n'
+        + '👤 ' + lead.name + '\n'
+        + '📌 Trạng thái: ' + lead.status + '\n'
+        + '👷 Owner: ' + lead.owner + '\n'
+        + '🕐 Không cập nhật: ' + lead.hours + ' giờ';
+      sendWithButtons(TELEGRAM_CHAT_ID, text, keyboard);
+    }
   }
 }
 
