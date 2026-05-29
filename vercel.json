@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/stale-check",
-      "schedule": "0 */12 * * *"
+      "schedule": "0 8 * * *"
     }
   ]
 }
