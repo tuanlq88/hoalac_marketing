@@ -135,6 +135,10 @@ main {
   flex-wrap: wrap;
 }
 
+.site-brand__logo {
+  flex-shrink: 0;
+  color: #d44809;
+}
 .site-brand {
   display: inline-flex;
   flex-direction: column;
