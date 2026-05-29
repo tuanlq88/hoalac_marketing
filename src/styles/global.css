@@ -137,14 +137,14 @@ main {
 
 .site-brand__logo {
   flex-shrink: 0;
-  color: #d44809;
 }
 .site-brand {
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   text-decoration: none;
   color: inherit;
-  gap: 0.15rem;
+  gap: 0.6rem;
   padding: 0.3rem 0.55rem;
   border-radius: 0.95rem;
   background-image: linear-gradient(120deg, rgba(249, 115, 22, 0.16), rgba(249, 115, 22, 0.32));
@@ -164,15 +164,26 @@ main {
   outline: none;
 }
 
-.site-brand__title {
-  font-size: var(--font-brand);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+.site-brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
 }
 
-.site-brand__subtitle {
-  font-size: var(--font-brand-subtitle);
-  color: var(--muted);
+.site-brand__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.site-brand__label {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: clamp(9px, 1vw, 11px);
+  font-weight: 600;
+  color: #d44809;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
 }
 
 .site-nav {
