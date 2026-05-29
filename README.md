@@ -1,46 +1,100 @@
-# Insight Hòa Lạc Landing
+# Tầm Nhìn Hòa Lạc
 
-Landing page viết bằng [Astro](https://astro.build) để thử nghiệm GitHub Pages + funnel marketing cho thị trường đất Hòa Lạc.
+Website phân tích chiến lược bất động sản Hòa Lạc, kết hợp CRM lead qua Telegram bot.
 
-## Tính năng chính
-- Bài viết tĩnh lưu trong `src/content/articles` (Markdown + frontmatter tags lead).
-- Form thu lead phân loại nóng/ấm/lạnh, gửi dữ liệu đến webhook (Google Apps Script) và ping Telegram khi lead nóng.
-- Bộ component tái sử dụng (Hero, TagLegend, ArticleList, LeadForm) phục vụ landing và trang blog.
-- Sẵn sàng SEO: metadata cơ bản, robots.txt, sitemap tự động do Astro generate.
-- Route `/ops` dành cho admin với đăng nhập cố định (config qua biến môi trường), hiển thị TagLegend và checklist automation.
+**Stack**: Astro (hybrid) + Vercel Functions + Google Sheets + Telegram Bot + Upstash Redis
 
-## Chạy cục bộ
+**Live**: [tamnhinhoalac.vn](https://tamnhinhoalac.vn)
+
+## Architecture
+
+```
+Website (Astro static)          API (Vercel serverless)
+├── Landing page                ├── /api/lead        ← form submission
+├── Blog articles               ├── /api/telegram    ← Telegram webhook
+├── Pillar pages                └── /api/cron/stale-check ← daily cron
+└── Lead form (LeadForm.astro)
+         │                              │
+         └──── POST /api/lead ──────────┘
+                                        │
+                                   waitUntil()
+                                   ├── Google Sheets (write lead + timeline)
+                                   ├── Telegram Bot (send notification)
+                                   └── Upstash Redis (dedupe + cache)
+```
+
+## Quick start
+
 ```bash
 npm install
-npm run dev
+npm run dev          # http://localhost:4321
+npm run build        # build for production
 ```
-Site mặc định chạy tại `http://localhost:4321`.
 
-## Biến môi trường
-1. Sao chép `.env.example` thành `.env` và cập nhật thông số thực tế:
+## Environment variables
+
+### Local development (`.env`)
+
 ```
-PUBLIC_LEAD_ENDPOINT=https://script.google.com/macros/s/xxx/exec
+PUBLIC_LEAD_ENDPOINT=/api/lead
 PUBLIC_ADMIN_USER=insight
 PUBLIC_ADMIN_PASS=hoa-lac-2025
 PUBLIC_DEFAULT_LEAD_TAG=pending_classification
 ```
-2. Khi deploy GitHub Pages: vào **Settings → Pages → Environment variables** và khai báo cùng các biến `PUBLIC_*` như trên để workflow build sử dụng.
 
-`PUBLIC_LEAD_ENDPOINT` nên là Apps Script (hoặc Cloud Function) xử lý ghi Google Sheet + gọi Telegram/Zalo OA. Các biến `PUBLIC_ADMIN_*` dùng cho route `/ops`, có thể thay bằng giá trị riêng trước khi build.
+### Vercel (Dashboard → Settings → Environment Variables)
 
-## Apps Script mẫu
-Tham khảo `apps-script/lead_webhook.gs`. Thay `SHEET_ID`, `TELEGRAM_TOKEN`, `TELEGRAM_CHAT_ID` rồi deploy dạng web app (cho phép anyone). Script:
-- Parse payload JSON.
-- Append hàng vào Sheet `Leads`.
-- Nếu `leadTag === "lead_hot"` thì gọi Telegram Bot API thông báo.
+| Key | Description |
+|-----|-------------|
+| `TELEGRAM_TOKEN` | Telegram Bot API token |
+| `TELEGRAM_CHAT_ID` | Group chat ID for lead notifications |
+| `SHEET_ID` | Google Sheets spreadsheet ID |
+| `ADMIN_IDS` | Telegram user IDs (comma-separated) |
+| `GOOGLE_SERVICE_ACCOUNT` | Service Account JSON key (full content) |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST endpoint |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token |
+| `PUBLIC_LEAD_ENDPOINT` | `/api/lead` |
 
-## Triển khai GitHub Pages
-1. Push toàn bộ thư mục này lên repo GitHub (có thể đặt tên `username.github.io`).
-2. Bật Pages → nguồn `GitHub Actions`.
-3. GitHub sẽ tự tạo workflow build Astro → publish.
-4. Thêm custom domain nếu cần và cấu hình DNS (CNAME hoặc A record).
+## Lead CRM flow
 
-## Tiếp tục phát triển
-- Thêm bài viết bằng cách tạo file Markdown mới trong `src/content/articles`.
-- Mở rộng form (thêm trường, reCAPTCHA) tại `src/components/LeadForm.astro`.
-- Nếu muốn trang dashboard, tạo route mới và fetch dữ liệu từ Google Sheets API.
+1. Visitor submits form → `POST /api/lead` → Google Sheets + Telegram notification
+2. Sales clicks inline button on Telegram → `POST /api/telegram` (webhook)
+3. Webhook returns 200 immediately, background `waitUntil()` handles:
+   - `answerCallbackQuery` (toast feedback)
+   - `editMessageText` (update status + buttons)
+   - Google Sheets update + Timeline log
+4. Status transitions: Mới → Đã nhận → Đang liên hệ → Dẫn khách → Đặt cọc → Thành công
+5. Stale check runs daily at 8:00 UTC — edits original message if lead inactive >48h
+
+## Key files
+
+| Path | Purpose |
+|------|---------|
+| `src/pages/api/telegram.ts` | Telegram webhook handler |
+| `src/pages/api/lead.ts` | Lead form submission handler |
+| `src/pages/api/cron/stale-check.ts` | Daily stale lead check |
+| `src/lib/telegram/config.ts` | Status map, transitions, constants |
+| `src/lib/telegram/sheets.ts` | Google Sheets API helpers |
+| `src/lib/telegram/telegram.ts` | Telegram Bot API helpers |
+| `src/lib/telegram/cache.ts` | Upstash Redis cache/dedupe |
+| `src/components/LeadForm.astro` | Lead capture form component |
+| `apps-script/lead_webhook.gs` | Legacy Apps Script (fallback) |
+| `vercel.json` | Cron schedule config |
+
+## Deployment
+
+- **Auto**: `git push` to `main` → Vercel builds + deploys automatically
+- **Domain**: `tamnhinhoalac.vn` → Cloudflare DNS → Vercel
+
+### Rollback to Apps Script
+
+If Vercel has issues, switch Telegram webhook back to Apps Script:
+```
+https://api.telegram.org/bot<TOKEN>/setWebhook?url=<APPS_SCRIPT_URL>&drop_pending_updates=true
+```
+
+## Content
+
+- Articles: `src/content/articles/*.md`
+- Pillar pages: `src/content/pillars/*.md`
+- Add new content by creating Markdown files with frontmatter tags.
