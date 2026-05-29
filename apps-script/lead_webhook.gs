@@ -306,86 +306,31 @@ function handleCallbackQuery(query) {
     return ok();
   }
 
-  // Try cache first, fall back to sheet
-  var tFind = Date.now();
-  var rowInfo = getCachedLead(leadId);
-  var ss = null;
-  var sheet = null;
-  if (!rowInfo) {
-    var tSheet = Date.now();
-    ss = SpreadsheetApp.openById(SHEET_ID);
-    sheet = ss.getSheetByName('Leads');
-    timer('openSheet', tSheet);
-    rowInfo = findLeadById(sheet, leadId);
-  }
-  timer('findLead', tFind);
-  if (!rowInfo || !rowInfo.found) {
-    answerCallback(callbackId, '⚠️ Không tìm thấy lead');
+  // Prevent duplicate clicks on same lead (2 devices, same user)
+  var clickCache = CacheService.getScriptCache();
+  var clickKey = 'click_' + leadId + '_' + action;
+  if (clickCache.get(clickKey)) {
+    answerCallback(callbackId, '⏳ Đã ghi nhận, đang xử lý...');
     return ok();
   }
+  clickCache.put(clickKey, '1', 30);
 
-  // Check state transition
-  var currentStatus = rowInfo.status || '';
-  var allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
-  if (allowed.length > 0 && allowed.indexOf(action) === -1) {
-    answerCallback(callbackId, '⚠️ Không thể chuyển trạng thái');
-    return ok();
-  }
+  // Fast path: answer callback immediately, queue everything else
+  answerCallback(callbackId, command.icon + ' ' + command.label + ' — đang cập nhật...');
 
-  var ownerCheck = checkOwnership(rowInfo, userId, userLabel, action);
-  if (ownerCheck.blocked) {
-    answerCallback(callbackId, ownerCheck.message);
-    return ok();
-  }
-
-  // Send answerCallback + editMessage in parallel (saves ~300ms)
-  var tTelegram = Date.now();
-  var telegramRequests = [{
-    url: 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/answerCallbackQuery',
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({ callback_query_id: callbackId, text: command.icon + ' ' + command.label, show_alert: false }),
-    muteHttpExceptions: true
-  }];
-
-  if (messageId && chatId) {
-    var originalText = query.message.text || '';
-    var statusLine = '\n\n' + command.icon + ' ' + command.label + ' — ' + userLabel + ' (' + vnDateTime() + ')';
-    var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '').replace(/\n\n↓ Bấm nút bên dưới để cập nhật trạng thái/, '');
-    var editPayload = { chat_id: chatId, message_id: messageId, text: cleanText + statusLine };
-    var newButtons = buildButtons(leadId, command.label);
-    if (newButtons.length > 0) {
-      editPayload.reply_markup = JSON.stringify({ inline_keyboard: newButtons });
-    }
-    telegramRequests.push({
-      url: 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/editMessageText',
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify(editPayload),
-      muteHttpExceptions: true
-    });
-    saveMessageId(leadId, messageId);
-  }
-
-  UrlFetchApp.fetchAll(telegramRequests);
-  timer('telegramBatch', tTelegram);
-
-  // Update cache immediately (next click reads from cache)
-  rowInfo.status = command.label;
-  rowInfo.ownerId = String(userId);
-  rowInfo.ownerName = userName;
-  setCachedLead(leadId, rowInfo);
-
-  // Queue sheet write for async processing
+  // Queue both Telegram edit + sheet write for async processing
   enqueueWrite({
     type: 'updateStatus',
-    row: rowInfo.row,
     leadId: leadId,
-    phone: rowInfo.phone,
+    action: action,
     statusLabel: command.label,
+    statusIcon: command.icon,
     updatedBy: userLabel,
     userId: String(userId),
-    userName: userName
+    userName: userName,
+    chatId: chatId ? String(chatId) : null,
+    messageId: messageId ? String(messageId) : null,
+    originalText: (messageId && query.message) ? (query.message.text || '') : ''
   });
 
   timer('total', t0);
@@ -510,8 +455,46 @@ function processWriteQueue() {
     var job = queue[i];
     try {
       if (job.type === 'updateStatus') {
-        updateLeadStatus(sheet, job.row, job.statusLabel, job.updatedBy, job.userId, job.userName);
-        logTimeline(job.leadId, job.phone, job.statusLabel, job.updatedBy, ss);
+        // Find lead row (may differ from cached if sheet was modified)
+        var rowInfo = findLeadById(sheet, job.leadId);
+        if (!rowInfo || !rowInfo.found) continue;
+
+        // Validate transition still valid
+        var currentStatus = rowInfo.status || '';
+        var allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
+        if (allowed.length > 0 && allowed.indexOf(job.action) === -1) continue;
+
+        var ownerCheck = checkOwnership(rowInfo, job.userId, job.updatedBy, job.action);
+        if (ownerCheck.blocked) continue;
+
+        // Edit Telegram message
+        if (job.messageId && job.chatId) {
+          var statusLine = '\n\n' + job.statusIcon + ' ' + job.statusLabel + ' — ' + job.updatedBy + ' (' + vnDateTime() + ')';
+          var cleanText = job.originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '').replace(/\n\n↓ Bấm nút bên dưới để cập nhật trạng thái/, '');
+          var newButtons = buildButtons(job.leadId, job.statusLabel);
+          var editPayload = { chat_id: job.chatId, message_id: job.messageId, text: cleanText + statusLine };
+          if (newButtons.length > 0) {
+            editPayload.reply_markup = JSON.stringify({ inline_keyboard: newButtons });
+          }
+          try {
+            UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/editMessageText', {
+              method: 'post', contentType: 'application/json',
+              payload: JSON.stringify(editPayload), muteHttpExceptions: true
+            });
+          } catch (e) {}
+          saveMessageId(job.leadId, job.messageId);
+        }
+
+        // Write to sheet
+        updateLeadStatus(sheet, rowInfo.row, job.statusLabel, job.updatedBy, job.userId, job.userName);
+        logTimeline(job.leadId, rowInfo.phone, job.statusLabel, job.updatedBy, ss);
+
+        // Update cache
+        rowInfo.status = job.statusLabel;
+        rowInfo.ownerId = job.userId;
+        rowInfo.ownerName = job.userName;
+        setCachedLead(job.leadId, rowInfo);
+
       } else if (job.type === 'clearOwner') {
         clearOwner(sheet, job.leadId);
       }
@@ -671,7 +654,7 @@ function answerCallback(callbackQueryId, text) {
     UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/answerCallbackQuery', {
       method: 'post',
       contentType: 'application/json',
-      payload: JSON.stringify({ callback_query_id: callbackQueryId, text: text, show_alert: false }),
+      payload: JSON.stringify({ callback_query_id: callbackQueryId, text: text, show_alert: true }),
       muteHttpExceptions: true
     });
   } catch (err) {
