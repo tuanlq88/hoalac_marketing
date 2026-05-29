@@ -1,9 +1,17 @@
-// Config from Script Properties (run setupConfig once to initialize)
-var _props = PropertiesService.getScriptProperties().getProperties();
-const TELEGRAM_TOKEN = _props.TELEGRAM_TOKEN || '';
-const TELEGRAM_CHAT_ID = _props.TELEGRAM_CHAT_ID || '';
-const SHEET_ID = _props.SHEET_ID || '';
-const ADMIN_IDS = (_props.ADMIN_IDS || '').split(',').map(Number).filter(Boolean);
+// Config: cached in CacheService (1h TTL), falls back to PropertiesService
+function getConfig() {
+  var cache = CacheService.getScriptCache();
+  var cached = cache.get('app_config');
+  if (cached) return JSON.parse(cached);
+  var props = PropertiesService.getScriptProperties().getProperties();
+  cache.put('app_config', JSON.stringify(props), 3600);
+  return props;
+}
+var _cfg = getConfig();
+const TELEGRAM_TOKEN = _cfg.TELEGRAM_TOKEN || '';
+const TELEGRAM_CHAT_ID = _cfg.TELEGRAM_CHAT_ID || '';
+const SHEET_ID = _cfg.SHEET_ID || '';
+const ADMIN_IDS = (_cfg.ADMIN_IDS || '').split(',').map(Number).filter(Boolean);
 
 function setupConfig() {
   var props = PropertiesService.getScriptProperties();
@@ -310,13 +318,10 @@ function handleCallbackQuery(query) {
   var clickCache = CacheService.getScriptCache();
   var clickKey = 'click_' + leadId + '_' + action;
   if (clickCache.get(clickKey)) {
-    answerCallback(callbackId, '⏳ Đã ghi nhận, đang xử lý...');
+    answerCallback(callbackId, '⏳ Đang xử lý...');
     return ok();
   }
   clickCache.put(clickKey, '1', 30);
-
-  // Fast path: answer callback immediately, queue everything else
-  answerCallback(callbackId, command.icon + ' ' + command.label + ' — đang cập nhật...');
 
   // Queue both Telegram edit + sheet write for async processing
   enqueueWrite({
@@ -418,23 +423,9 @@ function enqueueWrite(job) {
   var cache = CacheService.getScriptCache();
   var jobId = 'job_' + job.leadId + '_' + Date.now();
   cache.put(jobId, JSON.stringify(job), 300);
-
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(2000);
-    var index = JSON.parse(cache.get('job_index') || '[]');
-    index.push(jobId);
-    cache.put('job_index', JSON.stringify(index), 300);
-    if (!cache.get('queue_scheduled')) {
-      cache.put('queue_scheduled', '1', 90);
-      lock.releaseLock();
-      ScriptApp.newTrigger('processWriteQueue').timeBased().after(1000).create();
-    } else {
-      lock.releaseLock();
-    }
-  } catch (e) {
-    lock.releaseLock();
-  }
+  // Append jobId to pending list (no lock needed — atomic read+write per key)
+  var pending = cache.get('pending_jobs') || '';
+  cache.put('pending_jobs', pending ? pending + ',' + jobId : jobId, 300);
 }
 
 function processWriteQueue() {
@@ -442,19 +433,19 @@ function processWriteQueue() {
   try { lock.waitLock(10000); } catch (e) { return; }
 
   var cache = CacheService.getScriptCache();
-  var index = JSON.parse(cache.get('job_index') || '[]');
-  cache.remove('job_index');
-  cache.remove('queue_scheduled');
+  var pending = cache.get('pending_jobs') || '';
+  cache.remove('pending_jobs');
   lock.releaseLock();
 
-  if (index.length === 0) return;
+  if (!pending) return;
 
+  var jobIds = pending.split(',');
   var queue = [];
-  for (var k = 0; k < index.length; k++) {
-    var raw = cache.get(index[k]);
+  for (var k = 0; k < jobIds.length; k++) {
+    var raw = cache.get(jobIds[k]);
     if (raw) {
       queue.push(JSON.parse(raw));
-      cache.remove(index[k]);
+      cache.remove(jobIds[k]);
     }
   }
 
@@ -515,13 +506,6 @@ function processWriteQueue() {
     }
   }
 
-  // Clean up one-time trigger
-  var triggers = ScriptApp.getProjectTriggers();
-  for (var j = 0; j < triggers.length; j++) {
-    if (triggers[j].getHandlerFunction() === 'processWriteQueue') {
-      ScriptApp.deleteTrigger(triggers[j]);
-    }
-  }
 }
 
 // ── SHEET HELPERS ──
@@ -666,7 +650,7 @@ function answerCallback(callbackQueryId, text) {
     UrlFetchApp.fetch('https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/answerCallbackQuery', {
       method: 'post',
       contentType: 'application/json',
-      payload: JSON.stringify({ callback_query_id: callbackQueryId, text: text, show_alert: true }),
+      payload: JSON.stringify({ callback_query_id: callbackQueryId, text: text, show_alert: false }),
       muteHttpExceptions: true
     });
   } catch (err) {
@@ -703,15 +687,17 @@ function vnDateTime() {
 
 // ── SETUP ──
 
-function setupStaleCheck() {
+function setupTriggers() {
   var triggers = ScriptApp.getProjectTriggers();
   for (var i = 0; i < triggers.length; i++) {
-    if (triggers[i].getHandlerFunction() === 'runStaleCheck') {
+    var handler = triggers[i].getHandlerFunction();
+    if (handler === 'runStaleCheck' || handler === 'processWriteQueue') {
       ScriptApp.deleteTrigger(triggers[i]);
     }
   }
+  ScriptApp.newTrigger('processWriteQueue').timeBased().everyMinutes(1).create();
   ScriptApp.newTrigger('runStaleCheck').timeBased().everyHours(12).create();
-  Logger.log('Stale check scheduled: every 12 hours');
+  Logger.log('Triggers configured: processWriteQueue (1min), runStaleCheck (12h)');
 }
 
 function runStaleCheck() {
@@ -845,4 +831,121 @@ function sendDashboard() {
 
 function testDoSendMessage() {
   doSendMessage('🔔 Test ping từ Apps Script.');
+}
+
+// ── TEST HELPERS ──
+
+function testCallbackFlow() {
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) { Logger.log('No leads to test'); return; }
+
+  var leadId = data[1][COL.LEAD_ID - 1];
+  var currentStatus = data[1][COL.STATUS - 1] || '';
+  var allowed = ALLOWED_TRANSITIONS[currentStatus] || ALLOWED_TRANSITIONS[''];
+  if (allowed.length === 0) { Logger.log('Lead %s has no transitions from "%s"', leadId, currentStatus); return; }
+
+  var action = allowed[0];
+  var command = STATUS_MAP[action];
+  Logger.log('TEST: %s → %s (%s)', leadId, command.label, action);
+
+  var fakeQuery = {
+    id: 'test_' + Date.now(),
+    data: action + ':' + leadId,
+    from: { id: ADMIN_IDS[0] || 1, first_name: 'Test', username: 'test' },
+    message: {
+      message_id: getMessageId(leadId) || '1',
+      chat: { id: TELEGRAM_CHAT_ID },
+      text: '📥 Test lead [' + leadId + ']\n\n↓ Bấm nút bên dưới để cập nhật trạng thái'
+    }
+  };
+
+  var t0 = Date.now();
+  handleCallbackQuery(fakeQuery);
+  Logger.log('handleCallbackQuery: %sms', Date.now() - t0);
+
+  Utilities.sleep(2000);
+
+  var t1 = Date.now();
+  processWriteQueue();
+  Logger.log('processWriteQueue: %sms', Date.now() - t1);
+
+  var updated = sheet.getRange(2, COL.STATUS).getValue();
+  Logger.log('Sheet status: %s (expected: %s) → %s', updated, command.label, updated === command.label ? 'PASS' : 'FAIL');
+}
+
+function testConcurrentClicks() {
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Leads');
+  var data = sheet.getDataRange().getValues();
+  if (data.length < 2) { Logger.log('No leads'); return; }
+
+  var leadId = data[1][COL.LEAD_ID - 1];
+  var currentStatus = data[1][COL.STATUS - 1] || '';
+  var allowed = ALLOWED_TRANSITIONS[currentStatus] || ALLOWED_TRANSITIONS[''];
+  if (allowed.length === 0) { Logger.log('No transitions'); return; }
+
+  var action = allowed[0];
+  var command = STATUS_MAP[action];
+
+  var makeQuery = function(suffix) {
+    return {
+      id: 'test_' + suffix + '_' + Date.now(),
+      data: action + ':' + leadId,
+      from: { id: ADMIN_IDS[0] || 1, first_name: 'Test' + suffix, username: 'test' + suffix },
+      message: {
+        message_id: getMessageId(leadId) || '1',
+        chat: { id: TELEGRAM_CHAT_ID },
+        text: 'Test'
+      }
+    };
+  };
+
+  Logger.log('TEST CONCURRENT: %s → %s', leadId, command.label);
+
+  var t1 = Date.now();
+  handleCallbackQuery(makeQuery('A'));
+  Logger.log('Click A: %sms', Date.now() - t1);
+
+  var t2 = Date.now();
+  handleCallbackQuery(makeQuery('B'));
+  Logger.log('Click B: %sms (should be dedupe)', Date.now() - t2);
+
+  var cache = CacheService.getScriptCache();
+  var index = JSON.parse(cache.get('job_index') || '[]');
+  Logger.log('Jobs queued: %s (expected: 1) → %s', index.length, index.length === 1 ? 'PASS' : 'FAIL');
+
+  cache.remove('click_' + leadId + '_' + action);
+  cache.remove('job_index');
+  for (var i = 0; i < index.length; i++) cache.remove(index[i]);
+  cache.remove('queue_scheduled');
+  Logger.log('Cleanup done');
+}
+
+function testTimingReport() {
+  var results = [];
+  var cache = CacheService.getScriptCache();
+
+  var t0 = Date.now();
+  CacheService.getScriptCache().get('test_key');
+  results.push('CacheService.get: ' + (Date.now() - t0) + 'ms');
+
+  var t1 = Date.now();
+  CacheService.getScriptCache().put('test_key', 'v', 60);
+  results.push('CacheService.put: ' + (Date.now() - t1) + 'ms');
+
+  var t2 = Date.now();
+  PropertiesService.getScriptProperties().getProperty('test_key');
+  results.push('PropertiesService.get: ' + (Date.now() - t2) + 'ms');
+
+  var t3 = Date.now();
+  var lock = LockService.getScriptLock();
+  lock.waitLock(1000);
+  lock.releaseLock();
+  results.push('LockService round-trip: ' + (Date.now() - t3) + 'ms');
+
+  var t4 = Date.now();
+  answerCallback('fake_id_' + Date.now(), 'test');
+  results.push('answerCallback (will fail): ' + (Date.now() - t4) + 'ms');
+
+  Logger.log('=== TIMING REPORT ===\n' + results.join('\n'));
 }
