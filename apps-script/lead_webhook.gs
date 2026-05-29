@@ -1,8 +1,20 @@
-const TELEGRAM_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN';
-const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
-const SHEET_ID = 'YOUR_SHEET_ID';
+// Config from Script Properties (run setupConfig once to initialize)
+var _props = PropertiesService.getScriptProperties().getProperties();
+const TELEGRAM_TOKEN = _props.TELEGRAM_TOKEN || '';
+const TELEGRAM_CHAT_ID = _props.TELEGRAM_CHAT_ID || '';
+const SHEET_ID = _props.SHEET_ID || '';
+const ADMIN_IDS = (_props.ADMIN_IDS || '').split(',').map(Number).filter(Boolean);
 
-const ADMIN_IDS = [609104230];
+function setupConfig() {
+  var props = PropertiesService.getScriptProperties();
+  // Only set if not already configured
+  var existing = props.getProperties();
+  if (!existing.TELEGRAM_TOKEN) props.setProperty('TELEGRAM_TOKEN', 'YOUR_TELEGRAM_BOT_TOKEN');
+  if (!existing.TELEGRAM_CHAT_ID) props.setProperty('TELEGRAM_CHAT_ID', 'YOUR_CHAT_ID');
+  if (!existing.SHEET_ID) props.setProperty('SHEET_ID', 'YOUR_SHEET_ID');
+  if (!existing.ADMIN_IDS) props.setProperty('ADMIN_IDS', '609104230');
+  Logger.log('Config: %s', JSON.stringify(props.getProperties()));
+}
 
 // Leads sheet columns (1-based)
 // A=Lead ID, B=Lần đầu, C=Lần cuối, D=Mục đích, E=Tài chính, F=Ưu tiên,
@@ -294,10 +306,6 @@ function handleCallbackQuery(query) {
     return ok();
   }
 
-  // Answer once — all remaining paths are status updates
-  answerCallback(callbackId, command.icon + ' ' + command.label);
-  timer('answerCallback', t0);
-
   // Try cache first, fall back to sheet
   var tFind = Date.now();
   var rowInfo = getCachedLead(leadId);
@@ -311,27 +319,56 @@ function handleCallbackQuery(query) {
     rowInfo = findLeadById(sheet, leadId);
   }
   timer('findLead', tFind);
-  if (!rowInfo || !rowInfo.found) return ok();
+  if (!rowInfo || !rowInfo.found) {
+    answerCallback(callbackId, '⚠️ Không tìm thấy lead');
+    return ok();
+  }
 
   // Check state transition
   var currentStatus = rowInfo.status || '';
   var allowed = ALLOWED_TRANSITIONS[currentStatus] || [];
-  if (allowed.length > 0 && allowed.indexOf(action) === -1) return ok();
+  if (allowed.length > 0 && allowed.indexOf(action) === -1) {
+    answerCallback(callbackId, '⚠️ Không thể chuyển trạng thái');
+    return ok();
+  }
 
   var ownerCheck = checkOwnership(rowInfo, userId, userLabel, action);
-  if (ownerCheck.blocked) return ok();
+  if (ownerCheck.blocked) {
+    answerCallback(callbackId, ownerCheck.message);
+    return ok();
+  }
 
-  // Edit Telegram first (user sees result faster)
+  // Send answerCallback + editMessage in parallel (saves ~300ms)
+  var tTelegram = Date.now();
+  var telegramRequests = [{
+    url: 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/answerCallbackQuery',
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify({ callback_query_id: callbackId, text: command.icon + ' ' + command.label, show_alert: false }),
+    muteHttpExceptions: true
+  }];
+
   if (messageId && chatId) {
-    var tEdit = Date.now();
     var originalText = query.message.text || '';
     var statusLine = '\n\n' + command.icon + ' ' + command.label + ' — ' + userLabel + ' (' + vnDateTime() + ')';
     var cleanText = originalText.replace(/\n\n[👀📞🚗💰✅💤❌].+$/s, '').replace(/\n\n↓ Bấm nút bên dưới để cập nhật trạng thái/, '');
+    var editPayload = { chat_id: chatId, message_id: messageId, text: cleanText + statusLine };
     var newButtons = buildButtons(leadId, command.label);
-    editMessage(chatId, messageId, cleanText + statusLine, newButtons);
+    if (newButtons.length > 0) {
+      editPayload.reply_markup = JSON.stringify({ inline_keyboard: newButtons });
+    }
+    telegramRequests.push({
+      url: 'https://api.telegram.org/bot' + TELEGRAM_TOKEN + '/editMessageText',
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(editPayload),
+      muteHttpExceptions: true
+    });
     saveMessageId(leadId, messageId);
-    timer('editMessage', tEdit);
   }
+
+  UrlFetchApp.fetchAll(telegramRequests);
+  timer('telegramBatch', tTelegram);
 
   // Update cache immediately (next click reads from cache)
   rowInfo.status = command.label;
@@ -433,28 +470,36 @@ function invalidateCachedLead(leadId) {
 // ── WRITE QUEUE ──
 
 function enqueueWrite(job) {
-  var cache = CacheService.getScriptCache();
-  var raw = cache.get('write_queue') || '[]';
-  var queue = JSON.parse(raw);
-  queue.push(job);
-  cache.put('write_queue', JSON.stringify(queue), 300);
-  // Schedule async processor (runs ~1 min later)
+  var lock = LockService.getScriptLock();
   try {
+    lock.waitLock(5000);
+    var cache = CacheService.getScriptCache();
+    var raw = cache.get('write_queue') || '[]';
+    var queue = JSON.parse(raw);
+    queue.push(job);
+    cache.put('write_queue', JSON.stringify(queue), 300);
     if (!cache.get('queue_scheduled')) {
       ScriptApp.newTrigger('processWriteQueue').timeBased().after(1000).create();
       cache.put('queue_scheduled', '1', 90);
     }
-  } catch (e) {}
+    lock.releaseLock();
+  } catch (e) {
+    Logger.log('enqueueWrite lock error: %s', e);
+  }
 }
 
 function processWriteQueue() {
+  var lock = LockService.getScriptLock();
+  try { lock.waitLock(10000); } catch (e) { return; }
+
   var cache = CacheService.getScriptCache();
   var raw = cache.get('write_queue');
-  if (!raw) return;
+  if (!raw) { lock.releaseLock(); return; }
 
   var queue = JSON.parse(raw);
   cache.remove('write_queue');
   cache.remove('queue_scheduled');
+  lock.releaseLock();
 
   if (queue.length === 0) return;
 
