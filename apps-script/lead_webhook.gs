@@ -415,21 +415,25 @@ function invalidateCachedLead(leadId) {
 // ── WRITE QUEUE ──
 
 function enqueueWrite(job) {
+  var cache = CacheService.getScriptCache();
+  var jobId = 'job_' + job.leadId + '_' + Date.now();
+  cache.put(jobId, JSON.stringify(job), 300);
+
   var lock = LockService.getScriptLock();
   try {
-    lock.waitLock(5000);
-    var cache = CacheService.getScriptCache();
-    var raw = cache.get('write_queue') || '[]';
-    var queue = JSON.parse(raw);
-    queue.push(job);
-    cache.put('write_queue', JSON.stringify(queue), 300);
+    lock.waitLock(2000);
+    var index = JSON.parse(cache.get('job_index') || '[]');
+    index.push(jobId);
+    cache.put('job_index', JSON.stringify(index), 300);
     if (!cache.get('queue_scheduled')) {
-      ScriptApp.newTrigger('processWriteQueue').timeBased().after(1000).create();
       cache.put('queue_scheduled', '1', 90);
+      lock.releaseLock();
+      ScriptApp.newTrigger('processWriteQueue').timeBased().after(1000).create();
+    } else {
+      lock.releaseLock();
     }
-    lock.releaseLock();
   } catch (e) {
-    Logger.log('enqueueWrite lock error: %s', e);
+    lock.releaseLock();
   }
 }
 
@@ -438,13 +442,21 @@ function processWriteQueue() {
   try { lock.waitLock(10000); } catch (e) { return; }
 
   var cache = CacheService.getScriptCache();
-  var raw = cache.get('write_queue');
-  if (!raw) { lock.releaseLock(); return; }
-
-  var queue = JSON.parse(raw);
-  cache.remove('write_queue');
+  var index = JSON.parse(cache.get('job_index') || '[]');
+  cache.remove('job_index');
   cache.remove('queue_scheduled');
   lock.releaseLock();
+
+  if (index.length === 0) return;
+
+  var queue = [];
+  for (var k = 0; k < index.length; k++) {
+    var raw = cache.get(index[k]);
+    if (raw) {
+      queue.push(JSON.parse(raw));
+      cache.remove(index[k]);
+    }
+  }
 
   if (queue.length === 0) return;
 
