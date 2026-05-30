@@ -52,6 +52,7 @@ export const POST: APIRoute = async ({ request }) => {
       const icon = LEAD_ICONS[leadTag] || '⚪';
       const text = `♻️ Người đọc quay lại [${existing.leadId}]\n`
         + `👤 ${name}\n`
+        + `📞 ${rawContact}\n`
         + `🎯 ${intentLabel} | 💰 ${budgetLabel}\n`
         + `⭐ ${priorityLabel}\n`
         + `📄 ${source}\n`
@@ -76,11 +77,10 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const leadId = await generateLeadId();
-    const contact = rawContact ? `'${rawContact}` : '';
 
     await appendLead([
       leadId, submittedAt, submittedAt, intentLabel, budgetLabel, priorityLabel,
-      name, contact, leadTag, source,
+      name, rawContact, leadTag, source,
       '', '', '', '', '',
       '1', readingContext,
     ]);
@@ -89,6 +89,7 @@ export const POST: APIRoute = async ({ request }) => {
     const icon = LEAD_ICONS[leadTag] || '⚪';
     const text = `📥 Lead mới [${leadId}]\n`
       + `👤 ${name}\n`
+      + `📞 ${rawContact}\n`
       + `🎯 ${intentLabel} | 💰 ${budgetLabel}\n`
       + `⭐ ${priorityLabel}\n`
       + `📄 ${source}\n`
