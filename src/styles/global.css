@@ -282,6 +282,16 @@ main {
   margin-top: auto;
 }
 
+.site-footer a {
+  color: #8d8a84;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.site-footer a:hover {
+  color: #fff;
+}
+
 .site-footer__quote-section {
   padding: clamp(4rem, 6vw, 6rem) clamp(2rem, 4vw, 4rem) 4rem;
   text-align: center;
@@ -329,7 +339,7 @@ main {
 
 .site-footer__cta-text {
   flex: 1;
-  min-width: 28rem;
+  min-width: min(28rem, 100%);
 }
 
 .site-footer__cta-text strong {
@@ -425,16 +435,6 @@ main {
 
 .site-footer__cta:hover {
   border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
-}
-
-.site-footer a {
-  color: #8d8a84;
-  text-decoration: none;
-  transition: color 150ms ease;
-}
-
-.site-footer a:hover {
   color: #fff;
 }
 
