@@ -777,7 +777,7 @@ const priorityOptions = [
 
       setupValidationListeners(form, fieldErrors, setStatus);
       applySequentialTabIndex(form);
-      const sectionFlow = setupSectionFlow(form, fieldErrors);
+      const sectionFlow = setupSectionFlow(form, fieldErrors, placement);
       form.addEventListener('reset', () => sectionFlow?.reset?.());
 
 
@@ -1369,7 +1369,7 @@ const priorityOptions = [
       return group instanceof HTMLElement ? group.dataset.fieldGroup ?? '' : '';
     }
 
-    function setupSectionFlow(form, fieldErrors) {
+    function setupSectionFlow(form, fieldErrors, placement) {
       if (!form) return null;
       const completedSections = new Set();
 
@@ -1383,9 +1383,24 @@ const priorityOptions = [
         }
         completedSections.add(key);
         fieldErrors?.clear(key);
+
+        const value = getStepValue(key, form);
+        trackEvent(EVENTS.LEAD_STEP_COMPLETE, {
+          step: key,
+          value,
+          step_index: SECTION_FLOW.indexOf(key) + 1,
+          placement,
+        });
+
+        // Update form_outcome tag to "abandoned_at_<next_step>" — assumes they may abandon here next
+        const nextKey = getNextSectionKey(key);
+        if (nextKey) {
+          const outcomeTag = `abandoned_at_${nextKey}`;
+          tagSession('form_outcome', outcomeTag);
+        }
+
         // Don't auto-advance from free-text fields (name) — only from radio/select picks
         if (key === 'name') return;
-        const nextKey = getNextSectionKey(key);
         if (nextKey) {
           focusSection(nextKey, form);
         } else {
@@ -1424,6 +1439,21 @@ const priorityOptions = [
         }
         default:
           return true;
+      }
+    }
+
+    function getStepValue(key, form) {
+      switch (key) {
+        case 'name':
+          return form.querySelector('input[name="name"]')?.value ? 'provided' : 'skipped';
+        case 'intent':
+        case 'budgetRange':
+        case 'priority':
+          return form.querySelector(`input[name="${key}"]:checked`)?.value ?? '';
+        case 'contact':
+          return form.querySelector('input[name="contact"]')?.value ? 'provided' : '';
+        default:
+          return '';
       }
     }
 
