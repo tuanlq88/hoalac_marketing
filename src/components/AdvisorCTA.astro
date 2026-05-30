@@ -141,16 +141,3 @@ const base = import.meta.env.BASE_URL;
   }
 </style>
 
-<script>
-  import { trackEvent } from '../lib/analytics/track';
-  import { EVENTS } from '../lib/analytics/events';
-
-  document.querySelectorAll('.service-cta__btn[data-cta-variant]').forEach((el) => {
-    el.addEventListener('click', () => {
-      trackEvent(EVENTS.CTA_CLICK, {
-        cta_variant: el.getAttribute('data-cta-variant') ?? 'unknown',
-        source_page: window.location.pathname,
-      });
-    });
-  });
-</script>
