@@ -724,6 +724,9 @@ const priorityOptions = [
 
       const placement = (shell.dataset.placement || inferPlacementFromPath()) ?? 'unknown';
 
+      const pageLoadAt = performance.now();
+      let formOpenedAt = null;
+
       function inferPlacementFromPath() {
         const path = window.location.pathname;
         if (path === '/' || path === '') return 'home_hero';
@@ -854,7 +857,16 @@ const priorityOptions = [
 
       updateModalPreference();
 
-      const revealLeadCapture = () => {
+      const revealLeadCapture = (trigger = 'unknown') => {
+        if (formOpenedAt === null) {
+          formOpenedAt = performance.now();
+          trackEvent(EVENTS.LEAD_FORM_OPEN, {
+            trigger,
+            placement,
+            time_to_open_ms: Math.round(formOpenedAt - pageLoadAt),
+          });
+          tagSession('form_outcome', FORM_OUTCOME.OPENED);
+        }
         if (shouldUseModal()) {
           openModal();
           return;
@@ -907,14 +919,14 @@ const priorityOptions = [
         window.addEventListener('scroll', onScroll, { passive: true });
         setTimeout(showCta, 8000);
 
-        floatingCta.addEventListener('click', revealLeadCapture);
+        floatingCta.addEventListener('click', () => revealLeadCapture('floating_cta'));
       }
 
       handleScrollReveal();
 
       const introBtn = shell.querySelector('[data-lead-intro-btn]');
       if (introBtn) {
-        introBtn.addEventListener('click', revealLeadCapture);
+        introBtn.addEventListener('click', () => revealLeadCapture('intro_btn'));
       }
 
       function hideCtaWhenOtherCtasVisible() {
@@ -957,7 +969,7 @@ const priorityOptions = [
             if (!shell.classList.contains('is-collapsed')) return;
             if (!deferDisplay || !showFloatingCta) return;
             event.preventDefault();
-            revealLeadCapture();
+            revealLeadCapture('anchor');
           });
         });
       }
