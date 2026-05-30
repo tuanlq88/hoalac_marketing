@@ -1244,6 +1244,25 @@ const priorityOptions = [
             console.warn('Không parse được payload, dùng message mặc định.', parseErr);
           }
           setStatus?.(payloadMessage, 'success');
+
+          // Track successful submit
+          const shellEl = form.closest('[data-lead-shell]');
+          const placement = shellEl?.dataset?.placement
+            ?? (window.location.pathname.startsWith('/blog/') ? 'end_of_article' : 'home_hero');
+          trackEvent(EVENTS.LEAD_FORM_SUBMIT, {
+            lead_tag: computedTag,
+            intent: data.intent,
+            budget: data.budgetRange,
+            priority: data.priority,
+            submit_count: submitCount,
+            placement,
+          });
+          tagSession('form_outcome', FORM_OUTCOME.SUBMITTED);
+          tagSession('lead_tag', computedTag);
+          if (shellEl) {
+            shellEl.dataset.submitted = 'true';
+          }
+
           saveLeadPreferences({ intent: data.intent ?? '', areas: [] });
           try {
             const history = JSON.parse(localStorage.getItem('submit_history') || '[]');
@@ -1279,6 +1298,25 @@ const priorityOptions = [
         console.error(error);
         if (error instanceof TypeError) {
           setStatus?.('Đã nhận thông tin!', 'success');
+
+          // Track successful submit (network error fallback)
+          const shellEl = form.closest('[data-lead-shell]');
+          const placement = shellEl?.dataset?.placement
+            ?? (window.location.pathname.startsWith('/blog/') ? 'end_of_article' : 'home_hero');
+          trackEvent(EVENTS.LEAD_FORM_SUBMIT, {
+            lead_tag: computedTag,
+            intent: data.intent,
+            budget: data.budgetRange,
+            priority: data.priority,
+            submit_count: submitCount,
+            placement,
+          });
+          tagSession('form_outcome', FORM_OUTCOME.SUBMITTED);
+          tagSession('lead_tag', computedTag);
+          if (shellEl) {
+            shellEl.dataset.submitted = 'true';
+          }
+
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
