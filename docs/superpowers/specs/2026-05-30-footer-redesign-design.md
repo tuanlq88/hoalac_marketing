@@ -110,9 +110,9 @@ Hard-coded mới (dark palette — chỉ dùng trong footer):
   - Có thể giữ/xoá: `.site-footer__cta` (floating CTA — không liên quan footer mới, cần check usage)
 - **`src/scripts/`** — không cần JS mới; nút "Nhận phân tích" reuse logic `#lead-form` anchor handling hiện có ở Layout.astro lines 282-306
 
-## Open question (implementation phase)
+## Out of scope
 
-- **Floating CTA `.site-footer__cta`**: hiện tại có 1 floating CTA gắn vào footer (line 373-404 trong global.css). Cần check còn dùng không — nếu còn thì giữ; nếu không thì xoá luôn cho sạch.
+- **Floating CTA `.site-footer__cta`** (lines 373-404, 1308-1319 trong global.css): **giữ nguyên không động**, sẽ xử lý ở task khác. Implementation chỉ touch các `.site-footer__*` rules thuộc 3-column footer cũ.
 
 ## Verification (manual)
 
