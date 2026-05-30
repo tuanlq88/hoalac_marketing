@@ -684,6 +684,10 @@ const priorityOptions = [
     window[initKey] = true;
 
     const boot = () => {
+      const props = getGlobalProps();
+      if (props.top_pillar) {
+        tagSession('top_pillar', String(props.top_pillar));
+      }
       const shells = Array.from(document.querySelectorAll('[data-lead-shell]'));
       shells.forEach((shell) => initLeadShell(shell));
     };
