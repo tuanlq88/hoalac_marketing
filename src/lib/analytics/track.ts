@@ -4,6 +4,8 @@ declare global {
   interface Window {
     gtag?: (...args: unknown[]) => void;
     dataLayer?: unknown[];
+    clarity?: (...args: unknown[]) => void;
+    __clarity_queue__?: Array<[string, string]>;
   }
 }
 
@@ -72,4 +74,37 @@ function getSessionPageviewCount(): number {
   } catch {
     return 0;
   }
+}
+
+const CLARITY_POLL_MAX = 5;
+const CLARITY_POLL_INTERVAL_MS = 500;
+
+export function tagSession(key: string, value: string): void {
+  if (typeof window === 'undefined') return;
+  if (import.meta.env.PUBLIC_TRACKING_ENABLED === 'false') return;
+  try {
+    if (typeof window.clarity === 'function') {
+      window.clarity('set', key, value);
+      return;
+    }
+    window.__clarity_queue__ ??= [];
+    window.__clarity_queue__.push([key, value]);
+    pollClarityReady(0);
+  } catch (error) {
+    if (import.meta.env.DEV) console.warn('[analytics] tagSession error', error);
+  }
+}
+
+function pollClarityReady(attempt: number): void {
+  if (attempt >= CLARITY_POLL_MAX) return;
+  setTimeout(() => {
+    if (typeof window.clarity === 'function' && window.__clarity_queue__?.length) {
+      const queue = window.__clarity_queue__.splice(0);
+      queue.forEach(([k, v]) => {
+        try { window.clarity!('set', k, v); } catch {}
+      });
+    } else if (window.__clarity_queue__?.length) {
+      pollClarityReady(attempt + 1);
+    }
+  }, CLARITY_POLL_INTERVAL_MS);
 }

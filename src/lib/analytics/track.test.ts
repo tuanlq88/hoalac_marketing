@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { trackEvent, getGlobalProps } from './track';
+import { trackEvent, getGlobalProps, tagSession } from './track';
 import { EVENTS } from './events';
 
 declare global {
@@ -87,5 +87,54 @@ describe('getGlobalProps', () => {
     localStorage.setItem('reader_history', '{not json');
     const props = getGlobalProps();
     expect(props.reader_history_count).toBe(0);
+  });
+});
+
+describe('tagSession', () => {
+  let claritySpy: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    claritySpy = vi.fn();
+    vi.useFakeTimers();
+    // Reset queue state by re-importing — vitest module cache makes this complex
+    // Instead test via observable side effect on clarity
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    if (typeof window !== 'undefined') {
+      // @ts-expect-error - cleanup
+      delete window.clarity;
+      // @ts-expect-error - cleanup
+      delete window.__clarity_queue__;
+    }
+  });
+
+  it('calls clarity("set", key, value) when clarity is ready', () => {
+    // @ts-expect-error - test setup
+    window.clarity = claritySpy;
+    tagSession('form_outcome', 'opened');
+    expect(claritySpy).toHaveBeenCalledWith('set', 'form_outcome', 'opened');
+  });
+
+  it('queues tag when clarity not ready, flushes when it becomes ready', () => {
+    // @ts-expect-error - cleanup
+    delete window.clarity;
+    tagSession('form_outcome', 'opened');
+    expect(claritySpy).not.toHaveBeenCalled();
+
+    // @ts-expect-error - simulate clarity loading
+    window.clarity = claritySpy;
+    vi.advanceTimersByTime(600);
+    expect(claritySpy).toHaveBeenCalledWith('set', 'form_outcome', 'opened');
+  });
+
+  it('does nothing on SSR', () => {
+    // jsdom always has window; verify guard exists by stubbing
+    const originalWindow = global.window;
+    // @ts-expect-error - simulate SSR
+    delete global.window;
+    expect(() => tagSession('x', 'y')).not.toThrow();
+    global.window = originalWindow;
   });
 });
