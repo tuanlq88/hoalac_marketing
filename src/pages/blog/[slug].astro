@@ -236,21 +236,21 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
 
   .reading-toc__fab-wrap {
     position: fixed;
-    right: clamp(1rem, 4vw, 1.5rem);
-    bottom: clamp(1rem, 4vw, 1.5rem);
+    right: 0;
+    bottom: 22%;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     z-index: 46;
     opacity: 0;
-    transform: translateY(0.5rem);
+    transform: translateX(100%);
     pointer-events: none;
-    transition: opacity 200ms ease, transform 200ms ease;
+    transition: opacity 220ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .reading-toc__fab-wrap[data-visible="true"] {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
     pointer-events: auto;
   }
 
@@ -288,16 +288,17 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
 
   .reading-toc__fab {
     position: relative;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
+    width: 2.6rem;
+    height: 3.4rem;
+    border-radius: 999px 0 0 999px;
     border: none;
+    padding-right: 0.2rem;
     background: var(--accent, #f97316);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+    box-shadow: -6px 8px 24px rgba(15, 23, 42, 0.25);
     cursor: pointer;
   }
 
@@ -312,8 +313,8 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
   }
 
   .reading-toc__fab:hover {
-    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.32);
-    transform: translateY(-2px);
+    box-shadow: -8px 10px 30px rgba(15, 23, 42, 0.32);
+    transform: translateX(-3px);
     transition: box-shadow 200ms ease, transform 200ms ease;
   }
 
