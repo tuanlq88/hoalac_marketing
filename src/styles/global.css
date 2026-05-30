@@ -360,7 +360,7 @@ main {
   gap: 1rem;
 }
 
-.site-footer__cta-primary {
+a.site-footer__cta-primary {
   background: var(--accent);
   color: #fff;
   padding: 1.3rem 2.4rem;
@@ -374,7 +374,7 @@ main {
   transition: background 150ms ease;
 }
 
-.site-footer__cta-primary:hover {
+a.site-footer__cta-primary:hover {
   background: var(--accent-dark);
   color: #fff;
 }
