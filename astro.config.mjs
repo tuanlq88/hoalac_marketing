@@ -9,7 +9,7 @@ import remarkTimeline from './src/lib/markdown/remarkTimeline.js';
 const basePath = '/';
 
 export default defineConfig({
-  site: 'https://tamnhinhoalac.vn',
+  site: 'https://www.tamnhinhoalac.vn',
   base: basePath,
   output: 'hybrid',
   adapter: vercel(),
