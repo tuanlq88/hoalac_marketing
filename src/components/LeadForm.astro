@@ -813,7 +813,28 @@ const priorityOptions = [
         }
       };
 
-      const closeModal = () => {
+      let abandonFired = false;
+      function fireAbandonIfApplicable(reason: string) {
+        if (abandonFired || formOpenedAt === null) return;
+        // Don't fire if user already submitted
+        if (shell.dataset.submitted === 'true') return;
+        // Find last completed step
+        const lastStep = SECTION_FLOW
+          .slice()
+          .reverse()
+          .find((k) => isSectionComplete(k, form)) ?? 'none';
+        trackEvent(EVENTS.LEAD_FORM_ABANDON, {
+          last_step: lastStep,
+          time_in_form_ms: Math.round(performance.now() - formOpenedAt),
+          reason,
+          placement,
+        });
+        tagSession('form_outcome', `abandoned_at_${lastStep === 'none' ? 'open' : lastStep}`);
+        abandonFired = true;
+      }
+
+      const closeModal = (reason: string = 'close_btn') => {
+        fireAbandonIfApplicable(reason);
         const wasModal = shell.classList.contains('is-modal-open');
         shell.classList.remove('is-modal-open');
         overlay?.setAttribute('aria-hidden', 'true');
@@ -861,7 +882,7 @@ const priorityOptions = [
           modalQuery.addEventListener('change', (event) => {
             preferModal = event.matches;
             if (!preferModal) {
-              closeModal();
+              closeModal('auto');
             }
           });
         }
@@ -894,15 +915,36 @@ const priorityOptions = [
       };
 
       closeControls.forEach((control) => {
-        control.addEventListener('click', closeModal);
+        control.addEventListener('click', () => closeModal('close_btn'));
       });
-      overlay?.addEventListener('click', closeModal);
+      overlay?.addEventListener('click', () => closeModal('overlay_click'));
 
       window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-          closeModal();
+          closeModal('esc');
         }
       });
+
+      window.addEventListener('beforeunload', () => {
+        if (formOpenedAt === null || abandonFired) return;
+        if (shell.dataset.submitted === 'true') return;
+        const lastStep = SECTION_FLOW
+          .slice()
+          .reverse()
+          .find((k) => isSectionComplete(k, form)) ?? 'none';
+        if (typeof navigator.sendBeacon === 'function' && window.dataLayer) {
+          window.dataLayer.push({
+            event: EVENTS.LEAD_FORM_ABANDON,
+            last_step: lastStep,
+            time_in_form_ms: Math.round(performance.now() - formOpenedAt),
+            reason: 'page_leave',
+            placement,
+            ...getGlobalProps(),
+          });
+        }
+        abandonFired = true;
+      });
+
       window.addEventListener('resize', updateModalPreference);
 
       function handleScrollReveal() {
@@ -992,11 +1034,11 @@ const priorityOptions = [
       if (isGlobalFallback) {
         const portalQueueKey = '__hoaLacLeadPortalQueue__';
         window.addEventListener('lead-form:request-open', openModal);
-        window.addEventListener('lead-form:request-close', closeModal);
+        window.addEventListener('lead-form:request-close', () => closeModal('api'));
 
         window.__hoaLacLeadPortal = {
           open: () => openModal(),
-          close: () => closeModal()
+          close: () => closeModal('api')
         };
 
         const queue = window[portalQueueKey];
@@ -1006,7 +1048,7 @@ const priorityOptions = [
             if (action === 'open') {
               openModal();
             } else if (action === 'close') {
-              closeModal();
+              closeModal('api');
             }
           }
         }
@@ -1025,7 +1067,7 @@ const priorityOptions = [
           fallbackLeadTag,
           onSuccess: () => {
             if (shell.classList.contains('is-modal-open')) {
-              setTimeout(() => closeModal(), 2000);
+              setTimeout(() => closeModal('auto_after_submit'), 2000);
             }
           }
         });
