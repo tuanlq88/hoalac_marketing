@@ -725,7 +725,7 @@ const priorityOptions = [
       const placement = (shell.dataset.placement || inferPlacementFromPath()) ?? 'unknown';
 
       const pageLoadAt = performance.now();
-      let formOpenedAt = null;
+      let formOpenedAt: number | null = null;
 
       function inferPlacementFromPath() {
         const path = window.location.pathname;
