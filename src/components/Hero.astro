@@ -470,7 +470,7 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
   }
 </style>
 
-<script type="module">
+<script>
   const hero = document.querySelector('[data-hero]');
   const primaryCta = hero?.querySelector('[data-personalized-cta]');
 
@@ -497,18 +497,5 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
   window.addEventListener('lead-intent-change', (event) => {
     const intent = event?.detail?.intent;
     updateHero(intent);
-  });
-
-  // Track CTA clicks
-  import { trackEvent } from '../lib/analytics/track';
-  import { EVENTS } from '../lib/analytics/events';
-
-  document.querySelectorAll('[data-cta-variant]').forEach((el) => {
-    el.addEventListener('click', () => {
-      trackEvent(EVENTS.CTA_CLICK, {
-        cta_variant: el.getAttribute('data-cta-variant') ?? 'unknown',
-        source_page: window.location.pathname,
-      });
-    });
   });
 </script>
