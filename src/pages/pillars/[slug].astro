@@ -75,8 +75,24 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </button>
-              <div class="pillar-toc__panel" data-pillar-toc-panel>
-                <p class="pillar-toc__title">Mục lục</p>
+              <div class="pillar-toc__fab-wrap" data-pillar-toc-fab-wrap>
+                <span class="pillar-toc__tooltip" data-pillar-toc-tooltip aria-hidden="true">Mục lục</span>
+                <button class="pillar-toc__fab" type="button" data-pillar-toc-toggle aria-label="Mở mục lục">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 6h16M4 12h16M4 18h10" />
+                  </svg>
+                </button>
+              </div>
+              <div class="pillar-toc__panel" data-pillar-toc-panel role="dialog" aria-label="Mục lục trụ cột">
+                <span class="pillar-toc__handle" aria-hidden="true"></span>
+                <div class="pillar-toc__panel-header">
+                  <p class="pillar-toc__title">Mục lục chi tiết</p>
+                  <button class="pillar-toc__close" type="button" data-pillar-toc-close aria-label="Đóng mục lục">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                  </button>
+                </div>
                 <ol>
                   {tocEntries.map((heading) => (
                     <li class:list={[heading.depth === 3 && 'pillar-toc__item--nested']}>
@@ -87,9 +103,11 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
               </div>
             </nav>
           )}
+          <span class="pillar-toc__sentinel" data-pillar-toc-sentinel="start" aria-hidden="true"></span>
           <div class="pillar-content">
             <Content />
           </div>
+          <span class="pillar-toc__sentinel" data-pillar-toc-sentinel="end" aria-hidden="true"></span>
         </div>
       </article>
       <aside class="pillar-aside">
@@ -209,24 +227,33 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
 
   .pillar-toc__panel {
     position: fixed;
-    left: clamp(1rem, 3vw, 2rem);
-    top: calc(var(--pillar-toc-top, clamp(6rem, calc(50vh - 200px), 12rem)) + 3.5rem);
-    width: min(320px, 85vw);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
     background: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 35px 80px rgba(15, 23, 42, 0.25);
-    padding: 1.2rem 1.4rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow: 0 -20px 50px rgba(15, 23, 42, 0.25);
+    padding: 0.75rem 1.25rem 1.5rem;
     border: 1px solid rgba(15, 23, 42, 0.08);
-    display: none;
+    border-bottom: none;
+    display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: min(70vh, calc(100vh - 8rem));
+    max-height: 70vh;
     overflow-y: auto;
-    z-index: 45;
+    z-index: 47;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(100%);
+    transition: transform 220ms ease, visibility 0s linear 220ms;
   }
 
   .pillar-toc[data-open="true"] .pillar-toc__panel {
-    display: flex;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: transform 220ms ease, visibility 0s linear 0s;
   }
 
   .pillar-toc__title {
@@ -441,6 +468,143 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
     }
   }
 
+  .pillar-toc__sentinel {
+    display: block;
+    height: 1px;
+    width: 100%;
+  }
+
+  .pillar-toc__fab-wrap {
+    position: fixed;
+    right: clamp(1rem, 4vw, 1.5rem);
+    bottom: clamp(1rem, 4vw, 1.5rem);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 46;
+    opacity: 0;
+    transform: translateY(0.5rem);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  .pillar-toc__fab-wrap[data-visible="true"] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .pillar-toc__tooltip {
+    background: #0f172a;
+    color: #fff;
+    font-size: var(--font-small);
+    font-weight: 600;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+    opacity: 0;
+    transform: translateX(0.5rem);
+    pointer-events: none;
+    transition: opacity 220ms ease, transform 220ms ease;
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .pillar-toc__tooltip::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    background: #0f172a;
+  }
+
+  .pillar-toc__fab-wrap[data-hint="true"] .pillar-toc__tooltip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .pillar-toc__fab {
+    position: relative;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent, #f97316);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.25);
+    cursor: pointer;
+  }
+
+  .pillar-toc__fab svg {
+    width: 1.4rem;
+    height: 1.4rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pillar-toc__fab:hover {
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.32);
+    transform: translateY(-2px);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+  }
+
+  .pillar-toc__handle {
+    display: block;
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.18);
+    margin: 0 auto 0.75rem;
+  }
+
+  .pillar-toc__panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .pillar-toc__close {
+    background: transparent;
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #0f172a;
+  }
+
+  .pillar-toc__close svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .pillar-toc__close:hover {
+    background: rgba(15, 23, 42, 0.08);
+  }
+
+  .pillar-toc__fab:focus-visible,
+  .pillar-toc__close:focus-visible {
+    outline: 2px solid var(--accent, #f97316);
+    outline-offset: 2px;
+  }
+
   @media (min-width: 768px) {
     .pillar-toc {
       display: block;
@@ -449,19 +613,110 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
       top: var(--pillar-toc-top, clamp(6rem, calc(50vh - 200px), 12rem));
       z-index: 45;
     }
+
+    .pillar-toc__fab-wrap,
+    .pillar-toc__handle,
+    .pillar-toc__close {
+      display: none;
+    }
+
+    .pillar-toc__panel {
+      position: fixed;
+      left: clamp(1rem, 3vw, 2rem);
+      right: auto;
+      bottom: auto;
+      top: calc(var(--pillar-toc-top, clamp(6rem, calc(50vh - 200px), 12rem)) + 3.5rem);
+      width: min(320px, 85vw);
+      border-radius: 1rem;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      transform: none;
+      max-height: min(70vh, calc(100vh - 8rem));
+      visibility: hidden;
+      pointer-events: none;
+      transition: none;
+    }
+
+    .pillar-toc[data-open="true"] .pillar-toc__panel {
+      visibility: visible;
+      pointer-events: auto;
+      transform: none;
+    }
   }
 </style>
 
 <script type="module">
   const toc = document.querySelector('[data-pillar-toc]');
   if (toc) {
-    const toggle = toc.querySelector('[data-pillar-toc-toggle]');
+    const toggles = toc.querySelectorAll('[data-pillar-toc-toggle]');
     const panel = toc.querySelector('[data-pillar-toc-panel]');
     const closePanel = () => toc?.setAttribute('data-open', 'false');
-    toggle?.addEventListener('click', () => {
-      const nextState = toc.getAttribute('data-open') === 'true' ? 'false' : 'true';
-      toc.setAttribute('data-open', nextState);
+    toggles.forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const nextState = toc.getAttribute('data-open') === 'true' ? 'false' : 'true';
+        toc.setAttribute('data-open', nextState);
+      });
     });
+
+    const closeBtn = toc.querySelector('[data-pillar-toc-close]');
+    closeBtn?.addEventListener('click', closePanel);
+
+    document.addEventListener('click', (event) => {
+      if (toc.getAttribute('data-open') !== 'true') return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (toc.contains(target)) return;
+      closePanel();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toc.getAttribute('data-open') === 'true') {
+        closePanel();
+      }
+    });
+
+    const fabWrap = toc.querySelector('[data-pillar-toc-fab-wrap]');
+    const startSentinel = document.querySelector('[data-pillar-toc-sentinel="start"]');
+    const endSentinel = document.querySelector('[data-pillar-toc-sentinel="end"]');
+    if (fabWrap && startSentinel && endSentinel) {
+      let pastStart = false;
+      let reachedEnd = false;
+      let hintShown = false;
+      const TOOLTIP_FLAG = 'toc_fab_seen';
+      const syncFabVisibility = () => {
+        const visible = pastStart && !reachedEnd;
+        fabWrap.setAttribute('data-visible', visible ? 'true' : 'false');
+        if (visible && !hintShown) {
+          hintShown = true;
+          try {
+            if (!localStorage.getItem(TOOLTIP_FLAG)) {
+              fabWrap.setAttribute('data-hint', 'true');
+              setTimeout(() => {
+                fabWrap.setAttribute('data-hint', 'false');
+              }, 3000);
+              localStorage.setItem(TOOLTIP_FLAG, '1');
+            }
+          } catch {}
+        }
+      };
+      fabWrap.addEventListener('click', () => {
+        if (fabWrap.getAttribute('data-hint') === 'true') {
+          fabWrap.setAttribute('data-hint', 'false');
+        }
+        try { localStorage.setItem(TOOLTIP_FLAG, '1'); } catch {}
+      }, { capture: true });
+      const startObserver = new IntersectionObserver(([entry]) => {
+        pastStart = entry.boundingClientRect.top < 0;
+        syncFabVisibility();
+      }, { threshold: 0 });
+      const endObserver = new IntersectionObserver(([entry]) => {
+        reachedEnd = entry.isIntersecting || entry.boundingClientRect.top < window.innerHeight;
+        syncFabVisibility();
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      startObserver.observe(startSentinel);
+      endObserver.observe(endSentinel);
+    }
 
     const links = Array.from(toc.querySelectorAll('a[data-heading-id]'));
     const headingItems = links
