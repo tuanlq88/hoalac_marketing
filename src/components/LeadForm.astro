@@ -790,6 +790,19 @@ const priorityOptions = [
       });
 
 
+      const contactInput = form.querySelector('input[name="contact"]');
+      if (contactInput) {
+        contactInput.addEventListener('focus', () => {
+          const now = performance.now();
+          trackEvent(EVENTS.PHONE_FIELD_INTERACT, {
+            time_to_focus_ms: formOpenedAt ? Math.round(now - formOpenedAt) : null,
+            prev_steps_completed: SECTION_FLOW.slice(0, -1).filter((k) => isSectionComplete(k, form)).length,
+            placement,
+          });
+        }, { once: true });
+      }
+
+
       const setBodyScrollLock = (locked) => {
         if (typeof document === 'undefined') return;
         if (locked) {
