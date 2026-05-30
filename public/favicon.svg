@@ -1,22 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <circle cx="50" cy="50" r="50" fill="#fafaf7"/>
+  <!-- Vòng tròn — tầm nhìn / thiên thời -->
+  <circle cx="50" cy="50" r="48" fill="none" stroke="#0f172a" stroke-width="3"/>
 
-  <!-- Mountains (right side, ink wash) -->
-  <path d="M55 70 Q62 50 70 55 Q75 38 80 45 Q85 32 92 50 L92 75 L55 75 Z" fill="#0f172a" opacity="0.55"/>
-  <path d="M62 72 Q70 58 78 62 L82 50 Q88 42 95 58 L95 78 L62 78 Z" fill="#0f172a" opacity="0.85"/>
+  <!-- Nét chéo — địa thế Hòa Lạc đi lên -->
+  <path d="M22 72 L78 38" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
 
-  <!-- Ground line (brush stroke) -->
-  <path d="M10 78 Q50 76 90 78" stroke="#0f172a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-
-  <!-- Strategist: hair bun -->
-  <circle cx="28" cy="46" r="3" fill="#0f172a"/>
-
-  <!-- Hair ribbon flowing left -->
-  <path d="M26 46 Q18 44 13 47 Q18 48 23 48 Z" fill="#0f172a"/>
-
-  <!-- Body (black brush stroke) -->
-  <path d="M27 50 L30 50 L31 62 L26 62 Z" fill="#0f172a"/>
-
-  <!-- Red robe (signature accent) -->
-  <path d="M26 62 L31 62 L33 78 L22 78 Z" fill="#d44809"/>
+  <!-- Mưu sĩ — bóng người + chấm đỏ áo choàng -->
+  <circle cx="40" cy="56" r="3" fill="#0f172a"/>
+  <path d="M37 60 L43 60 L45 70 L35 70 Z" fill="#d44809"/>
 </svg>
