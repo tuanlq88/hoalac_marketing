@@ -43,12 +43,13 @@ export async function editMessage(
   messageId: string,
   text: string,
   keyboard: Array<Array<{ text: string; callback_data: string }>>,
-): Promise<void> {
+): Promise<boolean> {
   const payload: Record<string, unknown> = { chat_id: chatId, message_id: messageId, text };
   if (keyboard.length > 0) {
     payload.reply_markup = { inline_keyboard: keyboard };
   }
-  await telegramPost('editMessageText', payload);
+  const result = await telegramPost('editMessageText', payload);
+  return !!result?.ok;
 }
 
 export async function sendMessage(text: string): Promise<void> {
