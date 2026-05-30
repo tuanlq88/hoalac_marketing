@@ -861,10 +861,22 @@ const priorityOptions = [
         }
       };
 
-      const openModal = () => {
+      const recordFormOpen = (trigger: string) => {
+        if (formOpenedAt !== null) return;
+        formOpenedAt = performance.now();
+        trackEvent(EVENTS.LEAD_FORM_OPEN, {
+          trigger,
+          placement,
+          time_to_open_ms: Math.round(formOpenedAt - pageLoadAt),
+        });
+        tagSession('form_outcome', FORM_OUTCOME.OPENED);
+      };
+
+      const openModal = (trigger: string = 'api') => {
         if (shell.classList.contains('is-modal-open')) {
           return;
         }
+        recordFormOpen(trigger);
         shell.classList.add('is-modal-open');
         shell.classList.add('is-expanded');
         shell.classList.remove('is-collapsed');
@@ -897,17 +909,9 @@ const priorityOptions = [
       updateModalPreference();
 
       const revealLeadCapture = (trigger = 'unknown') => {
-        if (formOpenedAt === null) {
-          formOpenedAt = performance.now();
-          trackEvent(EVENTS.LEAD_FORM_OPEN, {
-            trigger,
-            placement,
-            time_to_open_ms: Math.round(formOpenedAt - pageLoadAt),
-          });
-          tagSession('form_outcome', FORM_OUTCOME.OPENED);
-        }
+        recordFormOpen(trigger);
         if (shouldUseModal()) {
-          openModal();
+          openModal(trigger);
           return;
         }
         shell.classList.add('is-expanded');
@@ -1038,11 +1042,14 @@ const priorityOptions = [
 
       if (isGlobalFallback) {
         const portalQueueKey = '__hoaLacLeadPortalQueue__';
-        window.addEventListener('lead-form:request-open', openModal);
+        window.addEventListener('lead-form:request-open', (e) => {
+          const trigger = (e as CustomEvent)?.detail?.source ?? 'api';
+          openModal(trigger);
+        });
         window.addEventListener('lead-form:request-close', () => closeModal('api'));
 
         window.__hoaLacLeadPortal = {
-          open: () => openModal(),
+          open: () => openModal('api'),
           close: () => closeModal('api')
         };
 
@@ -1051,7 +1058,7 @@ const priorityOptions = [
           while (queue.length > 0) {
             const action = queue.shift();
             if (action === 'open') {
-              openModal();
+              openModal('api');
             } else if (action === 'close') {
               closeModal('api');
             }
