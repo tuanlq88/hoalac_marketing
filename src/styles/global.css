@@ -276,7 +276,7 @@ main {
 }
 
 .site-footer {
-  background: #1b1b1b;
+  background: #0f172a;
   color: #ede9e2;
   font-family: var(--body-font);
   margin-top: auto;
@@ -326,15 +326,15 @@ main {
 }
 
 .site-footer__cta-strip {
-  background: #2a2a2a;
+  background: #1e293b;
   padding: 2.8rem clamp(2rem, 4vw, 4rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
   flex-wrap: wrap;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .site-footer__cta-text {
