@@ -137,11 +137,12 @@ export async function updateExistingLead(
 }
 
 export async function logTimeline(leadId: string, phone: string, event: string, actor: string): Promise<void> {
+  const phoneCell = phone ? `'${phone}` : '';
   await getSheets().spreadsheets.values.append({
     spreadsheetId: getSheetId(),
     range: 'Timeline!A:E',
-    valueInputOption: 'RAW',
+    valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
-    requestBody: { values: [[leadId, phone, vnDateTime(), event, actor]] },
+    requestBody: { values: [[leadId, phoneCell, vnDateTime(), event, actor]] },
   });
 }
