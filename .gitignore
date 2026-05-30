@@ -4,3 +4,20 @@ dist/
 .DS_Store
 .env
 content-system/agents/fact_check/reports/
+
+# Build / deploy artifacts
+.vercel/
+test-results/
+
+# Local tooling / agent artifacts
+.claude/
+.superpowers/
+
+# Windows reserved name (do not check in)
+/nul
+
+# Logs
+*.log
+
+# Local Python pipeline workspace
+rag/
