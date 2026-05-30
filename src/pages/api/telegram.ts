@@ -128,7 +128,7 @@ async function runStaleCheck(): Promise<void> {
 
     const parts = updatedAt.match(/(\d{2})\/(\d{2})\/(\d{4})\s+(\d{2}):(\d{2})/);
     if (!parts) continue;
-    const lastUpdate = new Date(Number(parts[3]), Number(parts[2]) - 1, Number(parts[1]), Number(parts[4]), Number(parts[5]));
+    const lastUpdate = new Date(`${parts[3]}-${parts[2]}-${parts[1]}T${parts[4]}:${parts[5]}:00+07:00`);
     const hoursAgo = Math.floor((now - lastUpdate.getTime()) / (1000 * 60 * 60));
     if (hoursAgo < 48) continue;
 
