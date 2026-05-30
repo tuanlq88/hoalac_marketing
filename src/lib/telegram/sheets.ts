@@ -102,6 +102,7 @@ export async function appendLead(values: string[]): Promise<void> {
     spreadsheetId: getSheetId(),
     range: 'Leads!A:Q',
     valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [values] },
   });
 }
@@ -140,6 +141,7 @@ export async function logTimeline(leadId: string, phone: string, event: string, 
     spreadsheetId: getSheetId(),
     range: 'Timeline!A:E',
     valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [[leadId, phone, vnDateTime(), event, actor]] },
   });
 }
