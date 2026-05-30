@@ -61,8 +61,24 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
-        <div class="reading-toc__panel" data-reading-toc-panel>
-          <p class="reading-toc__title">Mục lục</p>
+        <div class="reading-toc__fab-wrap" data-reading-toc-fab-wrap>
+          <span class="reading-toc__tooltip" data-reading-toc-tooltip aria-hidden="true">Mục lục</span>
+          <button class="reading-toc__fab" type="button" data-reading-toc-toggle aria-label="Mở mục lục">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h10" />
+            </svg>
+          </button>
+        </div>
+        <div class="reading-toc__panel" data-reading-toc-panel role="dialog" aria-label="Mục lục bài viết">
+          <span class="reading-toc__handle" aria-hidden="true"></span>
+          <div class="reading-toc__panel-header">
+            <p class="reading-toc__title">Mục lục chi tiết</p>
+            <button class="reading-toc__close" type="button" data-reading-toc-close aria-label="Đóng mục lục">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
           <ol>
             {tocEntries.map((heading) => (
               <li class:list={[heading.depth === 3 && 'reading-toc__item--nested']}>
@@ -79,9 +95,11 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
         <p>{dateLabel}</p>
       </div>
       <h1 class="reading-title">{post.data.title}</h1>
+      <span class="reading-toc__sentinel" data-reading-toc-sentinel="start" aria-hidden="true"></span>
       <div class="reading-content">
         <Content />
       </div>
+      <span class="reading-toc__sentinel" data-reading-toc-sentinel="end" aria-hidden="true"></span>
       {shouldRenderCTA && (
         <CTAEngine
           class="reading-cta"
