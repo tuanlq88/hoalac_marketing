@@ -198,27 +198,27 @@ const pillarsHref = `${basePath}/pillars`;
       <slot />
     </main>
     <footer class="site-footer">
-      <div class="site-footer__inner">
-        <div class="site-footer__col">
-          <p class="site-footer__brand">Tầm Nhìn Hòa Lạc</p>
-          <p class="site-footer__copy">Dữ liệu quy hoạch & phân tích đầu tư bất động sản khu vực Hòa Lạc.</p>
-          <p class="site-footer__trust">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="vertical-align: -2px; margin-right: 4px;"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Dữ liệu từ các quyết định quy hoạch chính thức
-          </p>
+      <div class="site-footer__quote-section">
+        <p class="site-footer__quote-mark" aria-hidden="true">"</p>
+        <p class="site-footer__quote">Đầu tư bất động sản không phải cuộc đua tốc độ — mà là cuộc chơi của người đọc được Thời, Thế, và Chiêu Thức.</p>
+        <p class="site-footer__quote-attr">— Triết lý Tầm Nhìn Hòa Lạc</p>
+      </div>
+      <div class="site-footer__cta-strip">
+        <div class="site-footer__cta-text">
+          <strong>Cần một góc nhìn độc lập cho quyết định của bạn?</strong>
+          <span>Phản hồi trong 24h. Không môi giới. Không spam.</span>
         </div>
-        <div class="site-footer__col">
-          <p class="site-footer__col-title">Nội dung</p>
-          <a href={blogHref}>Phân tích</a>
-        </div>
-        <div class="site-footer__col">
-          <p class="site-footer__col-title">Liên hệ</p>
-          <a href="mailto:lienhe@insighthoalac.vn">lienhe@insighthoalac.vn</a>
-          <a href="https://t.me/insighthoalac" target="_blank" rel="noreferrer">Telegram</a>
-          <p class="site-footer__response">Phản hồi trong 24 giờ làm việc</p>
+        <div class="site-footer__cta-actions">
+          <a href="#lead-form" class="site-footer__cta-primary">Nhận phân tích →</a>
         </div>
       </div>
-      <div class="site-footer__bottom">
-        <p>© {new Date().getFullYear()} Tầm Nhìn Hòa Lạc · Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chuyên nghiệp.</p>
+      <div class="site-footer__meta">
+        <div class="site-footer__brand-mini">
+          <strong>Tầm Nhìn Hòa Lạc</strong> · © {new Date().getFullYear()} · Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chuyên nghiệp.
+        </div>
+        <div class="site-footer__meta-nav">
+          <a href={blogHref}>Phân tích</a>
+        </div>
       </div>
     </footer>
     <LeadForm

@@ -884,44 +884,35 @@ const priorityOptions = [
         introBtn.addEventListener('click', revealLeadCapture);
       }
 
-      function hideCtaNearFooter() {
+      function hideCtaWhenOtherCtasVisible() {
         if (!floatingCta) return;
-        const footer = document.querySelector('.site-footer');
-        if (!footer) return;
+        const visibleTargets = new Set();
+        const targets = [
+          document.querySelector('[data-hero]'),
+          document.querySelector('.site-footer'),
+          ...document.querySelectorAll('a[href="#lead-form"]'),
+        ].filter(Boolean);
+        if (targets.length === 0) return;
         const observer = new IntersectionObserver((entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              floatingCta.style.opacity = '0';
-              floatingCta.style.pointerEvents = 'none';
+              visibleTargets.add(entry.target);
             } else {
-              floatingCta.style.opacity = '';
-              floatingCta.style.pointerEvents = '';
+              visibleTargets.delete(entry.target);
             }
           });
+          if (visibleTargets.size > 0) {
+            floatingCta.style.opacity = '0';
+            floatingCta.style.pointerEvents = 'none';
+          } else {
+            floatingCta.style.opacity = '';
+            floatingCta.style.pointerEvents = '';
+          }
         }, { threshold: 0.1 });
-        observer.observe(footer);
+        targets.forEach((target) => observer.observe(target));
       }
 
-      hideCtaNearFooter();
-      hideCtaNearHero();
-
-      function hideCtaNearHero() {
-        if (!floatingCta) return;
-        var hero = document.querySelector('[data-hero]');
-        if (!hero) return;
-        var heroObserver = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              floatingCta.style.opacity = '0';
-              floatingCta.style.pointerEvents = 'none';
-            } else {
-              floatingCta.style.opacity = '';
-              floatingCta.style.pointerEvents = '';
-            }
-          });
-        }, { threshold: 0.1 });
-        heroObserver.observe(hero);
-      }
+      hideCtaWhenOtherCtasVisible();
 
       function attachAnchorReveal() {
         if (!shell.id) return;
