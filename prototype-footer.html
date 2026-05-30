@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Footer Prototypes — Tầm Nhìn Hòa Lạc</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --ink: #1b1b1b;
+    --accent: #d44809;
+    --accent-dark: #a43706;
+    --muted: #5f5f5f;
+    --body: "Be Vietnam Pro", system-ui, sans-serif;
+    --display: "Playfair Display", serif;
+  }
+  * { box-sizing: border-box; }
+  html { font-size: 62.5%; }
+  body {
+    margin: 0;
+    font-family: var(--body);
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: var(--ink);
+    background: #e8e5df;
+  }
+  .page-label {
+    max-width: 1100px;
+    margin: 4rem auto 1rem;
+    padding: 0 2rem;
+  }
+  .page-label h2 {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    margin: 0 0 0.4rem;
+    color: var(--ink);
+  }
+  .page-label p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.4rem;
+  }
+  .demo-frame {
+    max-width: 1100px;
+    margin: 1.5rem auto;
+    background: var(--bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+  .demo-frame .fake-content {
+    padding: 6rem 4rem;
+    text-align: center;
+    color: #aaa;
+    font-size: 1.3rem;
+    border-bottom: 1px dashed #d4d0c8;
+  }
+
+  /* =========================================================
+     VARIANT 1 — Minimal Centered + Bold CTA Band
+     ========================================================= */
+  .footer-v1 {
+    background: var(--bg);
+    padding: 0;
+  }
+  .footer-v1__cta-band {
+    background: linear-gradient(135deg, #1b1b1b 0%, #2a2a2a 100%);
+    padding: 5rem 4rem;
+    text-align: center;
+    color: #fff;
+  }
+  .footer-v1__cta-eyebrow {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin: 0 0 1rem;
+    font-weight: 600;
+  }
+  .footer-v1__cta-headline {
+    font-family: var(--display);
+    font-size: clamp(2.4rem, 3vw, 3.6rem);
+    margin: 0 0 1rem;
+    line-height: 1.2;
+  }
+  .footer-v1__cta-sub {
+    font-size: 1.5rem;
+    color: #c8c4be;
+    margin: 0 0 2.5rem;
+    max-width: 52rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .footer-v1__cta-buttons {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .footer-v1__btn-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 1.4rem 2.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.5rem;
+    transition: background 150ms;
+  }
+  .footer-v1__btn-primary:hover { background: var(--accent-dark); }
+  .footer-v1__btn-secondary {
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 1.4rem 2.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .footer-v1__btn-secondary:hover { border-color: #fff; }
+  .footer-v1__trust-row {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 2.4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    color: #8d8a84;
+    font-size: 1.2rem;
+  }
+  .footer-v1__trust-row span { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .footer-v1__bottom {
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1.2rem;
+    color: var(--muted);
+    border-top: 1px solid #e0dcd5;
+  }
+  .footer-v1__bottom a { color: var(--muted); text-decoration: none; margin-left: 1.6rem; }
+  .footer-v1__bottom a:hover { color: var(--accent); }
+  .footer-v1__brand-mini { display: flex; align-items: center; gap: 0.8rem; }
+  .footer-v1__brand-mini strong { color: var(--ink); font-weight: 600; }
+
+  /* =========================================================
+     VARIANT 2 — Split (Brand left · CTA card right)
+     ========================================================= */
+  .footer-v2 {
+    background: var(--bg);
+    border-top: 1px solid #e0dcd5;
+    padding: 5rem 4rem 2rem;
+  }
+  .footer-v2__inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  .footer-v2__left h3 {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    margin: 0 0 0.6rem;
+    color: var(--ink);
+  }
+  .footer-v2__left p {
+    color: var(--muted);
+    font-size: 1.4rem;
+    margin: 0 0 1.6rem;
+    line-height: 1.6;
+  }
+  .footer-v2__trust-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .footer-v2__trust-list li {
+    font-size: 1.25rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .footer-v2__check {
+    width: 14px; height: 14px;
+    display: inline-flex;
+  }
+  .footer-v2__card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 3rem;
+    border: 1px solid #e6e2db;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .footer-v2__card-eyebrow {
+    font-size: 1.15rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 0 0 0.8rem;
+    font-weight: 600;
+  }
+  .footer-v2__card h4 {
+    font-family: var(--display);
+    font-size: 2.2rem;
+    margin: 0 0 0.8rem;
+    line-height: 1.25;
+  }
+  .footer-v2__card p {
+    font-size: 1.35rem;
+    color: var(--muted);
+    margin: 0 0 1.8rem;
+  }
+  .footer-v2__card-cta {
+    display: block;
+    background: var(--accent);
+    color: #fff;
+    text-align: center;
+    padding: 1.3rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.45rem;
+    margin-bottom: 1rem;
+  }
+  .footer-v2__card-cta:hover { background: var(--accent-dark); }
+  .footer-v2__card-alt {
+    display: block;
+    text-align: center;
+    color: var(--ink);
+    font-size: 1.3rem;
+    text-decoration: none;
+  }
+  .footer-v2__card-alt:hover { color: var(--accent); }
+  .footer-v2__bottom {
+    max-width: 1100px;
+    margin: 4rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid #e0dcd5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1.2rem;
+    color: var(--muted);
+  }
+  .footer-v2__bottom-nav a {
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: 1.6rem;
+  }
+  .footer-v2__bottom-nav a:hover { color: var(--accent); }
+
+  /* =========================================================
+     VARIANT 3 — Editorial Quote + Inline CTA Strip
+     ========================================================= */
+  .footer-v3 {
+    background: #1b1b1b;
+    color: #ede9e2;
+    padding: 0;
+  }
+  .footer-v3__quote-section {
+    padding: 6rem 4rem 4rem;
+    text-align: center;
+    max-width: 70rem;
+    margin: 0 auto;
+  }
+  .footer-v3__quote-mark {
+    font-family: var(--display);
+    font-size: 8rem;
+    line-height: 1;
+    color: var(--accent);
+    margin: 0;
+  }
+  .footer-v3__quote {
+    font-family: var(--display);
+    font-size: clamp(2rem, 2.4vw, 2.8rem);
+    line-height: 1.4;
+    color: #fff;
+    margin: -2rem 0 1.5rem;
+    font-style: italic;
+    font-weight: 600;
+  }
+  .footer-v3__quote-attr {
+    font-size: 1.2rem;
+    color: #8d8a84;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+  .footer-v3__cta-strip {
+    background: #2a2a2a;
+    padding: 2.8rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+  }
+  .footer-v3__cta-text {
+    flex: 1;
+    min-width: 28rem;
+  }
+  .footer-v3__cta-text strong {
+    display: block;
+    font-size: 1.7rem;
+    color: #fff;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+  }
+  .footer-v3__cta-text span {
+    font-size: 1.3rem;
+    color: #a8a4a0;
+  }
+  .footer-v3__cta-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  .footer-v3__cta-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 1.3rem 2.4rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+  .footer-v3__cta-primary:hover { background: var(--accent-dark); }
+  .footer-v3__cta-telegram {
+    background: transparent;
+    color: #ede9e2;
+    border: 1px solid #555;
+    padding: 1.3rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .footer-v3__cta-telegram:hover { border-color: #ede9e2; }
+  .footer-v3__meta {
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: 1.2rem;
+    color: #8d8a84;
+  }
+  .footer-v3__meta a { color: #8d8a84; text-decoration: none; margin-left: 1.6rem; }
+  .footer-v3__meta a:hover { color: #fff; }
+  .footer-v3__brand-mini strong { color: #ede9e2; font-weight: 600; }
+
+  @media (max-width: 720px) {
+    .footer-v2__inner { grid-template-columns: 1fr; gap: 3rem; }
+    .footer-v3__cta-strip { flex-direction: column; align-items: stretch; text-align: center; }
+    .footer-v3__cta-actions { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====================================================== -->
+<div class="page-label">
+  <h2>Variant 1 — Bold CTA Band, Minimal Bottom</h2>
+  <p>Toàn bộ footer = 1 banner CTA tối màu nổi bật + 1 dòng copyright nhỏ. Conversion-first.</p>
+</div>
+<div class="demo-frame">
+  <div class="fake-content">— end of article —</div>
+  <footer class="footer-v1">
+    <div class="footer-v1__cta-band">
+      <p class="footer-v1__cta-eyebrow">Trước khi xuống tiền</p>
+      <h3 class="footer-v1__cta-headline">Một góc nhìn độc lập có thể đáng giá hàng tỷ đồng</h3>
+      <p class="footer-v1__cta-sub">Gửi câu hỏi về lô đất, khu vực, hoặc kế hoạch đầu tư của bạn. Phản hồi trong 24h, không môi giới, không spam.</p>
+      <div class="footer-v1__cta-buttons">
+        <a href="#" class="footer-v1__btn-primary">Nhận phân tích miễn phí →</a>
+        <a href="#" class="footer-v1__btn-secondary">✈ Theo dõi Telegram</a>
+      </div>
+      <div class="footer-v1__trust-row">
+        <span>✓ Dữ liệu từ quyết định quy hoạch chính thức</span>
+        <span>✓ Khách quan, không môi giới</span>
+        <span>✓ Phản hồi trong 24h</span>
+      </div>
+    </div>
+    <div class="footer-v1__bottom">
+      <div class="footer-v1__brand-mini">
+        <strong>Tầm Nhìn Hòa Lạc</strong>
+        <span>· © 2026</span>
+      </div>
+      <div>
+        <a href="#">Phân tích</a>
+        <a href="#">lienhe@insighthoalac.vn</a>
+        <a href="#">Điều khoản</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ====================================================== -->
+<div class="page-label">
+  <h2>Variant 2 — Split: Brand + Trust · CTA Card</h2>
+  <p>Hai cột: trái là brand + trust signals (build credibility), phải là CTA card nổi như "form thu nhỏ". Cân bằng minimal và conversion.</p>
+</div>
+<div class="demo-frame">
+  <div class="fake-content">— end of article —</div>
+  <footer class="footer-v2">
+    <div class="footer-v2__inner">
+      <div class="footer-v2__left">
+        <h3>Tầm Nhìn Hòa Lạc</h3>
+        <p>Phân tích quy hoạch, hạ tầng và thị trường bất động sản Hòa Lạc — giúp nhà đầu tư tự đưa ra quyết định.</p>
+        <ul class="footer-v2__trust-list">
+          <li><svg class="footer-v2__check" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Dữ liệu từ quyết định quy hoạch chính thức</li>
+          <li><svg class="footer-v2__check" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Phân tích khách quan, không môi giới</li>
+          <li><svg class="footer-v2__check" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5L6 12 2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Phản hồi trong 24 giờ làm việc</li>
+        </ul>
+      </div>
+      <div class="footer-v2__card">
+        <p class="footer-v2__card-eyebrow">Cho người đang cân nhắc</p>
+        <h4>Có lô đất hoặc khu vực đang quan tâm?</h4>
+        <p>Gửi vị trí, em sẽ phân tích quy hoạch, hạ tầng, và rủi ro pháp lý — miễn phí.</p>
+        <a href="#" class="footer-v2__card-cta">Nhận phân tích →</a>
+        <a href="#" class="footer-v2__card-alt">hoặc theo dõi qua Telegram</a>
+      </div>
+    </div>
+    <div class="footer-v2__bottom">
+      <span>© 2026 Tầm Nhìn Hòa Lạc · Nội dung tham khảo, không thay thế tư vấn pháp lý.</span>
+      <div class="footer-v2__bottom-nav">
+        <a href="#">Phân tích</a>
+        <a href="#">Liên hệ</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ====================================================== -->
+<div class="page-label">
+  <h2>Variant 3 — Editorial Quote + Dark CTA Strip</h2>
+  <p>Mở đầu bằng 1 câu manifesto (gợi triết lý Thời-Thế-Chiêu Thức), tiếp theo là CTA strip ngang. Branded, có "soul".</p>
+</div>
+<div class="demo-frame">
+  <div class="fake-content">— end of article —</div>
+  <footer class="footer-v3">
+    <div class="footer-v3__quote-section">
+      <p class="footer-v3__quote-mark">"</p>
+      <p class="footer-v3__quote">Đầu tư bất động sản không phải cuộc đua tốc độ — mà là cuộc chơi của người đọc được Thời, Thế, và Chiêu Thức.</p>
+      <p class="footer-v3__quote-attr">— Triết lý Tầm Nhìn Hòa Lạc</p>
+    </div>
+    <div class="footer-v3__cta-strip">
+      <div class="footer-v3__cta-text">
+        <strong>Cần một góc nhìn độc lập cho quyết định của bạn?</strong>
+        <span>Phản hồi trong 24h. Không môi giới. Không spam.</span>
+      </div>
+      <div class="footer-v3__cta-actions">
+        <a href="#" class="footer-v3__cta-primary">Nhận phân tích →</a>
+      </div>
+    </div>
+    <div class="footer-v3__meta">
+      <div class="footer-v3__brand-mini">
+        <strong>Tầm Nhìn Hòa Lạc</strong> · © 2026 · Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chuyên nghiệp.
+      </div>
+      <div>
+        <a href="#">Phân tích</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div style="height: 6rem;"></div>
+
+</body>
+</html>
