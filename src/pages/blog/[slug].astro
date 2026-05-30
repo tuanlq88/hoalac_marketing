@@ -412,13 +412,81 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
 <script type="module">
   const toc = document.querySelector('[data-reading-toc]');
   if (toc) {
-    const toggle = toc.querySelector('[data-reading-toc-toggle]');
+    const toggles = toc.querySelectorAll('[data-reading-toc-toggle]');
     const panel = toc.querySelector('[data-reading-toc-panel]');
     const closePanel = () => toc?.setAttribute('data-open', 'false');
-    toggle?.addEventListener('click', () => {
-      const nextState = toc.getAttribute('data-open') === 'true' ? 'false' : 'true';
-      toc.setAttribute('data-open', nextState);
+    toggles.forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const nextState = toc.getAttribute('data-open') === 'true' ? 'false' : 'true';
+        toc.setAttribute('data-open', nextState);
+      });
     });
+
+    // Close button
+    const closeBtn = toc.querySelector('[data-reading-toc-close]');
+    closeBtn?.addEventListener('click', closePanel);
+
+    // Close panel khi tap ra ngoài (mobile + desktop)
+    document.addEventListener('click', (event) => {
+      if (toc.getAttribute('data-open') !== 'true') return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (toc.contains(target)) return;
+      closePanel();
+    });
+
+    // Close khi nhấn ESC
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toc.getAttribute('data-open') === 'true') {
+        closePanel();
+      }
+    });
+
+    // FAB visibility theo sentinels
+    const fabWrap = toc.querySelector('[data-reading-toc-fab-wrap]');
+    const startSentinel = document.querySelector('[data-reading-toc-sentinel="start"]');
+    const endSentinel = document.querySelector('[data-reading-toc-sentinel="end"]');
+    if (fabWrap && startSentinel && endSentinel) {
+      let pastStart = false;
+      let reachedEnd = false;
+      let hintShown = false;
+      const TOOLTIP_FLAG = 'toc_fab_seen';
+      const syncFabVisibility = () => {
+        const visible = pastStart && !reachedEnd;
+        fabWrap.setAttribute('data-visible', visible ? 'true' : 'false');
+        // First-time tooltip: hiện ~3s vào lần FAB xuất hiện đầu tiên của user (qua các session)
+        if (visible && !hintShown) {
+          hintShown = true;
+          try {
+            if (!localStorage.getItem(TOOLTIP_FLAG)) {
+              fabWrap.setAttribute('data-hint', 'true');
+              setTimeout(() => {
+                fabWrap.setAttribute('data-hint', 'false');
+              }, 3000);
+              localStorage.setItem(TOOLTIP_FLAG, '1');
+            }
+          } catch {}
+        }
+      };
+      // Nếu user tap FAB trước khi tooltip tự ẩn → ẩn tooltip ngay, mark đã thấy
+      fabWrap.addEventListener('click', () => {
+        if (fabWrap.getAttribute('data-hint') === 'true') {
+          fabWrap.setAttribute('data-hint', 'false');
+        }
+        try { localStorage.setItem(TOOLTIP_FLAG, '1'); } catch {}
+      }, { capture: true });
+      const startObserver = new IntersectionObserver(([entry]) => {
+        pastStart = entry.boundingClientRect.top < 0;
+        syncFabVisibility();
+      }, { threshold: 0 });
+      const endObserver = new IntersectionObserver(([entry]) => {
+        reachedEnd = entry.isIntersecting || entry.boundingClientRect.top < window.innerHeight;
+        syncFabVisibility();
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      startObserver.observe(startSentinel);
+      endObserver.observe(endSentinel);
+    }
 
     const links = Array.from(toc.querySelectorAll('a[data-heading-id]'));
     const headingItems = links
