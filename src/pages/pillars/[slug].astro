@@ -192,12 +192,12 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
   }
 
   .pillar-toc {
-    display: none;
+    display: contents;
     --pillar-toc-top: clamp(6rem, calc(50vh - 200px), 12rem);
   }
 
   .pillar-toc__toggle {
-    display: flex;
+    display: none;
     align-items: center;
     gap: 0.4rem;
     background: rgba(15, 23, 42, 0.08);
@@ -612,6 +612,10 @@ const relatedPostGroups = limitedRelatedPosts.reduce((groups, post) => {
       left: clamp(1rem, 3vw, 2rem);
       top: var(--pillar-toc-top, clamp(6rem, calc(50vh - 200px), 12rem));
       z-index: 45;
+    }
+
+    .pillar-toc__toggle {
+      display: flex;
     }
 
     .pillar-toc__fab-wrap,
