@@ -108,3 +108,12 @@ function pollClarityReady(attempt: number): void {
     }
   }, CLARITY_POLL_INTERVAL_MS);
 }
+
+export function bumpSessionPageview(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const key = '__hl_session_pv__';
+    const current = Number(sessionStorage.getItem(key) || '0');
+    sessionStorage.setItem(key, String(current + 1));
+  } catch {}
+}

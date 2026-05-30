@@ -641,7 +641,7 @@ const priorityOptions = [
 </style>
 
 <script>
-  import { trackEvent, tagSession, getGlobalProps } from '../lib/analytics/track';
+  import { trackEvent, tagSession, getGlobalProps, bumpSessionPageview } from '../lib/analytics/track';
   import { EVENTS, FORM_OUTCOME } from '../lib/analytics/events';
 
   (() => {
@@ -684,6 +684,7 @@ const priorityOptions = [
     window[initKey] = true;
 
     const boot = () => {
+      bumpSessionPageview();
       const props = getGlobalProps();
       if (props.top_pillar) {
         tagSession('top_pillar', String(props.top_pillar));
