@@ -7,6 +7,7 @@ interface Props {
   formId?: string;
   showFloatingCta?: boolean;
   isGlobalFallback?: boolean;
+  placement?: string;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   formId = "lead-form",
   showFloatingCta = true,
   isGlobalFallback = false,
+  placement,
 } = Astro.props;
 
 const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_classification";
@@ -53,6 +55,7 @@ const priorityOptions = [
   data-global={String(isGlobalFallback)}
   data-force-modal={String(isGlobalFallback)}
   data-floating-enabled={String(showFloatingCta)}
+  data-placement={placement ?? ''}
 >
   <div class="lead-modal-overlay" data-lead-overlay aria-hidden="true"></div>
   <div class="shell-inner lead-shell">
@@ -637,7 +640,10 @@ const priorityOptions = [
   }
 </style>
 
-<script type="module">
+<script>
+  import { trackEvent, tagSession, getGlobalProps } from '../lib/analytics/track';
+  import { EVENTS, FORM_OUTCOME } from '../lib/analytics/events';
+
   (() => {
     const SCROLL_THRESHOLD = 0.65;
     const intentWeights = {
@@ -715,6 +721,33 @@ const priorityOptions = [
           sourceInput.value = 'Landing Page';
         }
       }
+
+      const placement = (shell.dataset.placement || inferPlacementFromPath()) ?? 'unknown';
+
+      function inferPlacementFromPath() {
+        const path = window.location.pathname;
+        if (path === '/' || path === '') return 'home_hero';
+        if (path.startsWith('/blog/')) return 'end_of_article';
+        return 'other';
+      }
+
+      let viewFired = false;
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !viewFired) {
+              viewFired = true;
+              trackEvent(EVENTS.LEAD_FORM_VIEW, {
+                placement,
+                source_page: window.location.pathname,
+              });
+              observer.disconnect();
+            }
+          });
+        }, { threshold: 0.5 });
+        observer.observe(shell);
+      }
+
       let modalQuery;
       let preferModal = forceModal;
       let previousOverflow = '';
