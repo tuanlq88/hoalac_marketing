@@ -2,8 +2,8 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { INTENT_LABELS, BUDGET_LABELS, PRIORITY_LABELS, LEAD_ICONS, buildButtons, vnDateTime } from '../../lib/telegram/config';
 import { findLeadByPhone, generateLeadId, appendLead, updateExistingLead, logTimeline } from '../../lib/telegram/sheets';
-import { sendWithButtons } from '../../lib/telegram/telegram';
-import { saveMessageId } from '../../lib/telegram/cache';
+import { sendWithButtons, editMessage } from '../../lib/telegram/telegram';
+import { saveMessageId, getMessageId } from '../../lib/telegram/cache';
 
 const TELEGRAM_CHAT_ID = import.meta.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_ID || '';
 
@@ -61,8 +61,16 @@ export const POST: APIRoute = async ({ request }) => {
         + `\n\n↓ Bấm nút bên dưới để cập nhật trạng thái`;
 
       const buttons = buildButtons(existing.leadId, existing.status);
-      const msgId = await sendWithButtons(text, buttons, TELEGRAM_CHAT_ID);
-      if (msgId) await saveMessageId(existing.leadId, msgId);
+      const oldMsgId = await getMessageId(existing.leadId);
+
+      let edited = false;
+      if (oldMsgId && TELEGRAM_CHAT_ID) {
+        edited = await editMessage(TELEGRAM_CHAT_ID, oldMsgId, text, buttons);
+      }
+      if (!edited) {
+        const newMsgId = await sendWithButtons(text, buttons, TELEGRAM_CHAT_ID);
+        if (newMsgId) await saveMessageId(existing.leadId, newMsgId);
+      }
 
       return json({ message: 'Cảm ơn Anh/chị, thông tin đã được cập nhật!' });
     }

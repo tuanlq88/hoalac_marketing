@@ -71,21 +71,37 @@ async function handleCallback(query: any): Promise<void> {
     return;
   }
 
+  const rowInfo = await findLeadById(leadId);
+  if (!rowInfo.found) {
+    await answerCallback(callbackId, '❌ Không tìm thấy lead.');
+    return;
+  }
+
+  const allowed = ALLOWED_TRANSITIONS[rowInfo.status] || [];
+  if (allowed.length > 0 && !allowed.includes(action)) {
+    await answerCallback(
+      callbackId,
+      `⚠️ Lead đã ở trạng thái "${rowInfo.status}". Mở message mới nhất để cập nhật.`,
+    );
+    if (chatId && messageId) {
+      const originalText = query.message.text || '';
+      await editMessage(chatId, messageId, originalText, buildButtons(leadId, rowInfo.status));
+    }
+    return;
+  }
+
+  const ownerCheck = checkOwnership(rowInfo, userId, action);
+  if (ownerCheck.blocked) {
+    await answerCallback(callbackId, ownerCheck.message || '🚫 Không có quyền.');
+    return;
+  }
+
   if (await isDuplicate(`click:${leadId}:${action}`, 30)) {
     await answerCallback(callbackId, '⏳ Đang xử lý...');
     return;
   }
 
   await answerCallback(callbackId, `${command.icon} ${command.label} — đang cập nhật...`);
-
-  const rowInfo = await findLeadById(leadId);
-  if (!rowInfo.found) return;
-
-  const allowed = ALLOWED_TRANSITIONS[rowInfo.status] || [];
-  if (allowed.length > 0 && !allowed.includes(action)) return;
-
-  const ownerCheck = checkOwnership(rowInfo, userId, action);
-  if (ownerCheck.blocked) return;
 
   if (messageId && chatId) {
     const originalText = query.message.text || '';
