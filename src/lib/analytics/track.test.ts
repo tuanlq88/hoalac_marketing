@@ -138,3 +138,33 @@ describe('tagSession', () => {
     global.window = originalWindow;
   });
 });
+
+describe('kill switch', () => {
+  let gtagSpy: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    gtagSpy = vi.fn();
+    window.gtag = gtagSpy;
+    vi.stubEnv('PUBLIC_TRACKING_ENABLED', 'false');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    delete window.gtag;
+  });
+
+  it('trackEvent is a no-op when PUBLIC_TRACKING_ENABLED=false', () => {
+    trackEvent(EVENTS.LEAD_FORM_VIEW, {});
+    expect(gtagSpy).not.toHaveBeenCalled();
+  });
+
+  it('tagSession is a no-op when PUBLIC_TRACKING_ENABLED=false', () => {
+    const claritySpy = vi.fn();
+    // @ts-expect-error
+    window.clarity = claritySpy;
+    tagSession('form_outcome', 'opened');
+    expect(claritySpy).not.toHaveBeenCalled();
+    // @ts-expect-error
+    delete window.clarity;
+  });
+});
