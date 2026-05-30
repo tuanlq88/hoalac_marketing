@@ -216,7 +216,10 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
   }
 </style>
 
-<script type="module">
+<script>
+  import { trackEvent } from '../../lib/analytics/track';
+  import { EVENTS } from '../../lib/analytics/events';
+
   const toc = document.querySelector('[data-reading-toc]');
   if (toc) {
     const toggle = toc.querySelector('[data-reading-toc-toggle]');
@@ -310,6 +313,17 @@ const thumbnail = post.data.thumbnail ? `${basePath}${post.data.thumbnail}` : nu
         const interests = JSON.parse(localStorage.getItem('reader_interests') || '{}');
         interests[pillar] = (interests[pillar] || 0) + 1;
         localStorage.setItem('reader_interests', JSON.stringify(interests));
+
+        const milestones = [3, 5, 10];
+        if (milestones.includes(readings.length)) {
+          const topPillar = Object.entries(interests)
+            .filter(([k]) => !k.startsWith('_'))
+            .sort((a, b) => Number(b[1]) - Number(a[1]))[0]?.[0] ?? '';
+          trackEvent(EVENTS.READER_MILESTONE, {
+            count: readings.length,
+            top_pillar: topPillar,
+          });
+        }
       } catch {}
     };
 

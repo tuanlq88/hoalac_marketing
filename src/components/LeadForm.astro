@@ -7,6 +7,7 @@ interface Props {
   formId?: string;
   showFloatingCta?: boolean;
   isGlobalFallback?: boolean;
+  placement?: string;
 }
 
 const {
@@ -17,6 +18,7 @@ const {
   formId = "lead-form",
   showFloatingCta = true,
   isGlobalFallback = false,
+  placement,
 } = Astro.props;
 
 const defaultLeadTag = import.meta.env.PUBLIC_DEFAULT_LEAD_TAG ?? "pending_classification";
@@ -53,6 +55,7 @@ const priorityOptions = [
   data-global={String(isGlobalFallback)}
   data-force-modal={String(isGlobalFallback)}
   data-floating-enabled={String(showFloatingCta)}
+  data-placement={placement ?? ''}
 >
   <div class="lead-modal-overlay" data-lead-overlay aria-hidden="true"></div>
   <div class="shell-inner lead-shell">
@@ -637,7 +640,10 @@ const priorityOptions = [
   }
 </style>
 
-<script type="module">
+<script>
+  import { trackEvent, tagSession, getGlobalProps, bumpSessionPageview } from '../lib/analytics/track';
+  import { EVENTS, FORM_OUTCOME } from '../lib/analytics/events';
+
   (() => {
     const SCROLL_THRESHOLD = 0.65;
     const intentWeights = {
@@ -678,6 +684,11 @@ const priorityOptions = [
     window[initKey] = true;
 
     const boot = () => {
+      bumpSessionPageview();
+      const props = getGlobalProps();
+      if (props.top_pillar) {
+        tagSession('top_pillar', String(props.top_pillar));
+      }
       const shells = Array.from(document.querySelectorAll('[data-lead-shell]'));
       shells.forEach((shell) => initLeadShell(shell));
     };
@@ -715,6 +726,36 @@ const priorityOptions = [
           sourceInput.value = 'Landing Page';
         }
       }
+
+      const placement = (shell.dataset.placement || inferPlacementFromPath()) ?? 'unknown';
+
+      const pageLoadAt = performance.now();
+      let formOpenedAt: number | null = null;
+
+      function inferPlacementFromPath() {
+        const path = window.location.pathname;
+        if (path === '/' || path === '') return 'home_hero';
+        if (path.startsWith('/blog/')) return 'end_of_article';
+        return 'other';
+      }
+
+      let viewFired = false;
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && !viewFired) {
+              viewFired = true;
+              trackEvent(EVENTS.LEAD_FORM_VIEW, {
+                placement,
+                source_page: window.location.pathname,
+              });
+              observer.disconnect();
+            }
+          });
+        }, { threshold: 0.5 });
+        observer.observe(shell);
+      }
+
       let modalQuery;
       let preferModal = forceModal;
       let previousOverflow = '';
@@ -741,7 +782,7 @@ const priorityOptions = [
 
       setupValidationListeners(form, fieldErrors, setStatus);
       applySequentialTabIndex(form);
-      const sectionFlow = setupSectionFlow(form, fieldErrors);
+      const sectionFlow = setupSectionFlow(form, fieldErrors, placement);
       form.addEventListener('reset', () => sectionFlow?.reset?.());
 
 
@@ -754,6 +795,19 @@ const priorityOptions = [
       });
 
 
+      const contactInput = form.querySelector('input[name="contact"]');
+      if (contactInput) {
+        contactInput.addEventListener('focus', () => {
+          const now = performance.now();
+          trackEvent(EVENTS.PHONE_FIELD_INTERACT, {
+            time_to_focus_ms: formOpenedAt ? Math.round(now - formOpenedAt) : null,
+            prev_steps_completed: SECTION_FLOW.slice(0, -1).filter((k) => isSectionComplete(k, form)).length,
+            placement,
+          });
+        }, { once: true });
+      }
+
+
       const setBodyScrollLock = (locked) => {
         if (typeof document === 'undefined') return;
         if (locked) {
@@ -764,7 +818,28 @@ const priorityOptions = [
         }
       };
 
-      const closeModal = () => {
+      let abandonFired = false;
+      function fireAbandonIfApplicable(reason: string) {
+        if (abandonFired || formOpenedAt === null) return;
+        // Don't fire if user already submitted
+        if (shell.dataset.submitted === 'true') return;
+        // Find last completed step
+        const lastStep = SECTION_FLOW
+          .slice()
+          .reverse()
+          .find((k) => isSectionComplete(k, form)) ?? 'none';
+        trackEvent(EVENTS.LEAD_FORM_ABANDON, {
+          last_step: lastStep,
+          time_in_form_ms: Math.round(performance.now() - formOpenedAt),
+          reason,
+          placement,
+        });
+        tagSession('form_outcome', `abandoned_at_${lastStep === 'none' ? 'open' : lastStep}`);
+        abandonFired = true;
+      }
+
+      const closeModal = (reason: string = 'close_btn') => {
+        fireAbandonIfApplicable(reason);
         const wasModal = shell.classList.contains('is-modal-open');
         shell.classList.remove('is-modal-open');
         overlay?.setAttribute('aria-hidden', 'true');
@@ -786,10 +861,22 @@ const priorityOptions = [
         }
       };
 
-      const openModal = () => {
+      const recordFormOpen = (trigger: string) => {
+        if (formOpenedAt !== null) return;
+        formOpenedAt = performance.now();
+        trackEvent(EVENTS.LEAD_FORM_OPEN, {
+          trigger,
+          placement,
+          time_to_open_ms: Math.round(formOpenedAt - pageLoadAt),
+        });
+        tagSession('form_outcome', FORM_OUTCOME.OPENED);
+      };
+
+      const openModal = (trigger: string = 'api') => {
         if (shell.classList.contains('is-modal-open')) {
           return;
         }
+        recordFormOpen(trigger);
         shell.classList.add('is-modal-open');
         shell.classList.add('is-expanded');
         shell.classList.remove('is-collapsed');
@@ -812,7 +899,7 @@ const priorityOptions = [
           modalQuery.addEventListener('change', (event) => {
             preferModal = event.matches;
             if (!preferModal) {
-              closeModal();
+              closeModal('auto');
             }
           });
         }
@@ -821,9 +908,10 @@ const priorityOptions = [
 
       updateModalPreference();
 
-      const revealLeadCapture = () => {
+      const revealLeadCapture = (trigger = 'unknown') => {
+        recordFormOpen(trigger);
         if (shouldUseModal()) {
-          openModal();
+          openModal(trigger);
           return;
         }
         shell.classList.add('is-expanded');
@@ -836,15 +924,36 @@ const priorityOptions = [
       };
 
       closeControls.forEach((control) => {
-        control.addEventListener('click', closeModal);
+        control.addEventListener('click', () => closeModal('close_btn'));
       });
-      overlay?.addEventListener('click', closeModal);
+      overlay?.addEventListener('click', () => closeModal('overlay_click'));
 
       window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-          closeModal();
+          closeModal('esc');
         }
       });
+
+      window.addEventListener('beforeunload', () => {
+        if (formOpenedAt === null || abandonFired) return;
+        if (shell.dataset.submitted === 'true') return;
+        const lastStep = SECTION_FLOW
+          .slice()
+          .reverse()
+          .find((k) => isSectionComplete(k, form)) ?? 'none';
+        if (typeof navigator.sendBeacon === 'function' && window.dataLayer) {
+          window.dataLayer.push({
+            event: EVENTS.LEAD_FORM_ABANDON,
+            last_step: lastStep,
+            time_in_form_ms: Math.round(performance.now() - formOpenedAt),
+            reason: 'page_leave',
+            placement,
+            ...getGlobalProps(),
+          });
+        }
+        abandonFired = true;
+      });
+
       window.addEventListener('resize', updateModalPreference);
 
       function handleScrollReveal() {
@@ -874,14 +983,14 @@ const priorityOptions = [
         window.addEventListener('scroll', onScroll, { passive: true });
         setTimeout(showCta, 8000);
 
-        floatingCta.addEventListener('click', revealLeadCapture);
+        floatingCta.addEventListener('click', () => revealLeadCapture('floating_cta'));
       }
 
       handleScrollReveal();
 
       const introBtn = shell.querySelector('[data-lead-intro-btn]');
       if (introBtn) {
-        introBtn.addEventListener('click', revealLeadCapture);
+        introBtn.addEventListener('click', () => revealLeadCapture('intro_btn'));
       }
 
       function hideCtaWhenOtherCtasVisible() {
@@ -924,7 +1033,7 @@ const priorityOptions = [
             if (!shell.classList.contains('is-collapsed')) return;
             if (!deferDisplay || !showFloatingCta) return;
             event.preventDefault();
-            revealLeadCapture();
+            revealLeadCapture('anchor');
           });
         });
       }
@@ -933,12 +1042,15 @@ const priorityOptions = [
 
       if (isGlobalFallback) {
         const portalQueueKey = '__hoaLacLeadPortalQueue__';
-        window.addEventListener('lead-form:request-open', openModal);
-        window.addEventListener('lead-form:request-close', closeModal);
+        window.addEventListener('lead-form:request-open', (e) => {
+          const trigger = (e as CustomEvent)?.detail?.source ?? 'api';
+          openModal(trigger);
+        });
+        window.addEventListener('lead-form:request-close', () => closeModal('api'));
 
         window.__hoaLacLeadPortal = {
-          open: () => openModal(),
-          close: () => closeModal()
+          open: () => openModal('api'),
+          close: () => closeModal('api')
         };
 
         const queue = window[portalQueueKey];
@@ -946,9 +1058,9 @@ const priorityOptions = [
           while (queue.length > 0) {
             const action = queue.shift();
             if (action === 'open') {
-              openModal();
+              openModal('api');
             } else if (action === 'close') {
-              closeModal();
+              closeModal('api');
             }
           }
         }
@@ -967,7 +1079,7 @@ const priorityOptions = [
           fallbackLeadTag,
           onSuccess: () => {
             if (shell.classList.contains('is-modal-open')) {
-              setTimeout(() => closeModal(), 2000);
+              setTimeout(() => closeModal('auto_after_submit'), 2000);
             }
           }
         });
@@ -1151,6 +1263,25 @@ const priorityOptions = [
         submitCount: String(submitCount)
       };
 
+      const recordSuccessfulSubmit = () => {
+        const shellEl = form.closest('[data-lead-shell]');
+        const placement = shellEl?.dataset?.placement
+          ?? (window.location.pathname.startsWith('/blog/') ? 'end_of_article' : 'home_hero');
+        trackEvent(EVENTS.LEAD_FORM_SUBMIT, {
+          lead_tag: computedTag,
+          intent: data.intent,
+          budget: data.budgetRange,
+          priority: data.priority,
+          submit_count: submitCount,
+          placement,
+        });
+        tagSession('form_outcome', FORM_OUTCOME.SUBMITTED);
+        tagSession('lead_tag', computedTag);
+        if (shellEl) {
+          shellEl.dataset.submitted = 'true';
+        }
+      };
+
       if (raw.company) {
         clearTimeout(loadingTimeout);
         if (submitBtn) { submitBtn.classList.remove('is-loading'); submitBtn.disabled = false; }
@@ -1186,6 +1317,9 @@ const priorityOptions = [
             console.warn('Không parse được payload, dùng message mặc định.', parseErr);
           }
           setStatus?.(payloadMessage, 'success');
+
+          recordSuccessfulSubmit();
+
           saveLeadPreferences({ intent: data.intent ?? '', areas: [] });
           try {
             const history = JSON.parse(localStorage.getItem('submit_history') || '[]');
@@ -1221,6 +1355,9 @@ const priorityOptions = [
         console.error(error);
         if (error instanceof TypeError) {
           setStatus?.('Đã nhận thông tin!', 'success');
+
+          recordSuccessfulSubmit();
+
           if (typeof onSuccess === 'function') {
             onSuccess();
           }
@@ -1324,7 +1461,7 @@ const priorityOptions = [
       return group instanceof HTMLElement ? group.dataset.fieldGroup ?? '' : '';
     }
 
-    function setupSectionFlow(form, fieldErrors) {
+    function setupSectionFlow(form, fieldErrors, placement) {
       if (!form) return null;
       const completedSections = new Set();
 
@@ -1338,9 +1475,24 @@ const priorityOptions = [
         }
         completedSections.add(key);
         fieldErrors?.clear(key);
+
+        const value = getStepValue(key, form);
+        trackEvent(EVENTS.LEAD_STEP_COMPLETE, {
+          step: key,
+          value,
+          step_index: SECTION_FLOW.indexOf(key) + 1,
+          placement,
+        });
+
+        // Update form_outcome tag to "abandoned_at_<next_step>" — assumes they may abandon here next
+        const nextKey = getNextSectionKey(key);
+        if (nextKey) {
+          const outcomeTag = `abandoned_at_${nextKey}`;
+          tagSession('form_outcome', outcomeTag);
+        }
+
         // Don't auto-advance from free-text fields (name) — only from radio/select picks
         if (key === 'name') return;
-        const nextKey = getNextSectionKey(key);
         if (nextKey) {
           focusSection(nextKey, form);
         } else {
@@ -1379,6 +1531,21 @@ const priorityOptions = [
         }
         default:
           return true;
+      }
+    }
+
+    function getStepValue(key, form) {
+      switch (key) {
+        case 'name':
+          return form.querySelector('input[name="name"]')?.value ? 'provided' : 'skipped';
+        case 'intent':
+        case 'budgetRange':
+        case 'priority':
+          return form.querySelector(`input[name="${key}"]:checked`)?.value ?? '';
+        case 'contact':
+          return form.querySelector('input[name="contact"]')?.value ? 'provided' : '';
+        default:
+          return '';
       }
     }
 

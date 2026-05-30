@@ -101,7 +101,7 @@ const pillarsHref = `${basePath}/pillars`;
           <a href={blogHref} class="site-nav__pill site-nav__pill--accent">
             <span>Phân tích</span>
           </a>
-          <a href="#lead-form" class="site-nav__pill site-nav__pill--cta">
+          <a href="#lead-form" class="site-nav__pill site-nav__pill--cta" data-cta-variant="header_nav">
             <span>Tìm góc nhìn</span>
           </a>
         </nav>
@@ -158,7 +158,7 @@ const pillarsHref = `${basePath}/pillars`;
           </a></li>
         </ul>
         <div class="mobile-menu__cta-section">
-          <a class="mobile-menu__cta" href="#lead-form">
+          <a class="mobile-menu__cta" href="#lead-form" data-cta-variant="mobile_menu">
             <svg class="mobile-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             <div class="mobile-menu__link-text">
               <span>Tìm góc nhìn</span>
@@ -209,7 +209,7 @@ const pillarsHref = `${basePath}/pillars`;
           <span>Phản hồi trong 24h. Không môi giới. Không spam.</span>
         </div>
         <div class="site-footer__cta-actions">
-          <a href="#lead-form" class="site-footer__cta-primary">Nhận phân tích →</a>
+          <a href="#lead-form" class="site-footer__cta-primary" data-cta-variant="footer">Nhận phân tích →</a>
         </div>
       </div>
       <div class="site-footer__meta">
@@ -308,5 +308,20 @@ const pillarsHref = `${basePath}/pillars`;
       // Footer CTA always visible — floating CTA auto-hides near footer via IntersectionObserver
     </script>
     <script type="module" src={tableScriptSrc}></script>
+    <script>
+      import { trackEvent } from '../lib/analytics/track';
+      import { EVENTS } from '../lib/analytics/events';
+
+      document.querySelectorAll('[data-cta-variant]').forEach((el) => {
+        if (el.dataset.ctaTracked === 'true') return;
+        el.dataset.ctaTracked = 'true';
+        el.addEventListener('click', () => {
+          trackEvent(EVENTS.CTA_CLICK, {
+            cta_variant: el.getAttribute('data-cta-variant') ?? 'unknown',
+            source_page: window.location.pathname,
+          });
+        });
+      });
+    </script>
   </body>
 </html>

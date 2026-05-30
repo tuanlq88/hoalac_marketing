@@ -28,11 +28,11 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
       </p>
 
       <div class="hero__cta-group">
-        <a href={blogHref} class="hero__cta hero__cta--primary">
+        <a href={blogHref} class="hero__cta hero__cta--primary" data-cta-variant="hero_primary">
           Đọc phân tích mới nhất
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="#lead-form" class="hero__cta hero__cta--ghost">Tìm góc nhìn phù hợp</a>
+        <a href="#lead-form" class="hero__cta hero__cta--ghost" data-cta-variant="hero">Tìm góc nhìn phù hợp</a>
       </div>
 
       <div class="hero__stats">
@@ -470,7 +470,7 @@ const heroImagePath = `${basePath}/images/hero-hoalac.png`;
   }
 </style>
 
-<script type="module">
+<script>
   const hero = document.querySelector('[data-hero]');
   const primaryCta = hero?.querySelector('[data-personalized-cta]');
 
